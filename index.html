@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="RADIO CIWARA 105.5 FM — Votre radio, votre voix.">
+  <title>RADIO CIWARA 105.5 FM</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="#accueil">
+        <img src="assets/logo.jpg" alt="Logo RADIO CIWARA 105.5 FM">
+        <span>CIWARA <strong>105.5 FM</strong></span>
+      </a>
+      <nav>
+        <a href="#accueil">Accueil</a>
+        <a href="#programmes">Programmes</a>
+        <a href="#actualites">Actualités</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="accueil" class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">📻 RADIO CIWARA</p>
+          <h1>Votre voix, votre radio.</h1>
+          <p class="lead">Retrouvez RADIO CIWARA 105.5 FM en direct, vos émissions, vos actualités et toute l'information de proximité.</p>
+          <button id="listenBtn" class="btn btn-primary">▶ Écouter en direct</button>
+          <p id="playerStatus" class="status">Le flux radio sera activé dès que l'URL du streaming sera configurée.</p>
+        </div>
+
+        <div class="player-card">
+          <div class="live-dot"><span></span> EN DIRECT</div>
+          <img src="assets/logo.jpg" alt="RADIO CIWARA 105.5 FM">
+          <h2>RADIO CIWARA</h2>
+          <p>105.5 MHz</p>
+          <audio id="radioPlayer" controls preload="none"></audio>
+        </div>
+      </div>
+    </section>
+
+    <section id="programmes" class="section">
+      <div class="container">
+        <p class="eyebrow">🎙️ À L'ANTENNE</p>
+        <h2>Programmes & émissions</h2>
+        <div class="cards">
+          <article class="card"><span>☀️</span><h3>Matinale</h3><p>Information, musique et bonne humeur pour bien commencer la journée.</p></article>
+          <article class="card"><span>🗣️</span><h3>Débat</h3><p>Les sujets qui font l'actualité avec les voix de la communauté.</p></article>
+          <article class="card"><span>🎵</span><h3>Musique</h3><p>Les meilleurs titres et découvertes musicales à l'antenne.</p></article>
+          <article class="card"><span>🩺</span><h3>Santé & société</h3><p>Des rendez-vous utiles autour de la santé, de l'éducation et de la société.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="actualites" class="section section-alt">
+      <div class="container">
+        <p class="eyebrow">📰 INFORMATIONS</p>
+        <h2>Actualités</h2>
+        <div class="news">
+          <article><small>À VENIR</small><h3>Les dernières informations de RADIO CIWARA</h3><p>Cette rubrique accueillera les actualités et communiqués de la radio.</p></article>
+          <article><small>À VENIR</small><h3>Culture, éducation et santé</h3><p>Retrouvez prochainement nos contenus et informations de proximité.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <div class="container contact">
+        <div>
+          <p class="eyebrow">📞 CONTACT</p>
+          <h2>Parlons avec RADIO CIWARA</h2>
+          <p>Ajoutez ici le numéro de téléphone, WhatsApp, l'adresse et les réseaux sociaux officiels de la radio.</p>
+        </div>
+        <div class="contact-box">
+          <p><strong>RADIO CIWARA 105.5 FM</strong></p>
+          <p>🇲🇱 Mali</p>
+          <p>📞 Téléphone : à compléter</p>
+          <p>📱 WhatsApp : à compléter</p>
+          <p>✉️ E-mail : à compléter</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© <span id="year"></span> RADIO CIWARA 105.5 FM — Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
