@@ -1,5 +1,5 @@
 // URL du flux radio : à remplacer par l'URL réelle du streaming de RADIO CIWARA.
-const STREAM_URL = "STREAM_URL_A_COMPLETER";
+const STREAM_URL = "https://ciwarafm.radio12345.com";
 
 const player = document.getElementById("radioPlayer");
 const listenBtn = document.getElementById("listenBtn");
