@@ -10,32 +10,7 @@
   --white: #ffffff;
   --border: #ead9df;
 }
-.live-buttons {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
 
-.btn-ios {
-  background: #111;
-  color: white;
-  text-decoration: none;
-}
-
-.btn-ios:hover {
-  opacity: 0.85;
-}
-
-@media (max-width: 600px) {
-  .live-buttons {
-    flex-direction: column;
-  }
-
-  .live-buttons .btn {
-    width: 100%;
-    text-align: center;
-  }
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -70,7 +45,32 @@ h2 { font-size: clamp(1.8rem, 4vw, 2.7rem); margin: 0 0 24px; }
 .live-dot { display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 800; color: var(--wine); }
 .live-dot span { width: 9px; height: 9px; border-radius: 50%; background: var(--wine); animation: pulse 1.2s infinite; }
 @keyframes pulse { 50% { opacity: .35; transform: scale(.75); } }
+.live-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
 
+.btn-ios {
+  background: #111;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-ios:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+  .live-buttons {
+    flex-direction: column;
+  }
+
+  .live-buttons .btn {
+    width: 100%;
+    text-align: center;
+  }
 .section { padding: 78px 0; }
 .section-alt { background: #fff8fa; }
 .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
