@@ -1,31 +1,42 @@
 // URL du flux radio : à remplacer par l'URL réelle du streaming de RADIO CIWARA.
-const STREAM_URL = "https://ciwarafm.radio12345.com";
-
-const player = document.getElementById("radioPlayer");
+const radioPlayer = document.getElementById("radioPlayer");
 const listenBtn = document.getElementById("listenBtn");
-const status = document.getElementById("playerStatus");
+const playerStatus = document.getElementById("playerStatus");
 
-listenBtn.addEventListener("click", async () => {
-  if (STREAM_URL === "STREAM_URL_A_COMPLETER") {
-    status.textContent = "Le flux radio n'est pas encore configuré. Envoie-moi l'URL du streaming.";
-    return;
-  }
+listenBtn.addEventListener("click", function () {
 
-  player.src = STREAM_URL;
+    if (radioPlayer.paused) {
 
-  try {
-    await player.play();
-    listenBtn.textContent = "⏸ Mettre en pause";
-    status.textContent = "Vous écoutez RADIO CIWARA 105.5 FM en direct.";
-  } catch (error) {
-    status.textContent = "Impossible de démarrer automatiquement le flux. Utilise le lecteur ci-dessous.";
-  }
+        radioPlayer.play()
+            .then(() => {
+                listenBtn.textContent = "⏸ Pause";
+                playerStatus.textContent = "🔴 RADIO CIWARA 105.5 FM — EN DIRECT";
+            })
+            .catch((error) => {
+                console.error(error);
+                playerStatus.textContent =
+                    "❌ Impossible de démarrer la radio.";
+            });
+
+    } else {
+
+        radioPlayer.pause();
+
+        listenBtn.textContent = "▶ Écouter en direct";
+        playerStatus.textContent = "Radio en pause.";
+    }
 });
 
-player.addEventListener("pause", () => {
-  if (STREAM_URL !== "STREAM_URL_A_COMPLETER") {
+radioPlayer.addEventListener("playing", function () {
+    playerStatus.textContent =
+        "🔴 RADIO CIWARA 105.5 FM — EN DIRECT";
+});
+
+radioPlayer.addEventListener("pause", function () {
     listenBtn.textContent = "▶ Écouter en direct";
-  }
 });
 
-document.getElementById("year").textContent = new Date().getFullYear();
+radioPlayer.addEventListener("error", function () {
+    playerStatus.textContent =
+        "❌ Le flux radio est momentanément indisponible.";
+});
