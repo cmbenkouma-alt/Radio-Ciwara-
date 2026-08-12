@@ -10,7 +10,33 @@
   --white: #ffffff;
   --border: #ead9df;
 }
+.live-buttons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
 
+.btn-ios {
+  background: #111;
+  color: white;
+  text-decoration: none;
+}
+
+.btn-ios:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 600px) {
+  .live-buttons {
+    flex-direction: column;
+  }
+
+  .live-buttons .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; font-family: Inter, Arial, sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; }
