@@ -30,9 +30,19 @@
           <p class="eyebrow">📻 RADIO CIWARA</p>
           <h1>Votre voix, votre radio.</h1>
           <p class="lead">Retrouvez RADIO CIWARA 105.5 FM en direct, vos émissions, vos actualités et toute l'information de proximité.</p>
-          <button id="listenBtn" class="btn btn-primary">▶ Écouter en direct</button>
-          <p id="playerStatus" class="status">Le flux radio sera activé dès que l'URL du streaming sera configurée.</p>
-        </div>
+          <button id="listenBtn" class="btn btn-primary">
+  ▶ Écouter en direct
+</button>
+
+<p id="playerStatus" class="status">
+  🔴 Cliquez sur « Écouter en direct » pour écouter Radio Ciwara.
+</p>
+
+<audio
+  id="radioPlayer"
+  preload="none"
+  src="https://uk5freenew.listen2myradio.com/live.mp3?typeportmount=s1_35628_stream_604824813">
+</audio>
 
         <div class="player-card">
           <div class="live-dot"><span></span> EN DIRECT</div>
