@@ -41,3 +41,30 @@
     gap:9px
   }
 }
+.partner-mini {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  padding-right: 4px;
+}
+
+.partner-mini span {
+  font-size: 7px;
+  letter-spacing: .1em;
+  color: #999;
+  font-weight: 900;
+}
+
+.partner-mini img {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+@media (max-width: 1000px) {
+  .partner-mini {
+    display: none;
+  }
+}
