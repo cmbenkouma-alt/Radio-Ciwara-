@@ -10,12 +10,12 @@ listenBtn.addEventListener("click", function () {
         radioPlayer.play()
             .then(() => {
                 listenBtn.textContent = "⏸ Pause";
-                playerStatus.textContent = "🔴 RADIO CIWARA 105.5 FM — EN DIRECT";
+                playerStatus.textContent = "RADIO CIWARA 105.5 FM — EN DIRECT";
             })
             .catch((error) => {
                 console.error(error);
                 playerStatus.textContent =
-                    "❌ Impossible de démarrer la radio.";
+                    "Impossible de démarrer la radio.";
             });
 
     } else {
