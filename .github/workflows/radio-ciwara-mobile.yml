@@ -40,6 +40,10 @@ jobs:
         working-directory: mobile
         run: flutter create --platforms=android .
 
+      - name: Remove generated placeholder test
+        working-directory: mobile
+        run: rm -f test/widget_test.dart
+
       - name: Install dependencies
         working-directory: mobile
         run: flutter pub get
@@ -85,6 +89,10 @@ jobs:
         working-directory: mobile
         run: flutter create --platforms=ios .
 
+      - name: Remove generated placeholder test
+        working-directory: mobile
+        run: rm -f test/widget_test.dart
+
       - name: Install dependencies
         working-directory: mobile
         run: flutter pub get
@@ -92,6 +100,10 @@ jobs:
       - name: Analyze
         working-directory: mobile
         run: flutter analyze
+
+      - name: Run tests
+        working-directory: mobile
+        run: flutter test
 
       - name: Prepare iOS release build
         working-directory: mobile
