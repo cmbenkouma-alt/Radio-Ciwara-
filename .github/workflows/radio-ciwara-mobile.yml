@@ -1,0 +1,41 @@
+name: Radio Ciwara Mobile
+
+on:
+  push:
+    branches: [app-foundation]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/radio-ciwara-mobile.yml'
+  pull_request:
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/radio-ciwara-mobile.yml'
+
+jobs:
+  analyze-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Generate Android/iOS platform files
+        working-directory: mobile
+        run: flutter create --platforms=android,ios .
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+
+      - name: Analyze
+        working-directory: mobile
+        run: flutter analyze
+
+      - name: Build Android debug APK
+        working-directory: mobile
+        run: flutter build apk --debug
