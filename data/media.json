@@ -1,0 +1,5 @@
+{
+  "radio": {"name":"Radio Ciwara","frequency":"105.5 FM","city":"Bamako","country":"Mali"},
+  "ciwaraTv": {"enabled":true,"status":"source_provisoire","channelUrl":"","note":"Ajouter l'URL officielle YouTube de Ciwara TV pour activer les vidéos réelles."},
+  "ciwaraInfo": {"enabled":true,"status":"source_provisoire","sourceUrl":"","note":"Ajouter la source officielle de Ciwara Info pour ne publier que ses actualités."}
+}
