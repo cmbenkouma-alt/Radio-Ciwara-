@@ -1,0 +1,32 @@
+{
+  "station": {
+    "name": "Radio Ciwara",
+    "frequency": "105.5 FM",
+    "frequencyMHz": 105.5,
+    "city": "Bamako",
+    "country": "Mali"
+  },
+  "live": {
+    "casterPublicToken": "236f6884-9ad2-465f-a29e-5f349a8dac8e",
+    "streamUrl": "https://uk5freenew.listen2myradio.com/live.mp3?typeportmount=s1_35628_stream_416941156",
+    "mobilePlayerUrl": "https://ciwarafm.radio12345.com/"
+  },
+  "news": {
+    "sources": [
+      {
+        "name": "Maliweb",
+        "feed": "https://www.maliweb.net/rss/latest-posts",
+        "site": "https://www.maliweb.net/"
+      },
+      {
+        "name": "Malijet",
+        "feed": "https://malijet.com/rss",
+        "site": "https://malijet.com/"
+      }
+    ]
+  },
+  "schedule": {
+    "status": "awaiting_official_schedule_image",
+    "sourceOfTruth": "programme-tableau-fourni-par-radio-ciwara"
+  }
+}
