@@ -4,23 +4,41 @@ Application mobile officielle de Radio Ciwara 105.5 FM.
 
 ## État du projet
 
-Phase 1 : fondation du projet et lecteur Live Broadcast.
+La branche `app-foundation` contient la première base Flutter de l'application :
 
-- Android + iOS via Flutter
-- Lecteur audio direct basé sur le flux actuellement utilisé par le site
-- Identité visuelle Radio Ciwara
-- Première interface Direct
+- lecteur Live basé sur le flux actuellement utilisé par le site ;
+- identité visuelle Radio Ciwara ;
+- écran Direct ;
+- navigation Direct / Grille / Podcasts / Actus / Contact ;
+- gestion connexion, lecture, pause et erreur du flux ;
+- structure Material 3 adaptée aux écrans mobiles Android et iOS.
 
-## Flux actuel
+## Flux live
 
-Le lecteur utilise le même flux configuré dans le site Radio Ciwara. La valeur est centralisée dans `lib/main.dart` afin de pouvoir remplacer facilement le fournisseur plus tard.
+Le flux est centralisé dans `lib/main.dart` afin de pouvoir remplacer facilement le fournisseur plus tard.
+
+## Développement local
+
+Depuis le dossier `mobile` :
+
+```bash
+flutter create .
+flutter pub get
+flutter run
+```
+
+Pour Android :
+
+```bash
+flutter build apk --release
+```
 
 ## Prochaines étapes
 
-1. Ajouter les 10 écrans de l'application.
-2. Extraire les couleurs, logos et ressources en assets locaux.
-3. Ajouter la lecture en arrière-plan et les contrôles écran verrouillé.
-4. Connecter les actualités/RSS du site.
-5. Ajouter programmes, podcasts, dédicaces et contact.
-6. Ajouter les liens Play Store / App Store.
-7. Mettre en place le build Android et iOS.
+1. Finaliser les 10 écrans issus des maquettes Radio Ciwara.
+2. Ajouter les données réelles du site : actualités/RSS, grille et podcasts.
+3. Ajouter les actions WhatsApp, appel, dédicace et site Web.
+4. Ajouter la lecture en arrière-plan et les contrôles multimédias.
+5. Ajouter splash screen, icône et métadonnées Android/iOS.
+6. Tester sur plusieurs téléphones Android et iPhone.
+7. Générer l'APK/AAB et préparer la publication Play Store / App Store.
