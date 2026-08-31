@@ -1,6 +1,7 @@
 name: Radio Ciwara Mobile
 
 on:
+  workflow_dispatch:
   push:
     branches: [app-foundation]
     paths:
@@ -29,41 +30,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
-
       - name: Generate Android platform files
         working-directory: mobile
         run: flutter create --platforms=android .
-
       - name: Remove generated placeholder test
         working-directory: mobile
         run: rm -f test/widget_test.dart
-
       - name: Install dependencies
         working-directory: mobile
         run: flutter pub get
-
       - name: Analyze
         working-directory: mobile
         run: flutter analyze
-
       - name: Run tests
         working-directory: mobile
         run: flutter test
-
       - name: Build Android release App Bundle
         working-directory: mobile
         run: flutter build appbundle --release
-
       - name: Build Android release APK
         working-directory: mobile
         run: flutter build apk --release
-
       - name: Upload Android release artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -78,33 +70,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
-
       - name: Generate iOS platform files
         working-directory: mobile
         run: flutter create --platforms=ios .
-
       - name: Remove generated placeholder test
         working-directory: mobile
         run: rm -f test/widget_test.dart
-
       - name: Install dependencies
         working-directory: mobile
         run: flutter pub get
-
       - name: Analyze
         working-directory: mobile
         run: flutter analyze
-
       - name: Run tests
         working-directory: mobile
         run: flutter test
-
       - name: Prepare iOS release build
         working-directory: mobile
         run: flutter build ios --release --no-codesign
@@ -114,7 +99,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Validate required site files
         run: |
           test -s index.html
@@ -124,16 +108,13 @@ jobs:
           test -s data/schedule.json
           test -s ciwara-tv.html
           test -s ciwara-info.html
-
       - name: Validate HTML structure
         run: |
           python - <<'PY'
           from html.parser import HTMLParser
           from pathlib import Path
-
           class Parser(HTMLParser):
               pass
-
           for path in [Path('index.html'), Path('ciwara-tv.html'), Path('ciwara-info.html')]:
               Parser().feed(path.read_text(encoding='utf-8'))
               print(f'OK: {path}')
