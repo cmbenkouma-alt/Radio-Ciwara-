@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:just_audio/just_audio.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
-const streamUrl = 'https://uk5freenew.listen2myradio.com/live.mp3?typeportmount=s1_35628_stream_416941156';
+const casterPublicToken = '236f6884-9ad2-465f-a29e-5f349a8dac8e';
 const logoUrl = 'https://raw.githubusercontent.com/cmbenkouma-alt/Radio-Ciwara-/main/logo.jpg';
 
 void main() => runApp(const RadioCiwaraApp());
@@ -37,62 +37,17 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _index = 0;
-  final AudioPlayer _player = AudioPlayer();
-  bool _loading = false;
-  String _status = 'Prêt à écouter la radio';
 
   final _titles = const ['Direct', 'Grille', 'Podcasts', 'Actus', 'Contact'];
 
-  Future<void> _toggleLive() async {
-    if (_player.playing) {
-      await _player.pause();
-      if (mounted) setState(() => _status = 'Lecture en pause');
-      return;
-    }
-
-    setState(() {
-      _loading = true;
-      _status = 'Connexion au direct…';
-    });
-
-    try {
-      await _player.setUrl(streamUrl);
-      await _player.play();
-      if (mounted) {
-        setState(() {
-          _loading = false;
-          _status = '🔴 Radio Ciwara 105.5 FM — EN DIRECT';
-        });
-      }
-    } catch (_) {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-          _status = 'Flux momentanément indisponible';
-        });
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _player.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      DirectScreen(
-        playing: _player.playing,
-        loading: _loading,
-        status: _status,
-        onToggle: _toggleLive,
-      ),
-      const ScheduleScreen(),
-      const PodcastsScreen(),
-      const NewsScreen(),
-      const ContactScreen(),
+    final pages = const [
+      DirectScreen(),
+      ScheduleScreen(),
+      PodcastsScreen(),
+      NewsScreen(),
+      ContactScreen(),
     ];
 
     return Scaffold(
@@ -128,22 +83,43 @@ class _AppShellState extends State<AppShell> {
           NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Contact'),
         ],
       ),
-      floatingActionButton: _index == 0 ? null : FloatingActionButton.extended(
-        onPressed: _toggleLive,
-        icon: Icon(_player.playing ? Icons.pause : Icons.play_arrow),
-        label: Text(_player.playing ? 'Pause' : 'Direct'),
-      ),
+      floatingActionButton: _index == 0
+          ? null
+          : FloatingActionButton.extended(
+              onPressed: () => setState(() => _index = 0),
+              icon: const Icon(Icons.radio),
+              label: const Text('Direct'),
+            ),
     );
   }
 }
 
-class DirectScreen extends StatelessWidget {
-  final bool playing;
-  final bool loading;
-  final String status;
-  final VoidCallback onToggle;
+class DirectScreen extends StatefulWidget {
+  const DirectScreen({super.key});
 
-  const DirectScreen({super.key, required this.playing, required this.loading, required this.status, required this.onToggle});
+  @override
+  State<DirectScreen> createState() => _DirectScreenState();
+}
+
+class _DirectScreenState extends State<DirectScreen> {
+  late final WebViewController _controller;
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFF120108))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (_) {
+            if (mounted) setState(() => _loaded = true);
+          },
+        ),
+      )
+      ..loadHtmlString(_casterHtml);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,31 +129,45 @@ class DirectScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [Color(0xFF8E0034), Color(0xFF28000F)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF8E0034), Color(0xFF28000F)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             borderRadius: BorderRadius.circular(30),
           ),
           child: Column(
             children: [
-              Align(alignment: Alignment.centerLeft, child: Text(playing ? '● EN DIRECT' : '● HORS LIGNE', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800))),
-              const SizedBox(height: 28),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('🔴 EN DIRECT', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
+              ),
+              const SizedBox(height: 22),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white24, width: 3)),
-                child: ClipOval(child: Image.network(logoUrl, width: 190, height: 190, fit: BoxFit.cover)),
+                child: ClipOval(child: Image.network(logoUrl, width: 150, height: 150, fit: BoxFit.cover)),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
               const Text('RADIO CIWARA', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
               const SizedBox(height: 4),
               const Text('FM 105.5 MHz • Bamako, Mali', style: TextStyle(fontWeight: FontWeight.w700)),
               const SizedBox(height: 8),
-              const Text('Direct Studio FM (HD Live)', style: TextStyle(color: Colors.white70)),
-              const SizedBox(height: 24),
-              Text(status, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white70)),
-              const SizedBox(height: 20),
-              FilledButton(
-                onPressed: loading ? null : onToggle,
-                style: FilledButton.styleFrom(shape: const CircleBorder(), padding: const EdgeInsets.all(25)),
-                child: loading ? const SizedBox(width: 32, height: 32, child: CircularProgressIndicator(strokeWidth: 3)) : Icon(playing ? Icons.pause : Icons.play_arrow, size: 44),
+              const Text('Lecteur officiel Caster.fm', style: TextStyle(color: Colors.white70)),
+              const SizedBox(height: 18),
+              SizedBox(
+                height: 250,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: Stack(
+                    children: [
+                      WebViewWidget(controller: _controller),
+                      if (!_loaded)
+                        const Center(child: CircularProgressIndicator()),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -199,30 +189,60 @@ class DirectScreen extends StatelessWidget {
   }
 }
 
+const _casterHtml = '''
+<!doctype html>
+<html lang="fr">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+html,body{margin:0;padding:0;background:#120108;color:#fff;font-family:Arial,sans-serif;min-height:100%;overflow:hidden}
+.wrap{padding:4px;box-sizing:border-box}
+.cstrEmbed{width:100%;min-height:230px}
+a{color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="cstrEmbed" data-type="newStreamPlayer" data-publicToken="$casterPublicToken" data-theme="light" data-color="D4145A" data-channelId="" data-rendered="false">
+<a href="https://www.caster.fm">Shoutcast Hosting</a>
+<a href="https://www.caster.fm">Stream Hosting</a>
+<a href="https://www.caster.fm">Radio Server Hosting</a>
+</div>
+</div>
+<script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
+</body>
+</html>
+''';
+
 class _QuickCard extends StatelessWidget {
   final IconData icon;
   final String title;
   const _QuickCard({required this.icon, required this.title});
   @override
-  Widget build(BuildContext context) => Card(child: Padding(padding: const EdgeInsets.symmetric(vertical: 16), child: Column(children: [Icon(icon), const SizedBox(height: 7), Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700))])));
+  Widget build(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(children: [Icon(icon), const SizedBox(height: 7), Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700))]),
+        ),
+      );
 }
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
   @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Grille des programmes', subtitle: 'Retrouvez les rendez-vous de Radio Ciwara 105.5 FM.', items: ['La Matinale Ciwara', 'La voix de Ciwara', 'Ciwara Music', 'Ciwara Infos']);
+  Widget build(BuildContext context) => const _SectionPage(title: 'Grille des programmes', subtitle: 'Les programmes seront reliés aux données réelles du site.', items: ['Données à connecter', 'Grille hebdomadaire', 'Émission en cours']);
 }
 
 class PodcastsScreen extends StatelessWidget {
   const PodcastsScreen({super.key});
   @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Podcasts', subtitle: 'Réécoutez les meilleurs moments de l’antenne.', items: ['Les rendez-vous de Ciwara', 'La voix de la communauté', 'Ciwara Infos']);
+  Widget build(BuildContext context) => const _SectionPage(title: 'Podcasts', subtitle: 'Les podcasts seront reliés aux sources réelles de Radio Ciwara.', items: ['Catalogue des podcasts', 'Dernières émissions', 'Réécouter']);
 }
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({super.key});
   @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Actualités', subtitle: 'Les informations, événements et sujets de votre communauté.', items: ['À la une de Ciwara', 'Culture et vie locale', 'Les voix de Ciwara']);
+  Widget build(BuildContext context) => const _SectionPage(title: 'Actualités', subtitle: 'Les flux RSS et contenus réels seront connectés à cette section.', items: ['À la une', 'Actualités locales', 'Radio Ciwara']);
 }
 
 class ContactScreen extends StatelessWidget {
@@ -237,5 +257,21 @@ class _SectionPage extends StatelessWidget {
   final List<String> items;
   const _SectionPage({required this.title, required this.subtitle, required this.items});
   @override
-  Widget build(BuildContext context) => ListView(padding: const EdgeInsets.all(20), children: [Text(title, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900)), const SizedBox(height: 8), Text(subtitle, style: const TextStyle(color: Colors.white70)), const SizedBox(height: 22), ...items.map((item) => Card(margin: const EdgeInsets.only(bottom: 12), child: ListTile(leading: const CircleAvatar(child: Icon(Icons.play_arrow)), title: Text(item, style: const TextStyle(fontWeight: FontWeight.w700)), trailing: const Icon(Icons.chevron_right))))]);
+  Widget build(BuildContext context) => ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Text(title, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
+          const SizedBox(height: 8),
+          Text(subtitle, style: const TextStyle(color: Colors.white70)),
+          const SizedBox(height: 22),
+          ...items.map((item) => Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                child: ListTile(
+                  leading: const CircleAvatar(child: Icon(Icons.chevron_right)),
+                  title: Text(item, style: const TextStyle(fontWeight: FontWeight.w700)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                ),
+              )),
+        ],
+      );
 }
