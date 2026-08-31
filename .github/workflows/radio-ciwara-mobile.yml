@@ -5,10 +5,22 @@ on:
     branches: [app-foundation]
     paths:
       - 'mobile/**'
+      - 'index.html'
+      - 'style.css'
+      - 'script.js'
+      - 'ciwara-tv.html'
+      - 'ciwara-info.html'
+      - 'data/**'
       - '.github/workflows/radio-ciwara-mobile.yml'
   pull_request:
     paths:
       - 'mobile/**'
+      - 'index.html'
+      - 'style.css'
+      - 'script.js'
+      - 'ciwara-tv.html'
+      - 'ciwara-info.html'
+      - 'data/**'
       - '.github/workflows/radio-ciwara-mobile.yml'
 
 jobs:
