@@ -11,7 +11,7 @@ function setPlaying(playing) {
   });
   if (playIcon) playIcon.textContent = playing ? '❚❚' : '▶';
   if (playText) playText.textContent = playing ? 'ARRÊTER LE DIRECT' : 'ÉCOUTER EN DIRECT';
-  if (status) status.textContent = playing ? '🔴 Radio Ciwara est en direct' : 'Prêt à écouter la radio';
+  if (status) status.textContent = playing ? '🔴 Radio Ciwara 105.5 FM est en direct' : 'Prêt à écouter la radio';
 }
 
 buttons.forEach((button) => {
@@ -27,7 +27,8 @@ buttons.forEach((button) => {
       }
     } catch (error) {
       console.error('Lecture du direct impossible:', error);
-      if (status) status.textContent = 'Le direct est momentanément indisponible.';
+      setPlaying(false);
+      if (status) status.textContent = 'Le direct est momentanément indisponible. Réessayez dans quelques instants.';
     }
   });
 });
@@ -37,7 +38,7 @@ audio.addEventListener('pause', () => setPlaying(false));
 audio.addEventListener('ended', () => setPlaying(false));
 audio.addEventListener('error', () => {
   setPlaying(false);
-  if (status) status.textContent = 'Le direct est momentanément indisponible.';
+  if (status) status.textContent = 'Le direct est momentanément indisponible. Réessayez dans quelques instants.';
 });
 
 document.getElementById('year').textContent = new Date().getFullYear();
@@ -51,6 +52,15 @@ if (hamburger && nav) {
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+}
+
+function safeUrl(value) {
+  try {
+    const url = new URL(value, window.location.href);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '#';
+  } catch (_) {
+    return '#';
+  }
 }
 
 function formatNewsDate(value) {
@@ -78,7 +88,7 @@ async function loadNews() {
       <span>À LA UNE • ${escapeHtml(lead.source)}</span>
       <h3>${escapeHtml(lead.title)}</h3>
       <p>${escapeHtml(lead.description || 'Actualité du Mali à retrouver sur la source originale.')}</p>
-      <a href="${escapeHtml(lead.link)}" target="_blank" rel="noopener noreferrer">Lire l'article →</a>
+      <a href="${escapeHtml(safeUrl(lead.link))}" target="_blank" rel="noopener noreferrer">Lire l'article →</a>
     </div>`;
 
   column.innerHTML = items.slice(1, 7).map((item, index) => `
@@ -86,10 +96,31 @@ async function loadNews() {
       <time>${String(index + 1).padStart(2, '0')}</time>
       <div>
         <span>${escapeHtml(item.source)}${item.date ? ` • ${escapeHtml(formatNewsDate(item.date))}` : ''}</span>
-        <h3><a href="${escapeHtml(item.link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h3>
+        <h3><a href="${escapeHtml(safeUrl(item.link))}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a></h3>
         <p>${escapeHtml(item.description || '')}</p>
       </div>
     </article>`).join('');
 }
 
+async function loadSchedule() {
+  const response = await fetch('data/schedule.json', { cache: 'no-store' });
+  if (!response.ok) throw new Error(`schedule.json: ${response.status}`);
+  const data = await response.json();
+  const container = document.querySelector('.schedule');
+  if (!container || !Array.isArray(data.days)) return;
+
+  const allItems = data.days.flatMap((day) => day.items.map((item) => ({ ...item, day: day.day })));
+  container.innerHTML = allItems.slice(0, 4).map((item) => `
+    <article class="show-card">
+      <div class="show-image">🎙</div>
+      <div class="show-content">
+        <small>${escapeHtml(item.day)} • ${escapeHtml(item.time)}</small>
+        <h3>${escapeHtml(item.title)}</h3>
+        <p>${escapeHtml(item.description)}</p>
+        <strong>${data.status === 'provisional' ? 'GRILLE PROVISOIRE' : 'PROGRAMME'}</strong>
+      </div>
+    </article>`).join('');
+}
+
 loadNews().catch((error) => console.warn('Actualités RSS indisponibles:', error));
+loadSchedule().catch((error) => console.warn('Grille indisponible:', error));
