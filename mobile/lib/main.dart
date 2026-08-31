@@ -1,277 +1,61 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
 const casterPublicToken = '236f6884-9ad2-465f-a29e-5f349a8dac8e';
-const logoUrl = 'https://raw.githubusercontent.com/cmbenkouma-alt/Radio-Ciwara-/main/logo.jpg';
+const streamUrl = 'https://uk5freenew.listen2myradio.com/live.mp3?typeportmount=s1_35628_stream_416941156';
+const siteBase = 'https://raw.githubusercontent.com/cmbenkouma-alt/Radio-Ciwara-/app-foundation/';
+const logoUrl = '${siteBase}logo.jpg';
+const newsUrl = '${siteBase}data/news.json';
+const scheduleUrl = '${siteBase}data/schedule.json';
+const youtubeChannelUrl = 'https://www.youtube.com/';
 
 void main() => runApp(const RadioCiwaraApp());
 
 class RadioCiwaraApp extends StatelessWidget {
   const RadioCiwaraApp({super.key});
-
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Radio Ciwara 105.5 FM',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF120108),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFFD4145A),
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-      home: const AppShell(),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'Radio Ciwara 105.5 FM',
+    theme: ThemeData(useMaterial3: true, brightness: Brightness.dark, colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFD4145A), brightness: Brightness.dark)),
+    home: const AppShell(),
+  );
 }
 
-class AppShell extends StatefulWidget {
-  const AppShell({super.key});
-
-  @override
-  State<AppShell> createState() => _AppShellState();
-}
-
+class AppShell extends StatefulWidget { const AppShell({super.key}); @override State<AppShell> createState() => _AppShellState(); }
 class _AppShellState extends State<AppShell> {
-  int _index = 0;
-
-  final _titles = const ['Direct', 'Grille', 'Podcasts', 'Actus', 'Contact'];
-
+  int index = 0;
+  final pages = const [DirectScreen(), ScheduleScreen(), PodcastsScreen(), NewsScreen(), MoreScreen()];
   @override
-  Widget build(BuildContext context) {
-    final pages = const [
-      DirectScreen(),
-      ScheduleScreen(),
-      PodcastsScreen(),
-      NewsScreen(),
-      ContactScreen(),
-    ];
-
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        titleSpacing: 16,
-        title: Row(
-          children: [
-            ClipOval(child: Image.network(logoUrl, width: 42, height: 42, fit: BoxFit.cover)),
-            const SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('CIWARA', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1)),
-                Text('105.5 FM • Bamako', style: Theme.of(context).textTheme.labelSmall),
-              ],
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share_outlined)),
-        ],
-      ),
-      body: pages[_index],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (value) => setState(() => _index = value),
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.radio_outlined), selectedIcon: Icon(Icons.radio), label: 'Direct'),
-          NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label: 'Grille'),
-          NavigationDestination(icon: Icon(Icons.podcasts_outlined), selectedIcon: Icon(Icons.podcasts), label: 'Podcasts'),
-          NavigationDestination(icon: Icon(Icons.newspaper_outlined), selectedIcon: Icon(Icons.newspaper), label: 'Actus'),
-          NavigationDestination(icon: Icon(Icons.favorite_border), selectedIcon: Icon(Icons.favorite), label: 'Contact'),
-        ],
-      ),
-      floatingActionButton: _index == 0
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: () => setState(() => _index = 0),
-              icon: const Icon(Icons.radio),
-              label: const Text('Direct'),
-            ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Row(children: [ClipOval(child: Image.network(logoUrl, width: 42, height: 42, fit: BoxFit.cover, errorBuilder: (_,__,___)=>const Icon(Icons.radio))), const SizedBox(width: 10), const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('CIWARA', style: TextStyle(fontWeight: FontWeight.w900)), Text('105.5 FM • Bamako', style: TextStyle(fontSize: 11))])])),
+    body: pages[index],
+    bottomNavigationBar: NavigationBar(selectedIndex: index, onDestinationSelected: (i)=>setState(()=>index=i), destinations: const [NavigationDestination(icon: Icon(Icons.radio_outlined), selectedIcon: Icon(Icons.radio), label:'Direct'), NavigationDestination(icon: Icon(Icons.calendar_month_outlined), selectedIcon: Icon(Icons.calendar_month), label:'Grille'), NavigationDestination(icon: Icon(Icons.podcasts_outlined), selectedIcon: Icon(Icons.podcasts), label:'Podcasts'), NavigationDestination(icon: Icon(Icons.newspaper_outlined), selectedIcon: Icon(Icons.newspaper), label:'Actus'), NavigationDestination(icon: Icon(Icons.menu), label:'Plus')]),
+    floatingActionButton: index == 0 ? null : FloatingActionButton.extended(onPressed: ()=>setState(()=>index=0), icon: const Icon(Icons.radio), label: const Text('Direct')),
+  );
 }
 
-class DirectScreen extends StatefulWidget {
-  const DirectScreen({super.key});
-
-  @override
-  State<DirectScreen> createState() => _DirectScreenState();
-}
-
+class DirectScreen extends StatefulWidget { const DirectScreen({super.key}); @override State<DirectScreen> createState()=>_DirectScreenState(); }
 class _DirectScreenState extends State<DirectScreen> {
-  late final WebViewController _controller;
-  bool _loaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0xFF120108))
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageFinished: (_) {
-            if (mounted) setState(() => _loaded = true);
-          },
-        ),
-      )
-      ..loadHtmlString(_casterHtml);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(18, 8, 18, 28),
-      children: [
-        Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF8E0034), Color(0xFF28000F)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Column(
-            children: [
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text('🔴 EN DIRECT', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800)),
-              ),
-              const SizedBox(height: 22),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.white24, width: 3)),
-                child: ClipOval(child: Image.network(logoUrl, width: 150, height: 150, fit: BoxFit.cover)),
-              ),
-              const SizedBox(height: 20),
-              const Text('RADIO CIWARA', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
-              const SizedBox(height: 4),
-              const Text('FM 105.5 MHz • Bamako, Mali', style: TextStyle(fontWeight: FontWeight.w700)),
-              const SizedBox(height: 8),
-              const Text('Lecteur officiel Caster.fm', style: TextStyle(color: Colors.white70)),
-              const SizedBox(height: 18),
-              SizedBox(
-                height: 250,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: Stack(
-                    children: [
-                      WebViewWidget(controller: _controller),
-                      if (!_loaded)
-                        const Center(child: CircularProgressIndicator()),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 18),
-        Row(
-          children: const [
-            Expanded(child: _QuickCard(icon: Icons.chat, title: 'WhatsApp')),
-            SizedBox(width: 10),
-            Expanded(child: _QuickCard(icon: Icons.phone, title: 'Appeler')),
-            SizedBox(width: 10),
-            Expanded(child: _QuickCard(icon: Icons.favorite, title: 'Dédicace')),
-          ],
-        ),
-        const SizedBox(height: 22),
-        const Text('Votre voix, votre radio, votre communauté.', textAlign: TextAlign.center, style: TextStyle(color: Colors.white70)),
-      ],
-    );
-  }
+  late final WebViewController controller; bool loaded=false;
+  @override void initState(){super.initState(); controller=WebViewController()..setJavaScriptMode(JavaScriptMode.unrestricted)..setBackgroundColor(const Color(0xFF120108))..setNavigationDelegate(NavigationDelegate(onPageFinished:(_){if(mounted)setState(()=>loaded=true);} ))..loadHtmlString(_casterHtml);}
+  @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(18),children:[Container(padding:const EdgeInsets.all(24),decoration:BoxDecoration(gradient:const LinearGradient(colors:[Color(0xFF8E0034),Color(0xFF28000F)]),borderRadius:BorderRadius.circular(28)),child:Column(children:[const Text('🔴 EN DIRECT',style:TextStyle(fontWeight:FontWeight.w800)),const SizedBox(height:18),ClipOval(child:Image.network(logoUrl,width:150,height:150,fit:BoxFit.cover,errorBuilder:(_,__,___)=>const Icon(Icons.radio,size:100))),const SizedBox(height:16),const Text('RADIO CIWARA',style:TextStyle(fontSize:30,fontWeight:FontWeight.w900)),const Text('105.5 FM • Bamako, Mali',style:TextStyle(fontWeight:FontWeight.w700)),const SizedBox(height:18),SizedBox(height:250,width:double.infinity,child:ClipRRect(borderRadius:BorderRadius.circular(18),child:Stack(children:[WebViewWidget(controller:controller),if(!loaded)const Center(child:CircularProgressIndicator())])))])),const SizedBox(height:20),const _InfoCard(icon:Icons.volume_up,title:'Direct Radio Ciwara',text:'Écoutez le flux officiel Caster.fm.'),const _InfoCard(icon:Icons.public,title:'Radio Ciwara 105.5 FM',text:'La voix qui rassemble.')]);
 }
+const _casterHtml='''<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:#120108;color:#fff;font-family:Arial;overflow:hidden}.cstrEmbed{width:100%;min-height:230px}a{color:#fff}</style></head><body><div class="cstrEmbed" data-type="newStreamPlayer" data-publicToken="$casterPublicToken" data-theme="light" data-color="D4145A" data-channelId="" data-rendered="false"><a href="https://www.caster.fm">Radio Server Hosting</a></div><script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script></body></html>''';
 
-const _casterHtml = '''
-<!doctype html>
-<html lang="fr">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<style>
-html,body{margin:0;padding:0;background:#120108;color:#fff;font-family:Arial,sans-serif;min-height:100%;overflow:hidden}
-.wrap{padding:4px;box-sizing:border-box}
-.cstrEmbed{width:100%;min-height:230px}
-a{color:#fff}
-</style>
-</head>
-<body>
-<div class="wrap">
-<div class="cstrEmbed" data-type="newStreamPlayer" data-publicToken="$casterPublicToken" data-theme="light" data-color="D4145A" data-channelId="" data-rendered="false">
-<a href="https://www.caster.fm">Shoutcast Hosting</a>
-<a href="https://www.caster.fm">Stream Hosting</a>
-<a href="https://www.caster.fm">Radio Server Hosting</a>
-</div>
-</div>
-<script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
-</body>
-</html>
-''';
+class ScheduleScreen extends StatelessWidget { const ScheduleScreen({super.key}); @override Widget build(BuildContext context)=>FutureBuilder<String>(future:_get(scheduleUrl),builder:(c,s){if(s.connectionState==ConnectionState.waiting)return const Center(child:CircularProgressIndicator()); if(s.hasError)return const _ErrorPage(title:'Grille indisponible',text:'La grille provisoire sera remplacée par le tableau officiel de Radio Ciwara.'); final data=jsonDecode(s.data!); final days=(data['days'] as List? ?? []); return ListView(padding:const EdgeInsets.all(18),children:[const Text('Grille des programmes',style:TextStyle(fontSize:28,fontWeight:FontWeight.w900)),const SizedBox(height:6),const Text('Source provisoire — sera remplacée par la grille officielle.',style:TextStyle(color:Colors.white70)),const SizedBox(height:18),...days.map((d)=>Card(child:ExpansionTile(title:Text(d['day']??''),children:[...(d['programs'] as List? ?? []).map((p)=>ListTile(leading:const Icon(Icons.access_time),title:Text(p['title']??''),subtitle:Text('${p['start']??''} – ${p['end']??''}')))]))) ]);}); }
 
-class _QuickCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  const _QuickCard({required this.icon, required this.title});
-  @override
-  Widget build(BuildContext context) => Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          child: Column(children: [Icon(icon), const SizedBox(height: 7), Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700))]),
-        ),
-      );
-}
+class NewsScreen extends StatelessWidget { const NewsScreen({super.key}); @override Widget build(BuildContext context)=>FutureBuilder<String>(future:_get(newsUrl),builder:(c,s){if(s.connectionState==ConnectionState.waiting)return const Center(child:CircularProgressIndicator()); if(s.hasError)return const _ErrorPage(title:'Actualités indisponibles',text:'Réessayez lorsque la connexion est disponible.'); final data=jsonDecode(s.data!); final items=(data['items'] as List? ?? []); return RefreshIndicator(onRefresh:()=>_get(newsUrl),child:ListView(padding:const EdgeInsets.all(18),children:[const Text('Actualités',style:TextStyle(fontSize:28,fontWeight:FontWeight.w900)),const Text('Sources provisoires : Maliweb et Malijet',style:TextStyle(color:Colors.white70)),const SizedBox(height:16),...items.take(10).map((n)=>Card(child:ListTile(title:Text(n['title']??'',maxLines:3,overflow:TextOverflow.ellipsis),subtitle:Text(n['source']??''),trailing:const Icon(Icons.open_in_new))))]));}); }
 
-class ScheduleScreen extends StatelessWidget {
-  const ScheduleScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Grille des programmes', subtitle: 'Les programmes seront reliés aux données réelles du site.', items: ['Données à connecter', 'Grille hebdomadaire', 'Émission en cours']);
-}
+class PodcastsScreen extends StatelessWidget { const PodcastsScreen({super.key}); @override Widget build(BuildContext context)=>const _Section(title:'Podcasts',subtitle:'Espace prêt pour les vrais podcasts et replays de Radio Ciwara.',cards:[('Dernières émissions',Icons.podcasts),('Réécouter',Icons.play_circle_outline),('Archives',Icons.library_music)]); }
 
-class PodcastsScreen extends StatelessWidget {
-  const PodcastsScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Podcasts', subtitle: 'Les podcasts seront reliés aux sources réelles de Radio Ciwara.', items: ['Catalogue des podcasts', 'Dernières émissions', 'Réécouter']);
-}
+class MoreScreen extends StatelessWidget { const MoreScreen({super.key}); @override Widget build(BuildContext context)=>ListView(padding:const EdgeInsets.all(18),children:[const Text('Radio Ciwara',style:TextStyle(fontSize:28,fontWeight:FontWeight.w900)),const Text('105.5 FM • Bamako, Mali',style:TextStyle(color:Colors.white70)),const SizedBox(height:18),_MenuTile(icon:Icons.live_tv,title:'Ciwara TV',text:'Vidéos et chaîne YouTube officielle',url:youtubeChannelUrl),_MenuTile(icon:Icons.article,title:'Ciwara Info',text:'Le journal Ciwara Info',url:'https://www.google.com/search?q=Ciwara+Info+Mali'),const _MenuTile(icon:Icons.favorite,title:'Contact',text:'Contactez Radio Ciwara'),const _MenuTile(icon:Icons.language,title:'Site Web',text:'Retrouvez Radio Ciwara en ligne')]); }
 
-class NewsScreen extends StatelessWidget {
-  const NewsScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Actualités', subtitle: 'Les flux RSS et contenus réels seront connectés à cette section.', items: ['À la une', 'Actualités locales', 'Radio Ciwara']);
-}
+class _MenuTile extends StatelessWidget { final IconData icon; final String title,text; final String? url; const _MenuTile({required this.icon,required this.title,required this.text,this.url}); @override Widget build(BuildContext c)=>Card(child:ListTile(leading:Icon(icon),title:Text(title,style:const TextStyle(fontWeight:FontWeight.w800)),subtitle:Text(text),trailing:const Icon(Icons.arrow_forward_ios,size:15),onTap:()=>ScaffoldMessenger.of(c).showSnackBar(SnackBar(content:Text(url==null?'Section prête à être raccordée.':'Source : $url'))))); }
 
-class ContactScreen extends StatelessWidget {
-  const ContactScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const _SectionPage(title: 'Contact', subtitle: 'Radio Ciwara 105.5 FM • Bamako, Mali', items: ['WhatsApp', 'Appeler Radio Ciwara', 'Envoyer une dédicace', 'Visiter le site Web']);
-}
-
-class _SectionPage extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final List<String> items;
-  const _SectionPage({required this.title, required this.subtitle, required this.items});
-  @override
-  Widget build(BuildContext context) => ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Text(title, style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w900)),
-          const SizedBox(height: 8),
-          Text(subtitle, style: const TextStyle(color: Colors.white70)),
-          const SizedBox(height: 22),
-          ...items.map((item) => Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: const CircleAvatar(child: Icon(Icons.chevron_right)),
-                  title: Text(item, style: const TextStyle(fontWeight: FontWeight.w700)),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                ),
-              )),
-        ],
-      );
-}
+class _Section extends StatelessWidget { final String title,subtitle; final List<(String,IconData)> cards; const _Section({required this.title,required this.subtitle,required this.cards}); @override Widget build(BuildContext c)=>ListView(padding:const EdgeInsets.all(18),children:[Text(title,style:const TextStyle(fontSize:28,fontWeight:FontWeight.w900)),Text(subtitle,style:const TextStyle(color:Colors.white70)),const SizedBox(height:18),...cards.map((x)=>Card(child:ListTile(leading:Icon(x.$2),title:Text(x.$1),trailing:const Icon(Icons.arrow_forward_ios,size:15))))]); }
+class _InfoCard extends StatelessWidget { final IconData icon; final String title,text; const _InfoCard({required this.icon,required this.title,required this.text}); @override Widget build(BuildContext c)=>Card(child:ListTile(leading:Icon(icon),title:Text(title,style:const TextStyle(fontWeight:FontWeight.w800)),subtitle:Text(text))); }
+class _ErrorPage extends StatelessWidget { final String title,text; const _ErrorPage({required this.title,required this.text}); @override Widget build(BuildContext c)=>Center(child:Padding(padding:const EdgeInsets.all(24),child:Column(mainAxisSize:MainAxisSize.min,children:[const Icon(Icons.wifi_off,size:50),const SizedBox(height:12),Text(title,style:const TextStyle(fontSize:22,fontWeight:FontWeight.w800)),const SizedBox(height:8),Text(text,textAlign:TextAlign.center)]))); }
+Future<String> _get(String url) async { final r=await http.get(Uri.parse(url)); if(r.statusCode!=200)throw Exception('HTTP ${r.statusCode}'); return r.body; }
