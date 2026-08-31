@@ -1,0 +1,14 @@
+{
+  "status": "provisional",
+  "note": "Grille temporaire en attendant le tableau officiel Radio Ciwara. Les horaires seront remplacés dès réception de la photo officielle.",
+  "station": "Radio Ciwara 105.5 FM",
+  "days": [
+    {"day":"Lundi","items":[{"time":"06:00","title":"Matinale Ciwara","description":"Information, musique et proximité"},{"time":"12:00","title":"Ciwara Infos","description":"Actualités et informations"},{"time":"18:00","title":"La voix de Ciwara","description":"Échanges et société"}]},
+    {"day":"Mardi","items":[{"time":"06:00","title":"Matinale Ciwara","description":"Information, musique et proximité"},{"time":"12:00","title":"Ciwara Infos","description":"Actualités et informations"},{"time":"18:00","title":"La voix de Ciwara","description":"Échanges et société"}]},
+    {"day":"Mercredi","items":[{"time":"06:00","title":"Matinale Ciwara","description":"Information, musique et proximité"},{"time":"12:00","title":"Ciwara Infos","description":"Actualités et informations"},{"time":"18:00","title":"La voix de Ciwara","description":"Échanges et société"}]},
+    {"day":"Jeudi","items":[{"time":"06:00","title":"Matinale Ciwara","description":"Information, musique et proximité"},{"time":"12:00","title":"Ciwara Infos","description":"Actualités et informations"},{"time":"18:00","title":"La voix de Ciwara","description":"Échanges et société"}]},
+    {"day":"Vendredi","items":[{"time":"06:00","title":"Matinale Ciwara","description":"Information, musique et proximité"},{"time":"12:00","title":"Ciwara Infos","description":"Actualités et informations"},{"time":"18:00","title":"La voix de Ciwara","description":"Échanges et société"}]},
+    {"day":"Samedi","items":[{"time":"08:00","title":"Ciwara Week-end","description":"Musique, culture et proximité"},{"time":"12:00","title":"Ciwara Infos","description":"Actualités et informations"}]},
+    {"day":"Dimanche","items":[{"time":"09:00","title":"Ciwara Week-end","description":"Musique, culture et proximité"},{"time":"18:00","title":"La voix de Ciwara","description":"Échanges et société"}]}
+  ]
+}
