@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:radio_ciwara/main.dart';
+import 'package:radio_ciwara_app/main.dart';
 
 void main() {
   test('Radio Ciwara release configuration is wired', () {
