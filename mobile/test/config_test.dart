@@ -5,7 +5,7 @@ void main() {
   test('Radio Ciwara release configuration is wired', () {
     expect(siteBase, equals('https://ciwara-medias.ml'));
     expect(playerUrl, equals('$siteBase/radio-player.html'));
-    expect(streamUrl, startsWith('https://'));
+    expect(streamUrl, equals('https://uk5freenew.listen2myradio.com/live.mp3?typeportmount=s1_35628_stream_416941156'));
     expect(logoUrl, equals('$siteBase/assets/ciwara-logo-v2.svg'));
     expect(newsUrl, equals('$siteBase/data/news.json'));
     expect(scheduleUrl, equals('$siteBase/data/schedule.json'));
