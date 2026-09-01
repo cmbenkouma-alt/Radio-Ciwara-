@@ -2,7 +2,7 @@
   "sources": [
     {
       "name": "Maliweb",
-      "feed": "https://www.maliweb.net/rss/latest-posts",
+      "feed": "https://www.maliweb.net/feed",
       "site": "https://www.maliweb.net/",
       "enabled": true
     },
