@@ -1,8 +1,151 @@
 {
-  "generated_at": null,
-  "items": [],
-  "sources": [
-    "Maliweb",
-    "Malijet"
+  "generatedAt": "2026-09-01T00:34:30.141550+00:00",
+  "items": [
+    {
+      "title": "Energie : L'Algérie et le Niger renforcent leur partenariat stratégique pour la souveraineté énergétique de Niamey",
+      "link": "https://malijet.com/actualite_economique_du_mali/311558-energie-lalgerie-et-le-niger-renforcent-leur-partenariat.html",
+      "description": "Le ministre algérien des Hydrocarbures et le directeur général de la Société nigérienne des produits pétroliers (SONIDEP) ont officialisé, à Alger, un partenariat stratégique majeur visant à dynamiser le secteur énergétique du Niger.",
+      "date": "Mon, 31 Aug 2026 22:42:27 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Niger-Algérie : Un soutien militaire historique et une fraternité scellée au sommet",
+      "link": "https://malijet.com/a_la_une_du_mali/311557-niger-algerie-un-soutien-militaire-historique-et-une-frate.html",
+      "description": "Dans un élan de solidarité remarquable, le Président nigérien, le Général d’Armée Abdourahamane Tiani, a échangé ce lundi avec son homologue algérien, Abdelmadjid Tebboune. Au cœur de cet entretien : une gratitude profonde pour le soutien exceptionnel de l’Algérie face aux récentes tentatives de dés",
+      "date": "Mon, 31 Aug 2026 21:55:01 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Devenir investisseur : cinq compétences à construire avant de chercher la fortune",
+      "link": "https://malijet.com/lettres_ouvertes_mali/311556-devenir-investisseur-cinq-competences-a-construire-avant-d.html",
+      "description": "Cette tribune s'adresse à toutes celles et à tous ceux qui souhaitent investir, entreprendre et construire progressivement un patrimoine productif. Elle s'adresse tout particulièrement aux jeunes et aux femmes, qui représentent une force décisive pour l'avenir de nos économies et disposent devant eu",
+      "date": "Mon, 31 Aug 2026 21:34:51 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Mali : plusieurs frappes contre des positions terroristes en 48 heures",
+      "link": "https://malijet.com/actualte_dans_les_regions_du_mali/311555-mali-plusieurs-frappes-contre-des-positions-terroristes-en.html",
+      "description": "L'armée malienne a mené une série de frappes ciblées ce week-end et ce lundi dans le nord et le centre du pays, dans le cadre de l'opération Dougoukoloko.",
+      "date": "Mon, 31 Aug 2026 15:36:29 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Lutte contre le terrorisme : L’appel urgent du Président algérien à l’unité africaine",
+      "link": "https://malijet.com/a_la_une_du_mali/311554-lutte-contre-le-terrorisme-lappel-urgent-du-president-alg.html",
+      "description": "Face à la résurgence de la menace terroriste, particulièrement dans la région du Sahel, le Président algérien Abdelmadjid Tebboune a lancé, dimanche 30 août, un appel vibrant à la solidarité continentale.",
+      "date": "Mon, 31 Aug 2026 13:58:48 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Dioïla : Chaleureuse arrivée du GTIA « El Hadj Oumar TALL » sous le signe de la fraternité",
+      "link": "https://malijet.com/actualite_de_la_nation_malienne/311553-dioila-chaleureuse-arrivee-du-gtia-el-hadj-oumar-tall.html",
+      "description": "Ce dimanche, la ville de Dioïla a ouvert grand ses portes aux Forces Armées Maliennes (FAMa). Le Groupement Tactique Inter-Armes (GTIA) « El Hadj Oumar TALL », placé sous le commandement du Colonel David Poudiougou, y a officiellement pris position, porté par l'élan de solidarité d'une population dé",
+      "date": "Mon, 31 Aug 2026 13:37:35 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Mali : Décès du Général Mahamane Touré, figure militaire et diplomate",
+      "link": "https://malijet.com/a_la_une_du_mali/311552-mali-deces-du-general-mahamane-toure-figure-militaire-et.html",
+      "description": "Le Mali est en deuil. La nouvelle est tombée ce lundi 31 août. Le Général Mahamane Touré a été rappelé à Dieu.",
+      "date": "Mon, 31 Aug 2026 13:19:52 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Le Nigeria, frère et voisin, exprime sa vive inquiétude face aux tensions au Niger",
+      "link": "https://malijet.com/actualite-sur-afrique/311551-le-nigeria-frere-et-voisin-exprime-sa-vive-inquietude-face.html",
+      "description": "Les événements survenus ce week-end à Niamey n'ont pas laissé le Nigeria indifférent. De l'autre côté de la frontière, le gouvernement fédéral nigérian suit avec une attention particulière et une réelle inquiétude l'évolution de la situation politique et sécuritaire chez son voisin.",
+      "date": "Mon, 31 Aug 2026 11:36:45 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Cette fois, votons pour le football",
+      "link": "https://malijet.com/lettres_ouvertes_mali/311550-cette-fois-votons-pour-le-football.html",
+      "description": "Bientôt, les 211 fédérations qui composent la FIFA choisiront un nom : celui d’un homme ou d’une femme appelé à diriger l’organisation.",
+      "date": "Mon, 31 Aug 2026 11:22:47 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Vidéo animée exclusive : pourquoi les opérations de secours lors de la coulée de boue de Gyirong sont-elles si difficiles ?",
+      "link": "https://malijet.com/actualite_internationale/311549-video-animee-exclusive-pourquoi-les-operations-de-secours.html",
+      "description": "Le 26 août, vers 10h30, une coulée de boue s'est produite du côté népalais et a frappé le poste-frontière de Gyirong, dans la région autonome du Xizang, faisant d'importantes pertes humaines, et un grand nombre de personnes sont toujours portées disparues. Après la catastrophe, de nombreuses équipes",
+      "date": "Mon, 31 Aug 2026 10:45:33 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Une rencontre sur les échanges humains et culturels entre les pays membres de l'OCS se tient à Bichkek",
+      "link": "https://malijet.com/actualite_internationale/311548-une-rencontre-sur-les-echanges-humains-et-culturels-entre-le.html",
+      "description": "À l'occasion de la participation du président chinois Xi Jinping au sommet de l'Organisation de coopération de Shanghai (OCS) 2026 et de sa visite d'État au Kirghizistan, une rencontre consacrée aux échanges humains et culturels entre les pays membres de l'OCS s'est tenue le 30 août à Bichkek. Organ",
+      "date": "Mon, 31 Aug 2026 10:40:51 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "FIBA WCQ - Zone Afrique : le Mali termine la quatrième fenêtre sur une mauvaise note",
+      "link": "https://malijet.com/actualite_sportive_au_mali/311547-fiba-wcq-zone-afrique-le-mali-termine-la-quatrieme-fenet.html",
+      "description": "Les Aigles du Mali ont terminé la quatrième fenêtre des éliminatoires de la Coupe du Monde FIBA 2027 sur une lourde défaite. Opposés aux Lions de la Téranga du Sénégal, dimanche, lors de la troisième et dernière journée, les Maliens se sont inclinés 71-97.",
+      "date": "Mon, 31 Aug 2026 10:24:23 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "France : deux marins portés disparus après le naufrage d’un bateau de pêche au large de l’Angleterre",
+      "link": "https://malijet.com/actualite_internationale/311546-france-deux-marins-portes-disparus-apres-le-naufrage-dun.html",
+      "description": "Trois autres membres d’équipage ont été secourus après le naufrage du « Maranello » au large de Plymouth, indique la préfecture maritime de la Manche et de la mer du Nord",
+      "date": "Sun, 30 Aug 2026 22:36:50 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "ORTM / Edition de 20H du JT du 30 août 2026.",
+      "link": "https://malijet.com/videos/311545-ortm-edition-de-20h-du-jt-du-30-aout-2026.html",
+      "description": "ORTM / Edition de 20H du JT du 30 août 2026.",
+      "date": "Sun, 30 Aug 2026 22:31:13 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Sécurité régionale : L’Algérie renforce son soutien militaire au Niger avec l'arrivée d'aéronefs",
+      "link": "https://malijet.com/actualite-sur-afrique/311544-securite-regionale-lalgerie-renforce-son-soutien-militair.html",
+      "description": "L’Algérie vient d’apporter un nouveau souffle à la coopération militaire avec le Niger. Ce dimanche, un important convoi aérien s’est posé sur le tarmac de l’aéroport international Diori Hamani de Niamey, marquant une étape supplémentaire dans le renforcement des capacités de défense nigériennes.",
+      "date": "Sun, 30 Aug 2026 18:08:50 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Riposte des FAMa : L'armée malienne frappe fort à Dogoni et Macina après l'attaque de Kignan.",
+      "link": "https://malijet.com/actualte_dans_les_regions_du_mali/311543-riposte-des-fama-larmee-malienne-frappe-fort-a-dogoni-et.html",
+      "description": "En riposte à la tentative d'attaque contre le commissariat de Kignan, l'état-major général des armées a annoncé avoir démantelé plusieurs bases terroristes à Dogoni et Macina, infligeant de lourdes pertes matérielles à l'ennemi.",
+      "date": "Sun, 30 Aug 2026 17:43:06 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Gao : frayeur matinale sur l'axe de Forgho, des voyageurs rançonnés par deux hommes armés",
+      "link": "https://malijet.com/les_faits_divers_au_mali/311542-gao-frayeur-matinale-sur-laxe-de-forgho-des-voyageurs-ra.html",
+      "description": "Samedi matin, sur la route du marché de Bourem, deux individus à moto ont intercepté des usagers pour leur extorquer de l'argent. Une agression qui s'est heureusement soldée sans effusion de sang.",
+      "date": "Sun, 30 Aug 2026 12:04:10 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "FIBA WCQ-Zone Afrique : le Mali se relance dans la course au Mondial 2027",
+      "link": "https://malijet.com/actualite_sportive_au_mali/311541-fiba-wcq-zone-afrique-le-mali-se-relance-dans-la-course-au.html",
+      "description": "Après sa défaite face à la Côte d’Ivoire lors de la première journée, le Mali s’est relancé lors de la quatrième fenêtre des éliminatoires de la Coupe du Monde FIBA 2027. Les Aigles se sont largement imposés 101-76 face à la RDC, samedi, lors de la deuxième journée du groupe F.",
+      "date": "Sun, 30 Aug 2026 10:30:12 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Sécurité : Une tentative d’attaque terroriste repoussée au commissariat de Kignan (Sikasso)",
+      "link": "https://malijet.com/actualte_dans_les_regions_du_mali/311540-securite-une-tentative-dattaque-terroriste-repoussee-au-c.html",
+      "description": "Une tentative d’attaque menée par des groupes armés terroristes a été déjouée ce dimanche matin, aux environs de 6 heures, contre le commissariat de police de Kignan.",
+      "date": "Sun, 30 Aug 2026 10:23:04 +0000",
+      "source": "Malijet"
+    },
+    {
+      "title": "Alerte santé : Hausse des cas de dengue au Mali, le Chef de l’État appelle à une vigilance accrue",
+      "link": "https://malijet.com/la_sante_au_mali/311539-alerte-sante-hausse-des-cas-de-dengue-au-mali-le-chef-de.html",
+      "description": "Le ministre de la Santé et du Développement social a tiré la sonnette d’alarme lors du dernier conseil des ministres, signalant une augmentation inquiétante du nombre de cas confirmés de dengue par rapport à la semaine précédente.Face à cette recrudescence épidémiologique, le Président de la Transit",
+      "date": "Sat, 29 Aug 2026 23:09:53 +0000",
+      "source": "Malijet"
+    }
+  ],
+  "errors": [
+    {
+      "source": "Maliweb",
+      "error": "not well-formed (invalid token): line 37, column 341"
+    }
   ]
 }
