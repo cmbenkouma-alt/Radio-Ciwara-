@@ -1,0 +1,66 @@
+name: Radio Ciwara Android Download Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [app-foundation]
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/download-release.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  android-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout app-foundation
+        uses: actions/checkout@v4
+        with:
+          ref: app-foundation
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android platform files
+        working-directory: mobile
+        run: flutter create --platforms=android .
+      - name: Ensure Android internet permission
+        working-directory: mobile
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          text = p.read_text(encoding='utf-8')
+          permission = '<uses-permission android:name="android.permission.INTERNET" />'
+          if permission not in text:
+              text = text.replace('<manifest xmlns:android="http://schemas.android.com/apk/res/android">', '<manifest xmlns:android="http://schemas.android.com/apk/res/android">\n    ' + permission)
+              p.write_text(text, encoding='utf-8')
+          PY
+      - name: Remove generated placeholder test
+        working-directory: mobile
+        run: rm -f test/widget_test.dart
+      - name: Install dependencies
+        working-directory: mobile
+        run: flutter pub get
+      - name: Analyze
+        working-directory: mobile
+        run: flutter analyze
+      - name: Run tests
+        working-directory: mobile
+        run: flutter test
+      - name: Build release APK
+        working-directory: mobile
+        run: flutter build apk --release
+      - name: Publish APK as latest GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: mobile-v${{ github.run_number }}
+          name: Radio Ciwara Android v${{ github.run_number }}
+          body: |
+            Version Android officielle de Radio Ciwara.
+            Cette release est destinée au téléchargement direct depuis le site ciwara-medias.ml.
+          files: mobile/build/app/outputs/flutter-apk/app-release.apk
+          fail_on_unmatched_files: true
