@@ -2,6 +2,8 @@ name: Radio Ciwara Mobile
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/30 * * * *'
   push:
     branches: [app-foundation]
     paths:
@@ -12,6 +14,7 @@ on:
       - 'ciwara-tv.html'
       - 'ciwara-info.html'
       - 'data/**'
+      - 'scripts/**'
       - '.github/workflows/radio-ciwara-mobile.yml'
   pull_request:
     paths:
@@ -22,10 +25,37 @@ on:
       - 'ciwara-tv.html'
       - 'ciwara-info.html'
       - 'data/**'
+      - 'scripts/**'
       - '.github/workflows/radio-ciwara-mobile.yml'
 
+permissions:
+  contents: write
+
 jobs:
+  update-news:
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout app-foundation
+        uses: actions/checkout@v4
+        with:
+          ref: app-foundation
+      - name: Build news feed from publisher RSS
+        run: python scripts/update_news.py
+      - name: Commit updated news only when changed
+        run: |
+          if git diff --quiet -- data/news.json; then
+            echo "No news changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/news.json
+          git commit -m "chore: refresh news feed"
+          git push origin HEAD:app-foundation
+
   android-release:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -66,6 +96,7 @@ jobs:
           if-no-files-found: error
 
   ios-release-prepare:
+    if: github.event_name != 'schedule'
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -95,6 +126,7 @@ jobs:
         run: flutter build ios --release --no-codesign
 
   site-validation:
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
