@@ -1,7 +1,7 @@
 name: radio_ciwara_app
 description: Application mobile officielle de Radio Ciwara 105.5 FM.
 publish_to: "none"
-version: 0.2.0+3
+version: 0.2.0+4
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -12,6 +12,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   just_audio: ^0.10.5
   webview_flutter: ^4.13.0
+  flutter_svg: ^2.0.17
   http: ^1.5.0
 
 dev_dependencies:
