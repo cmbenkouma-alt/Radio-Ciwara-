@@ -11,10 +11,6 @@ function toggle(){if(!audio.paused&&!audio.ended){audio.pause();status('Radio en
 buttons.forEach(b=>b.addEventListener('click',toggle));
 audio.addEventListener('playing',()=>{status('🔴 Radio Ciwara — EN DIRECT');sync()});audio.addEventListener('pause',sync);audio.addEventListener('error',()=>{if(sourceIndex<sources.length-1){sourceIndex++;setSource();audio.play().catch(()=>status('Le flux direct est indisponible pour le moment.'))}else status('Le flux direct est indisponible pour le moment.');sync()});
 
-/* LECTEUR PRINCIPAL : lecteur Caster.fm officiel fourni par Radio Ciwara. */
-const mainBox=document.querySelector('.hero-player .direct-player');
-if(mainBox){mainBox.innerHTML='<iframe src="https://cloud.caster.fm/player/a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47" title="Lecteur principal Radio Ciwara FM 105.5 MHz" style="display:block;width:100%;height:180px;border:0;overflow:hidden" scrolling="no" allow="autoplay; encrypted-media"></iframe>';mainBox.style.padding='0';mainBox.style.overflow='hidden';mainBox.style.background='transparent'}
-
 const menu=document.getElementById('mainNav'),toggleMenu=document.getElementById('menuToggle');if(toggleMenu)toggleMenu.addEventListener('click',()=>menu.classList.toggle('open'));if(menu)menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
 const ticker=document.getElementById('breakingItems'),tickerBtn=document.getElementById('tickerToggle');let paused=false;if(tickerBtn)tickerBtn.addEventListener('click',()=>{paused=!paused;ticker.style.animationPlayState=paused?'paused':'running';tickerBtn.textContent=paused?'▶':'Ⅱ'});
 function esc(v=''){return String(v).replace(/[&<>'\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
