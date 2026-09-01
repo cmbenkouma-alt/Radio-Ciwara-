@@ -31,6 +31,9 @@ on:
 permissions:
   contents: write
 
+env:
+  APP_REF: app-foundation
+
 jobs:
   update-news:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
@@ -58,8 +61,10 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout app-foundation
         uses: actions/checkout@v4
+        with:
+          ref: app-foundation
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -99,8 +104,10 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: macos-latest
     steps:
-      - name: Checkout
+      - name: Checkout app-foundation
         uses: actions/checkout@v4
+        with:
+          ref: app-foundation
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -129,8 +136,10 @@ jobs:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout app-foundation
         uses: actions/checkout@v4
+        with:
+          ref: app-foundation
       - name: Validate required site files
         run: |
           test -s index.html
