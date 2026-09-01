@@ -1,0 +1,43 @@
+name: Repair Caster.fm Player
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: Branch to repair
+        required: true
+        default: app-foundation
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch }}
+          fetch-depth: 0
+
+      - name: Repair official Caster.fm widget type
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('mobile/lib/main.dart')
+          s = p.read_text(encoding='utf-8')
+          old = 'data-type=\"newStreamPlayer\"'
+          new = 'data-type=\"streamPlayer\"'
+          if old not in s:
+              raise SystemExit('Expected legacy Caster.fm widget type was not found; no automatic change made.')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add mobile/lib/main.dart
+          git commit -m "fix: use official Caster.fm stream player widget"
+          git push origin HEAD:${{ inputs.target_branch }}
