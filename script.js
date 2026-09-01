@@ -50,6 +50,17 @@ if (hamburger && nav) {
   nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => nav.classList.remove('open')));
 }
 
+// Tous les anciens liens « mobile » externes sont désormais centralisés
+// vers la page officielle de téléchargement de l'application Radio Ciwara.
+document.querySelectorAll('a[href*="ciwarafm.radio12345.com"]').forEach((link) => {
+  link.href = '/download-app.html';
+  link.target = '_self';
+  link.removeAttribute('rel');
+  if (link.textContent.includes('Écouter sur mobile')) link.textContent = '📱 Télécharger l’application';
+  if (link.textContent.includes('LECTEUR MOBILE')) link.textContent = '📱 TÉLÉCHARGER L’APPLICATION';
+  if (link.textContent.includes('Écouter en ligne')) link.textContent = '📱 Télécharger l’application →';
+});
+
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 }
