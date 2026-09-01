@@ -1,0 +1,1 @@
+Radio Ciwara desktop favicon: use /favicon.svg when served from the web directory.
