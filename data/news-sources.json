@@ -1,0 +1,6 @@
+{
+  "sources": [
+    {"name":"Maliweb","feed":"https://www.maliweb.net/feed","site":"https://www.maliweb.net/","enabled":true},
+    {"name":"Malijet","feed":"https://malijet.com/rss","site":"https://malijet.com/","enabled":true}
+  ]
+}
