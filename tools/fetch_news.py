@@ -64,7 +64,6 @@ for source in sources:
     except Exception as exc:
         errors.append({"source": source["name"], "error": str(exc)})
 
-# Deduplicate by canonical article URL and keep the newest-looking entries first.
 seen = set()
 unique = []
 for item in all_items:
@@ -75,6 +74,18 @@ for item in all_items:
     unique.append(item)
 
 unique = unique[:40]
+
+# Never replace a known-good cache with an empty result caused by a temporary
+# feed/network failure. This keeps the app populated until the next successful sync.
+previous = {}
+if OUTPUT_FILE.exists():
+    try:
+        previous = json.loads(OUTPUT_FILE.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        previous = {}
+if not unique and previous.get("items"):
+    unique = previous["items"][:40]
+
 OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 OUTPUT_FILE.write_text(
     json.dumps(
