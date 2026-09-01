@@ -197,7 +197,7 @@ class _DirectScreenState extends State<DirectScreen> {
       );
 }
 
-const _casterHtml = '''<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:#120108;color:#fff;font-family:Arial;overflow:hidden}.cstrEmbed{width:100%;min-height:230px}a{color:#fff}</style></head><body><div class="cstrEmbed" data-type="newStreamPlayer" data-publicToken="$casterPublicToken" data-theme="light" data-color="D4145A" data-channelId="" data-rendered="false"><a href="https://www.caster.fm">Radio Server Hosting</a></div><script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script></body></html>''';
+const _casterHtml = '''<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;background:#120108;color:#fff;font-family:Arial;overflow:hidden}.cstrEmbed{width:100%;min-height:230px}a{color:#fff}</style></head><body><div class="cstrEmbed" data-type="streamPlayer" data-publicToken="$casterPublicToken" data-theme="light" data-color="D4145A" data-channelId="" data-rendered="false"><a href="https://www.caster.fm">Radio Server Hosting</a></div><script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script></body></html>''';
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
