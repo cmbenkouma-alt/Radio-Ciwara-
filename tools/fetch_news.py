@@ -18,6 +18,14 @@ def clean(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
+def sanitize_xml(raw):
+    """Tolerate common malformed RSS while removing invalid XML characters."""
+    text = raw.decode("utf-8", errors="replace")
+    text = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F]", "", text)
+    text = re.sub(r"&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9A-Fa-f]+;)", "&amp;", text)
+    return text.encode("utf-8")
+
+
 def first_text(node, names):
     for name in names:
         child = node.find(name)
@@ -32,7 +40,7 @@ def parse_feed(source):
         headers={"User-Agent": "Radio-Ciwara-News/1.0 (+https://radio-ciwara.com)"},
     )
     with urllib.request.urlopen(request, timeout=20) as response:
-        root = ET.fromstring(response.read())
+        root = ET.fromstring(sanitize_xml(response.read()))
 
     items = []
     nodes = root.findall(".//item")
@@ -74,9 +82,6 @@ for item in all_items:
     unique.append(item)
 
 unique = unique[:40]
-
-# Never replace a known-good cache with an empty result caused by a temporary
-# feed/network failure. This keeps the app populated until the next successful sync.
 previous = {}
 if OUTPUT_FILE.exists():
     try:
