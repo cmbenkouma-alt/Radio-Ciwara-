@@ -5,10 +5,12 @@ const ticker=document.getElementById('breakingItems');
 const orbPlaySelector='.radio-widget-wrap .orbPp';
 let tickerPaused=false;
 let orbReady=false;
+let autoplayAttempted=false;
 
 function getOrbPlay(){return document.querySelector(orbPlaySelector)}
+function getOrbAudio(){return document.querySelector('.radio-widget-wrap audio')}
 function setStatus(text){const el=document.getElementById('status');if(el)el.textContent=text}
-function isOrbPlaying(){const audio=document.querySelector('.radio-widget-wrap audio');return !!audio&&!audio.paused&&!audio.ended}
+function isOrbPlaying(){const audio=getOrbAudio();return !!audio&&!audio.paused&&!audio.ended}
 function syncButtons(){
   const playing=isOrbPlaying();
   playButtons.forEach(btn=>{
@@ -28,16 +30,30 @@ function clickOrbPlayer(){
   return true;
 }
 
-// Le bouton « ÉCOUTER EN DIRECT » pilote directement le vrai lecteur OnlineRadioBox.
-// Cela évite l'ancien audio invisible qui n'était pas connecté au lecteur affiché.
+async function tryAutoplay(){
+  if(autoplayAttempted||isOrbPlaying())return;
+  autoplayAttempted=true;
+  const audio=getOrbAudio();
+  const play=getOrbPlay();
+  if(!play||!audio)return;
+
+  // OnlineRadioBox prévoit l'autostart dans son widget. On déclenche aussi
+  // le bouton une fois le widget prêt. Les navigateurs peuvent refuser le
+  // son automatique : dans ce cas le bouton Play reste immédiatement utilisable.
+  audio.autoplay=true;
+  try{await audio.play();syncButtons();setStatus('🔴 Radio Ciwara — EN DIRECT');return}catch(_e){}
+  try{play.click();setTimeout(syncButtons,900);setTimeout(syncButtons,2200)}catch(_e){}
+}
+
 async function toggleRadio(){
-  const audio=document.querySelector('.radio-widget-wrap audio');
+  const audio=getOrbAudio();
   if(audio&&!audio.paused&&!audio.ended){
     audio.pause();
     syncButtons();
     setStatus('Radio en pause');
     return;
   }
+  autoplayAttempted=true;
   if(!clickOrbPlayer()){
     document.querySelector('#direct')?.scrollIntoView({behavior:'smooth',block:'center'});
     setTimeout(clickOrbPlayer,700);
@@ -46,19 +62,25 @@ async function toggleRadio(){
 
 playButtons.forEach(btn=>btn.addEventListener('click',toggleRadio));
 
-// Sur certains navigateurs le widget met quelques instants à créer son audio.
-// On le surveille et on synchronise l'état du bouton sans tenter un autoplay non autorisé.
 const orbObserver=new MutationObserver(()=>{
-  const audio=document.querySelector('.radio-widget-wrap audio');
+  const audio=getOrbAudio();
   if(audio&&!orbReady){
     orbReady=true;
     audio.addEventListener('play',()=>{setStatus('🔴 Radio Ciwara — EN DIRECT');syncButtons()});
     audio.addEventListener('pause',syncButtons);
+    audio.addEventListener('playing',()=>{setStatus('🔴 Radio Ciwara — EN DIRECT');syncButtons()});
     audio.addEventListener('error',()=>setStatus('Flux direct temporairement indisponible.'));
     syncButtons();
+    setTimeout(tryAutoplay,700);
   }
 });
 orbObserver.observe(document.body,{childList:true,subtree:true});
+
+// Si le widget était déjà présent avant l'installation de l'observateur.
+window.addEventListener('load',()=>{
+  syncButtons();
+  setTimeout(tryAutoplay,1400);
+});
 
 if(menuToggle)menuToggle.addEventListener('click',()=>menu.classList.toggle('open'));
 if(menu)menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
@@ -73,7 +95,7 @@ function renderNews(items){
  grid.innerHTML=items.slice(0,8).map(item=>`<article class="news-card"><div class="news-image">${escapeHtml(item.source||'ACTUALITÉ')}<span></span></div><div class="news-content"><span class="news-source">${escapeHtml(item.source||'ACTUALITÉ')}</span><h3>${escapeHtml(item.title||'Actualité')}</h3><p>${escapeHtml(item.description||'Retrouvez cette actualité sur le site de sa source.')}</p><div class="news-meta">${escapeHtml(item.date||'Aujourd’hui')} · Source : ${escapeHtml(item.source||'Média')}</div><p style="margin-top:10px"><a href="${escapeHtml(item.link||'#')}" target="_blank" rel="noopener">Lire la source →</a></p></div></article>`).join('');
 }
 async function loadNews(){
- try{const res=await fetch('data/news.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('news');const data=await res.json();renderNews(data.items||[]);if(ticker&&data.items?.length)ticker.innerHTML=data.items.slice(0,6).map(x=>`<span>${escapeHtml(x.title)}</span>`).join('')}catch(e){renderNews([])}
+ try{const res=await fetch('data/news.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('news');const data=await res.json();renderNews(data.items||[]);if(ticker&&data.items?.length)ticker.innerHTML=data.items.slice(0,8).map(x=>`<span>${escapeHtml(x.title)} <small>— ${escapeHtml(x.source||'')}</small></span>`).join('')}catch(e){renderNews([])}
 }
 loadNews();
 const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();
