@@ -10,6 +10,18 @@ async function playRadio(){status('🔴 Connexion à Radio Ciwara…');if(!audio
 function toggle(){if(!audio.paused&&!audio.ended){audio.pause();status('Radio en pause');sync()}else playRadio()}
 buttons.forEach(b=>b.addEventListener('click',toggle));
 audio.addEventListener('playing',()=>{status('🔴 Radio Ciwara — EN DIRECT');sync()});audio.addEventListener('pause',sync);audio.addEventListener('error',()=>{if(sourceIndex<sources.length-1){sourceIndex++;setSource();audio.play().catch(()=>status('Le flux direct est indisponible pour le moment.'))}else status('Le flux direct est indisponible pour le moment.');sync()});
+
+/* Lecteur PRINCIPAL uniquement : le lecteur fixe du bas conserve son fonctionnement ci-dessus. */
+const mainAudio=document.getElementById('mainRadioPlayer');
+const mainPlay=document.getElementById('mainPlay');
+const mainStatus=document.getElementById('mainPlayerStatus');
+const mainSources=['https://ciwarafm.radiostream321.com/stream','https://ciwarafm.radiostream321.com/','http://ciwarafm.radiostream321.com/'];
+let mainSourceIndex=0;
+function mainSetSource(){if(!mainAudio)return;mainAudio.src=mainSources[mainSourceIndex];mainAudio.load()}
+function mainSync(){if(!mainPlay||!mainAudio)return;const playing=!mainAudio.paused&&!mainAudio.ended;mainPlay.textContent=playing?'Ⅱ':'▶';mainPlay.classList.toggle('playing',playing)}
+async function mainPlayRadio(){if(!mainAudio)return;if(!mainAudio.src)mainSetSource();if(mainStatus)mainStatus.textContent='🔴 Connexion à Radio Ciwara…';try{await mainAudio.play();if(mainStatus)mainStatus.textContent='🔴 Radio Ciwara — EN DIRECT'}catch(e){if(mainSourceIndex<mainSources.length-1){mainSourceIndex++;mainSetSource();try{await mainAudio.play();if(mainStatus)mainStatus.textContent='🔴 Radio Ciwara — EN DIRECT'}catch(_){if(mainStatus)mainStatus.textContent='Le flux direct est indisponible pour le moment.'}}else if(mainStatus)mainStatus.textContent='Le flux direct est indisponible pour le moment.'}mainSync()}
+if(mainPlay&&mainAudio){mainPlay.addEventListener('click',()=>{if(!mainAudio.paused&&!mainAudio.ended){mainAudio.pause();if(mainStatus)mainStatus.textContent='Radio en pause'}else mainPlayRadio()});mainAudio.addEventListener('playing',()=>{if(mainStatus)mainStatus.textContent='🔴 Radio Ciwara — EN DIRECT';mainSync()});mainAudio.addEventListener('pause',mainSync);mainAudio.addEventListener('waiting',()=>{if(mainStatus)mainStatus.textContent='🔴 Connexion au direct…'});mainAudio.addEventListener('error',()=>{if(mainSourceIndex<mainSources.length-1){mainSourceIndex++;mainSetSource();mainAudio.play().then(()=>{if(mainStatus)mainStatus.textContent='🔴 Radio Ciwara — EN DIRECT'}).catch(()=>{if(mainStatus)mainStatus.textContent='Le flux direct est indisponible pour le moment.'})}else if(mainStatus)mainStatus.textContent='Le flux direct est indisponible pour le moment.';mainSync()});mainSetSource()}
+
 const menu=document.getElementById('mainNav'),toggleMenu=document.getElementById('menuToggle');if(toggleMenu)toggleMenu.addEventListener('click',()=>menu.classList.toggle('open'));if(menu)menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
 const ticker=document.getElementById('breakingItems'),tickerBtn=document.getElementById('tickerToggle');let paused=false;if(tickerBtn)tickerBtn.addEventListener('click',()=>{paused=!paused;ticker.style.animationPlayState=paused?'paused':'running';tickerBtn.textContent=paused?'▶':'Ⅱ'});
 function esc(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
