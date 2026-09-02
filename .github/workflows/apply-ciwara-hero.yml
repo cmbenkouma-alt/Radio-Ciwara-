@@ -1,0 +1,70 @@
+name: apply-ciwara-hero
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: ${{ !startsWith(github.event.head_commit.message, 'chore: apply Ciwara hero') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch homepage
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- CIWARA-HERO-VIDEO -->'
+          if marker not in s:
+              hero = r'''<!-- CIWARA-HERO-VIDEO -->
+<section class="hero ciwara-hero" id="direct">
+  <div class="hero-bg"></div>
+  <div class="container hero-grid">
+    <div class="hero-copy ciwara-hero-video-col">
+      <p class="kicker">RADIO CIWARA 105.5 FM</p>
+      <div class="ciwara-youtube-frame">
+        <iframe src="https://www.youtube.com/embed/lcSEEc1-YpU?rel=0&modestbranding=1" title="Ciwara TV — vidéo" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+      <p class="ciwara-hero-caption">CIWARA TV · Retrouvez nos contenus vidéo</p>
+    </div>
+    <div class="hero-player ciwara-caster-card">
+      <div class="player-title"><b>ÉCOUTER RADIO CIWARA 105.5 FM</b><span>● LIVE</span></div>
+      <div class="direct-player caster-main-player">
+        <div data-type="newStreamPlayer" data-publicToken="236f6884-9ad2-465f-a29e-5f349a8dac8e" data-theme="light" data-color="e81e4d" data-channelId="a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47" data-rendered="false" class="cstrEmbed"><a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a></div>
+      </div>
+    </div>
+  </div>
+  <div class="container ciwara-hero-actions">
+    <button class="btn btn-red" data-play>▶ ÉCOUTER EN DIRECT</button>
+    <a class="btn btn-outline" href="#programmes">VOIR LA GRILLE</a>
+    <a class="btn btn-tv" href="ciwara-tv.html">CIWARA TV</a>
+  </div>
+</section>
+<style>
+.ciwara-hero{min-height:390px;background:#111214;color:#fff;border-top:4px solid #d71920;border-bottom:4px solid #f7d51b}
+.ciwara-hero .hero-bg{background:radial-gradient(circle at 65% 45%,rgba(247,213,27,.18),transparent 28%),linear-gradient(100deg,rgba(0,0,0,.94),rgba(15,15,16,.72)),url('logo.jpg') center/520px no-repeat}
+.ciwara-hero .hero-grid{min-height:320px;grid-template-columns:minmax(0,1.15fr) minmax(300px,.85fr);gap:28px;align-items:center}
+.ciwara-hero-video-col{min-width:0}.ciwara-youtube-frame{position:relative;width:100%;aspect-ratio:16/9;border:2px solid #f7d51b;border-radius:8px;overflow:hidden;background:#000;box-shadow:0 12px 30px rgba(0,0,0,.42)}.ciwara-youtube-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.ciwara-hero-caption{margin:8px 0 0;color:#f7d51b!important;font:800 10px Montserrat!important;letter-spacing:.3px}
+.ciwara-caster-card{width:100%;max-width:500px;justify-self:end;border:2px solid #f7d51b;border-radius:8px;background:#fff;box-shadow:0 12px 30px rgba(0,0,0,.5);overflow:hidden}
+.ciwara-caster-card .player-title{height:44px;padding:0 14px;background:linear-gradient(90deg,#111214,#d71920);font-size:12px;border-bottom:3px solid #f7d51b}.ciwara-caster-card .player-title span{color:#f7d51b;font-size:8px}.ciwara-caster-card .direct-player{padding:8px;background:#fff;min-height:120px;display:grid;place-items:center;overflow:hidden}.ciwara-caster-card .cstrEmbed{width:100%;max-width:480px}
+.ciwara-hero-actions{position:relative;display:flex;gap:10px;flex-wrap:wrap;padding:0 0 20px}.ciwara-hero-actions .btn{min-height:38px;font-size:9px}.ciwara-hero-actions .btn-outline{border-color:#f7d51b;color:#f7d51b}.ciwara-hero-actions .btn-tv{color:#111}
+@media(max-width:900px){.ciwara-hero .hero-grid{grid-template-columns:1fr;min-height:0;padding-top:25px}.ciwara-caster-card{max-width:620px;justify-self:center}.ciwara-hero-actions{padding-top:15px}.ciwara-youtube-frame{max-width:760px;margin:auto}}
+@media(max-width:650px){.ciwara-hero{min-height:0}.ciwara-hero .hero-grid{gap:18px}.ciwara-hero .kicker{font-size:14px}.ciwara-caster-card .direct-player{min-height:105px;padding:6px}.ciwara-hero-actions{padding-bottom:18px}.ciwara-hero-actions .btn{flex:1 1 140px}}
+</style>
+'''
+              token = '<section class="portal-main" id="actualites">'
+              if token not in s:
+                  raise SystemExit('anchor portal-main not found')
+              s = s.replace(token, hero + token, 1)
+              p.write_text(s, encoding='utf-8')
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "chore: apply Ciwara hero"
+          git push
