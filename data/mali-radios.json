@@ -1,36 +1,9 @@
 {
   "title": "ÉCOUTER D'AUTRES RADIOS DU MALI",
-  "note": "Flux publics repérés en ligne. Les adresses de streaming peuvent évoluer selon les stations.",
+  "note": "Sélection de radios maliennes dont les flux sont actuellement référencés en ligne.",
   "stations": [
-    {
-      "name": "Radio KLEDU",
-      "frequency": "101.2 FM · Bamako",
-      "stream": "https://ice.audionow.com/8086KleduMali.mp3",
-      "source": "https://info-mali.com/"
-    },
-    {
-      "name": "Radio Lanaya",
-      "frequency": "Sikasso · Mali",
-      "stream": "https://streamingv2.shoutcast.com/radio-lanaya",
-      "source": "https://streamingv2.shoutcast.com/radio-lanaya"
-    },
-    {
-      "name": "Radio Badenya",
-      "frequency": "89.3 FM · Bamako",
-      "stream": "https://node-29.zeno.fm/prc6n1p8cnruv",
-      "source": "https://zeno.fm/culture-fm/"
-    },
-    {
-      "name": "Radio Dambé",
-      "frequency": "104.8 FM · Bamako",
-      "stream": "https://node-26.zeno.fm/pynbqy45xreuv",
-      "source": "https://zeno.fm/radiodambebamako"
-    },
-    {
-      "name": "Radio Bamako24",
-      "frequency": "Bamako · Mali",
-      "stream": "https://stream.zeno.fm/37xmk5uxgnruv",
-      "source": "https://zeno.fm/bamako24-djenneca42/"
-    }
+    {"name":"Radio KLEDU","frequency":"101.2 FM · Bamako","stream":"https://ice.audionow.com/8086KleduMali.mp3","logo":"assets/radio-kledu.svg","source":"https://zeno.fm/radio/radiokledumali/"},
+    {"name":"Radio Dambé","frequency":"104.8 FM · Bamako","stream":"https://node-26.zeno.fm/pynbqy45xreuv","logo":"assets/radio-dambe.svg","source":"https://zeno.fm/radio/radiodambebamako/"},
+    {"name":"Radio Bamako24","frequency":"88.0 FM · Bamako","stream":"https://stream.zeno.fm/37xmk5uxgnruv","logo":"assets/radio-bamako24.svg","source":"https://zeno.fm/radio/radiobamako24/"}
   ]
 }
