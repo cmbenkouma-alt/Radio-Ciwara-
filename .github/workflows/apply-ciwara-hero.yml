@@ -6,7 +6,6 @@ permissions:
   contents: write
 jobs:
   patch:
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore: apply Ciwara hero') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,8 +16,9 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
           marker = '<!-- CIWARA-HERO-VIDEO -->'
-          if marker not in s:
-              hero = r'''<!-- CIWARA-HERO-VIDEO -->
+          if marker in s:
+              raise SystemExit(0)
+          hero = r'''<!-- CIWARA-HERO-VIDEO -->
 <section class="hero ciwara-hero" id="direct">
   <div class="hero-bg"></div>
   <div class="container hero-grid">
@@ -55,11 +55,11 @@ jobs:
 @media(max-width:650px){.ciwara-hero{min-height:0}.ciwara-hero .hero-grid{gap:18px}.ciwara-hero .kicker{font-size:14px}.ciwara-caster-card .direct-player{min-height:105px;padding:6px}.ciwara-hero-actions{padding-bottom:18px}.ciwara-hero-actions .btn{flex:1 1 140px}}
 </style>
 '''
-              token = '<section class="portal-main" id="actualites">'
-              if token not in s:
-                  raise SystemExit('anchor portal-main not found')
-              s = s.replace(token, hero + token, 1)
-              p.write_text(s, encoding='utf-8')
+          token = '<section class="portal-main" id="actualites">'
+          if token not in s:
+              raise SystemExit('anchor portal-main not found')
+          s = s.replace(token, hero + token, 1)
+          p.write_text(s, encoding='utf-8')
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
