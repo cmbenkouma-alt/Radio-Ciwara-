@@ -15,7 +15,7 @@
   const safe = (value = '') => String(value).replace(/[&<>\"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));
 
   function build(stations, title, note) {
-    const anchor = document.querySelector('.hero-player');
+    const anchor = document.querySelector('.canal-plus-block') || document.querySelector('.hero-player');
     if (!anchor || document.querySelector('.mali-radio-section')) return;
 
     const section = document.createElement('section');
@@ -41,7 +41,7 @@
         </div>
       </div>`;
 
-    anchor.closest('.hero-grid')?.parentElement?.insertAdjacentElement('afterend', section) || anchor.parentElement.insertAdjacentElement('afterend', section);
+    anchor.insertAdjacentElement('afterend', section);
 
     const status = section.querySelector('.mali-radio-status');
     const statusText = status.querySelector('span');
