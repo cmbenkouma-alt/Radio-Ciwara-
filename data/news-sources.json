@@ -1,6 +1,9 @@
 {
   "sources": [
     {"name":"Maliweb","feed":"https://www.maliweb.net/feed","site":"https://www.maliweb.net/","enabled":true},
-    {"name":"Malijet","feed":"https://malijet.com/rss","site":"https://malijet.com/","enabled":true}
+    {"name":"Malijet","feed":"https://malijet.com/rss","site":"https://malijet.com/","enabled":true},
+    {"name":"Africanews","feed":"https://fr.africanews.com/feed/rss?themes=news","site":"https://fr.africanews.com/","enabled":true},
+    {"name":"Afrik.com","feed":"https://www.afrik.com/feed","site":"https://www.afrik.com/","enabled":true},
+    {"name":"Actualite.cd","feed":"https://actualite.cd/feed/","site":"https://actualite.cd/","enabled":true}
   ]
 }
