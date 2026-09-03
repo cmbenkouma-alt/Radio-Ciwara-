@@ -27,6 +27,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Validate JavaScript
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check script syntax
+        run: node --check script.js
+
+      - name: Validate JSON data
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('data/news.json','utf8')); JSON.parse(require('fs').readFileSync('data/mali-radios.json','utf8')); JSON.parse(require('fs').readFileSync('data/news-sources.json','utf8')); JSON.parse(require('fs').readFileSync('data/radio-config.json','utf8')); JSON.parse(require('fs').readFileSync('data/schedule.json','utf8')); console.log('JSON OK')"
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
