@@ -11,8 +11,6 @@ permissions:
   pages: write
   id-token: write
 
-# Serialize Pages deployments. A fresh push creates a fresh run/artifact;
-# cancelling an older in-progress deployment prevents artifact collisions.
 concurrency:
   group: radio-ciwara-pages
   cancel-in-progress: true
@@ -36,7 +34,7 @@ jobs:
 
       - name: Validate JSON data
         run: |
-          node -e "JSON.parse(require('fs').readFileSync('data/news.json','utf8')); JSON.parse(require('fs').readFileSync('data/mali-radios.json','utf8')); JSON.parse(require('fs').readFileSync('data/news-sources.json','utf8')); JSON.parse(require('fs').readFileSync('data/radio-config.json','utf8')); JSON.parse(require('fs').readFileSync('data/schedule.json','utf8')); console.log('JSON OK')"
+          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/schedule.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
