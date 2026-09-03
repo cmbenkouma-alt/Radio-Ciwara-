@@ -4,6 +4,19 @@
     {"name":"Malijet","feed":"https://malijet.com/rss","site":"https://malijet.com/","enabled":true},
     {"name":"Africanews","feed":"https://fr.africanews.com/feed/rss?themes=news","site":"https://fr.africanews.com/","enabled":true},
     {"name":"Afrik.com","feed":"https://www.afrik.com/feed","site":"https://www.afrik.com/","enabled":true},
-    {"name":"Actualite.cd","feed":"https://actualite.cd/feed/","site":"https://actualite.cd/","enabled":true}
+    {"name":"Actualite.cd","feed":"https://actualite.cd/feed/","site":"https://actualite.cd/","enabled":true},
+    {"name":"AIP","feed":"https://www.aip.ci/feed/","site":"https://www.aip.ci/","enabled":true},
+    {"name":"Burkina24","feed":"https://burkina24.com/feed/","site":"https://burkina24.com/","enabled":true},
+    {"name":"Connection Ivoirienne","feed":"https://connectionivoirienne.net/feed/","site":"https://connectionivoirienne.net/","enabled":true},
+    {"name":"Ivoire Actu","feed":"https://www.ivoireactu.net/feed/","site":"https://www.ivoireactu.net/","enabled":true},
+    {"name":"Journal du Faso","feed":"https://journaldufaso.com/feed/","site":"https://journaldufaso.com/","enabled":true},
+    {"name":"SeneNews","feed":"https://www.senenews.com/feed","site":"https://www.senenews.com/","enabled":true},
+    {"name":"Sidwaya","feed":"https://www.sidwaya.info/feed/","site":"https://www.sidwaya.info/","enabled":true},
+    {"name":"Afrique XXI","feed":"https://afriquexxi.info/?page=backend&lang=fr","site":"https://afriquexxi.info/","enabled":true},
+    {"name":"Algérie 360","feed":"https://www.algerie360.com/feed/","site":"https://www.algerie360.com/","enabled":true},
+    {"name":"Kapitalis Tunisie","feed":"https://kapitalis.com/tunisie/feed/","site":"https://kapitalis.com/tunisie/","enabled":true},
+    {"name":"Kaweru","feed":"https://www.kaweru.com/feed/","site":"https://www.kaweru.com/","enabled":true},
+    {"name":"AllAfrica Côte d’Ivoire","feed":"https://fr.allafrica.com/tools/headlines/rdf/cotedivoire/headlines.rdf","site":"https://fr.allafrica.com/","enabled":true},
+    {"name":"AllAfrica Sénégal","feed":"https://fr.allafrica.com/tools/headlines/rdf/senegal/headlines.rdf","site":"https://fr.allafrica.com/","enabled":true}
   ]
 }
