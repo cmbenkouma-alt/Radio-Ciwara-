@@ -1,13 +1,6 @@
 const buttons=[...document.querySelectorAll('[data-play]')];
 let audio=document.getElementById('radioPlayer');
-if(!audio){
-  audio=document.createElement('audio');
-  audio.id='radioPlayer';
-  audio.preload='none';
-  audio.setAttribute('playsinline','');
-  audio.style.display='none';
-  document.body.appendChild(audio);
-}
+if(!audio){audio=document.createElement('audio');audio.id='radioPlayer';audio.preload='none';audio.setAttribute('playsinline','');audio.style.display='none';document.body.appendChild(audio)}
 const statusEls=[document.getElementById('status'),document.getElementById('playerStatus')].filter(Boolean);
 const sources=['https://ciwarafm.radiostream321.com/stream','https://ciwarafm.radiostream321.com/','http://ciwarafm.radiostream321.com/'];
 let sourceIndex=0;
@@ -26,7 +19,6 @@ function renderNews(items){const grid=document.getElementById('newsGrid');if(!gr
 async function loadNews(){try{const r=await fetch('data/news.json?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error();const d=await r.json();renderNews(d.items||[]);if(ticker&&d.items?.length)ticker.innerHTML=d.items.slice(0,8).map(x=>`<span>${esc(x.title)} <small>— ${esc(x.source||'')}</small></span>`).join('');buildAfricaSlider(d.items||[])}catch(e){renderNews([])}}
 function ensureCasterScript(){const embed=document.querySelector('.cstrEmbed');if(!embed)return;const existing=[...document.scripts].find(s=>s.src&&s.src.includes('cdn.cloud.caster.fm/widgets/embed.js'));if(existing)return;const s=document.createElement('script');s.src='https://cdn.cloud.caster.fm/widgets/embed.js';s.async=true;s.onload=()=>{try{if(window.CasterFM&&typeof window.CasterFM.render==='function')window.CasterFM.render()}catch(_){}};s.onerror=()=>{};document.body.appendChild(s)}
 function addRefonteCss(){const s=document.createElement('style');s.id='ciwara-refonte-v2';s.textContent=`
-/* Ciwara v2: lecteur + slider */
 .hero-player.caster-main-player,.caster-main-player{border-radius:16px;overflow:hidden;background:linear-gradient(145deg,#087f3f,#0b8f4d);box-shadow:0 16px 35px rgba(8,127,63,.22)}
 .caster-main-player .player-title{background:rgba(0,0,0,.18)!important;color:#fff!important;border-bottom:1px solid rgba(255,255,255,.18)}
 .caster-main-player .player-title span{background:#ce1126!important;color:#fff!important;border-radius:999px;padding:5px 8px}
@@ -49,6 +41,6 @@ function addRefonteCss(){const s=document.createElement('style');s.id='ciwara-re
 @media(max-width:900px){.portal-sidebar .hero-player{margin-top:4px!important}.africa-slide{width:250px;flex-basis:250px}.africa-slide img{height:145px}.caster-before-hero{width:calc(100% - 24px);margin:6px auto 14px}}
 @media(max-width:600px){.africa-slide{width:calc(100vw - 58px);flex-basis:calc(100vw - 58px)}.africa-slide img{height:170px}}
 `;document.head.appendChild(s)}
-function moveMediaBlocks(){const caster=document.querySelector('.hero-player');const hero=document.querySelector('.ciwara-hero');if(caster&&hero&&!caster.closest('.caster-before-hero')){caster.classList.add('caster-main-player');const wrap=document.createElement('div');wrap.className='caster-before-hero';wrap.setAttribute('aria-label','Lecteur Radio Ciwara');hero.parentNode.insertBefore(wrap,hero);wrap.appendChild(caster)}}
+function moveMediaBlocks(){const side=document.querySelector('.portal-sidebar');const caster=document.querySelector('.hero-player');const radios=document.querySelector('.mali-radio-section');if(side&&caster){caster.classList.add('caster-main-player');side.prepend(caster)}if(side&&radios)side.appendChild(radios)}
 function buildAfricaSlider(items){let wrap=document.querySelector('.africa-slider-wrap');const target=document.querySelector('.portal-main .section-title');if(!target||!items.length)return;if(!wrap){wrap=document.createElement('section');wrap.className='africa-slider-wrap';target.insertAdjacentElement('afterend',wrap)}const list=items.filter(x=>x.image).slice(0,12);wrap.innerHTML='<div class="africa-slider-head"><strong>ACTUALITÉS D’AFRIQUE</strong><span>FLUX RSS · DÉFILEMENT AUTOMATIQUE</span><div class="africa-slider-controls"><button type="button" data-prev>‹</button><button type="button" data-next>›</button></div></div><div class="africa-slider-viewport"><div class="africa-slider-track">'+list.map(x=>`<a class="africa-slide" href="${esc(x.link||'#')}" target="_blank" rel="noopener"><img src="${esc(imageSrc(x.image))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='logo.jpg'"><div class="africa-slide-copy"><span class="africa-slide-source">${esc(x.source||'MÉDIA AFRICAIN')}</span><h3>${esc(x.title||'Actualité africaine')}</h3></div></a>`).join('')+'</div></div>';const viewport=wrap.querySelector('.africa-slider-viewport'),track=wrap.querySelector('.africa-slider-track'),slides=[...wrap.querySelectorAll('.africa-slide')];let index=0,timer;function go(n){if(!slides.length)return;index=(n+slides.length)%slides.length;const max=Math.max(0,track.scrollWidth-viewport.clientWidth);const x=Math.min(index*292,max);track.style.transform=`translateX(-${x}px)`}function start(){clearInterval(timer);timer=setInterval(()=>go(index+1),4500)}wrap.querySelector('[data-prev]').onclick=()=>{go(index-1);start()};wrap.querySelector('[data-next]').onclick=()=>{go(index+1);start()};viewport.onmouseenter=()=>clearInterval(timer);viewport.onmouseleave=start;go(0);start()}
 addRefonteCss();moveMediaBlocks();ensureCasterScript();loadNews();const y=document.getElementById('year');if(y)y.textContent=new Date().getFullYear();setSource();
