@@ -11,8 +11,10 @@ permissions:
   pages: write
   id-token: write
 
+# Serialize Pages deployments. A fresh push creates a fresh run/artifact;
+# cancelling an older in-progress deployment prevents artifact collisions.
 concurrency:
-  group: pages
+  group: radio-ciwara-pages
   cancel-in-progress: true
 
 jobs:
