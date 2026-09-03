@@ -7,6 +7,12 @@
     {"name":"Radio Bamako24","frequency":"88.0 FM · Bamako","stream":"https://stream.zeno.fm/37xmk5uxgnruv","logo":"assets/radio-bamako24.svg","source":"https://zeno.fm/radio/radiobamako24/"},
     {"name":"Radio Jekafo","frequency":"100.7 FM · Bamako","stream":"http://s3.voscast.com:10374/stream/1/","logo":"assets/radio-jekafo.svg","source":"https://radiome.ml/radiojekafo"},
     {"name":"Radio Woyowayanko","frequency":"Bamako · en ligne 24h/24","stream":"https://stream.zeno.fm/tk7h4usz668uv","logo":"assets/radio-woyowayanko.svg","source":"https://radiome.ml/radiowoyowayanko"},
-    {"name":"Radio BAMAKAN","frequency":"Bamako · en ligne","stream":"http://38.107.243.226:8006/;stream.mp3","logo":"assets/radio-bamakan.svg","source":"https://zeno.fm/radio/radio-bamakan-mali/"}
+    {"name":"Radio BAMAKAN","frequency":"Bamako · en ligne","stream":"http://38.107.243.226:8006/;stream.mp3","logo":"assets/radio-bamakan.svg","source":"https://zeno.fm/radio/radio-bamakan-mali/"},
+    {"name":"Radio Banimonotie FM Bougouni","frequency":"Bougouni · en ligne","stream":"http://node-12.zeno.fm:80/vhs9rbrxgpeuv","logo":"logo.jpg","source":"https://zeno.fm/radio/?query=Mali"},
+    {"name":"Radio Badenya","frequency":"Sikasso · en ligne","stream":"https://node-29.zeno.fm/prc6n1p8cnruv","logo":"logo.jpg","source":"https://zeno.fm/radio/?query=Mali"},
+    {"name":"Radio Faida","frequency":"Ségou · en ligne","stream":"http://ample-zeno-18.radiojar.com/aanxzx2mb","logo":"logo.jpg","source":"https://zeno.fm/radio/?query=Mali"},
+    {"name":"Radio Kassara Barikama","frequency":"Mali · en ligne","stream":"http://stream.zenolive.com/u5u4gvaxh4duv","logo":"logo.jpg","source":"https://zeno.fm/radio/?query=Mali"},
+    {"name":"Radio Lanaya","frequency":"Sikasso · en ligne","stream":"https://streamingv2.shoutcast.com/radio-lanaya","logo":"logo.jpg","source":"https://zeno.fm/radio/?query=Mali"},
+    {"name":"Renouveau FM Bamako","frequency":"Bamako · en ligne","stream":"http://ample-zeno-03.radiojar.com/nxugn83rwqwtv","logo":"logo.jpg","source":"https://zeno.fm/radio/?query=Mali"}
   ]
 }
