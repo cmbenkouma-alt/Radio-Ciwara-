@@ -1,15 +1,12 @@
 {
   "title": "ÉCOUTER D'AUTRES RADIOS DU MALI",
-  "note": "Sélection de radios maliennes avec flux publics actuellement référencés en ligne. Les stations peuvent être temporairement indisponibles selon leur serveur.",
+  "note": "Sélection de radios maliennes avec flux publics identifiés en ligne. La disponibilité peut varier selon les serveurs des stations.",
   "stations": [
     {"name":"Radio KLEDU","frequency":"101.2 FM · Bamako","stream":"https://ice.audionow.com/8086KleduMali.mp3","logo":"assets/radio-kledu.svg","source":"https://zeno.fm/radio/radiokledubamako/"},
     {"name":"Radio Dambé","frequency":"104.8 FM · Bamako","stream":"https://node-26.zeno.fm/pynbqy45xreuv","logo":"assets/radio-dambe.svg","source":"https://zeno.fm/radio/radiodambebamako/"},
     {"name":"Radio Bamako24","frequency":"88.0 FM · Bamako","stream":"https://stream.zeno.fm/37xmk5uxgnruv","logo":"assets/radio-bamako24.svg","source":"https://zeno.fm/radio/radiobamako24/"},
-    {"name":"Radio Jekafo","frequency":"100.7 FM · Bamako","stream":"http://s3.voscast.com:10374/stream/1/","logo":"assets/radio-jekafo.svg","source":"https://www.radiome.ml/radiojekafo"},
+    {"name":"Radio Jekafo","frequency":"100.7 FM · Bamako","stream":"http://s3.voscast.com:10374/stream/1/","logo":"assets/radio-jekafo.svg","source":"https://radiome.ml/radiojekafo"},
     {"name":"Radio Woyowayanko","frequency":"Bamako · en ligne 24h/24","stream":"https://stream.zeno.fm/tk7h4usz668uv","logo":"assets/radio-woyowayanko.svg","source":"https://radiome.ml/radiowoyowayanko"},
-    {"name":"Radio Energie FM","frequency":"107.9 FM · Bamako","stream":"https://stream.zeno.fm/radio-energie-fm-107-9","logo":"assets/radio-energie.svg","source":"https://zeno.fm/radio/radio-energie-fm-107-9/"},
-    {"name":"Radio BAMAKAN","frequency":"Bamako · en ligne","stream":"http://38.107.243.226:8006/;stream.mp3","logo":"assets/radio-bamakan.svg","source":"https://zeno.fm/radio/radio-bamakan-mali/"},
-    {"name":"Renouveau FM","frequency":"98.1 FM · Bamako","stream":"http://ample-zeno-03.radiojar.com/nxugn83rwqwtv","logo":"assets/radio-renouveau.svg","source":"https://zeno.fm/radio/renouveau-fm-bamako/"},
-    {"name":"Radio Kassara Barikama","frequency":"Mali · en ligne","stream":"http://stream.zenolive.com/u5u4gvaxh4duv","logo":"assets/radio-kassara.svg","source":"https://zeno.fm/"}
+    {"name":"Radio BAMAKAN","frequency":"Bamako · en ligne","stream":"http://38.107.243.226:8006/;stream.mp3","logo":"assets/radio-bamakan.svg","source":"https://zeno.fm/radio/radio-bamakan-mali/"}
   ]
 }
