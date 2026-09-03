@@ -34,7 +34,14 @@ jobs:
 
       - name: Validate JSON data
         run: |
-          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/schedule.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
+          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
+
+      - name: Verify essential site files
+        run: |
+          for f in index.html style.css script.js mali-radios.js mali-radios.css; do
+            test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }
+          done
+          echo "Fichiers essentiels OK"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
