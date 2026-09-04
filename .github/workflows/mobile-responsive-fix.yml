@@ -1,0 +1,78 @@
+name: Ciwara Mobile Responsive Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/mobile-responsive-fix.trigger'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply responsive CSS patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('style.css')
+          css = p.read_text(encoding='utf-8')
+          marker = '/* CIWARA MOBILE RESPONSIVE PATCH */'
+          if marker not in css:
+              patch = r'''\n\n/* CIWARA MOBILE RESPONSIVE PATCH */
+html,body{max-width:100%;overflow-x:hidden}
+img,svg,video,iframe{max-width:100%}
+iframe,video{width:100%}
+.news-grid,.article-list,.feature-grid,.podcast-list{min-width:0}
+.news-card,.article-card,.podcast-list article,.partner-card,.contact-box{min-width:0;max-width:100%}
+.news-card h3,.news-card p,.article-card h2,.article-card p,.article-card a,.podcast-list b,.schedule b,.schedule small,.contact-box a,.contact-box span,.footer-grid a{overflow-wrap:anywhere}
+.news-image img,.partner-card img,.footer-brand img{max-width:100%}
+.hero-player,.tv-player{max-width:100%;overflow:hidden}
+@media(max-width:760px){
+ .container{width:calc(100% - 24px)}
+ .news-grid,.article-list,.feature-grid,.podcast-list{grid-template-columns:1fr}
+ .article-card{width:100%;padding:16px}
+ .news-card{width:100%}
+ .hero-grid{grid-template-columns:1fr;min-width:0;gap:18px}
+ .hero-player{width:100%}
+ .hero-actions{width:100%}
+ .hero-actions .btn{max-width:100%}
+ .schedule{width:100%;overflow:hidden}
+ .footer-grid{grid-template-columns:1fr}
+ .footer-bottom{flex-direction:column;gap:10px}
+ .podcast-list article{grid-template-columns:38px minmax(0,1fr) 38px}
+ .player-tabs{overflow-x:auto;max-width:100%}
+ .player-tabs button{white-space:nowrap}
+ .caster-wrap{max-width:100%;overflow:hidden}
+}
+@media(max-width:480px){
+ .container{width:calc(100% - 20px)}
+ .article-card{padding:14px}
+ .article-card h2{font-size:16px}
+ .article-card p{font-size:11px}
+ .hero h1{font-size:34px}
+ .hero-actions{flex-direction:column}
+ .hero-actions .btn{width:100%}
+ .player-title{font-size:12px}
+ .section-head{align-items:flex-start;flex-direction:column}
+}
+'''
+              p.write_text(css + patch, encoding='utf-8')
+          PY
+
+      - name: Remove trigger
+        run: rm -f .github/mobile-responsive-fix.trigger
+
+      - name: Commit responsive fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add style.css .github/mobile-responsive-fix.trigger
+          git diff --cached --quiet || git commit -m 'Fix mobile responsive layout'
+          git push
