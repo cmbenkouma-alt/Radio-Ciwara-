@@ -1,0 +1,1 @@
+trigger mobile responsive fix
