@@ -1,6 +1,9 @@
 name: Mettre à jour automatiquement la vidéo ORTM
 
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
@@ -36,8 +39,6 @@ jobs:
               'atom': 'http://www.w3.org/2005/Atom'
           }
 
-          # Le flux contient les dernières vidéos de la chaîne. On ne prend
-          # que les titres correspondant à un journal télévisé ORTM.
           journal_re = re.compile(
               r'(journal\s+t[ée]l[ée]vis[ée]|\bjt\b|\b20h\b|\b13h\b|\b23h30\b|\b19h30\b|\b18h30\b|don\s+kibaru|kibaru)',
               re.IGNORECASE
@@ -70,7 +71,6 @@ jobs:
               f.write('title<<EOF\n')
               f.write(title.replace('\n', ' ') + '\n')
               f.write('EOF\n')
-
           PY
 
       - name: Mettre à jour le bloc ORTM
@@ -87,7 +87,6 @@ jobs:
           s = p.read_text(encoding='utf-8')
           new_url = 'https://www.youtube.com/live/' + os.environ['VIDEO_ID']
 
-          # Remplace uniquement l'URL du JT dans le bloc ORTM.
           s2, count = re.subn(
               r'https://www\.youtube\.com/live/[A-Za-z0-9_-]+',
               new_url,
@@ -97,22 +96,56 @@ jobs:
           if count == 0:
               raise SystemExit('Lien ORTM actuel introuvable dans mali-radios.js')
 
-          if s2 == s:
-              print('Le bloc ORTM pointe déjà vers :', os.environ['VIDEO_TITLE'])
-          else:
-              p.write_text(s2, encoding='utf-8')
-              print('Bloc ORTM mis à jour :', os.environ['VIDEO_TITLE'])
-              print('Nouveau lien :', new_url)
+          p.write_text(s2, encoding='utf-8')
+          print('Bloc ORTM :', os.environ['VIDEO_TITLE'])
+          print('Nouveau lien :', new_url)
           PY
 
-      - name: Publier uniquement si la vidéo a changé
+      - name: Ajouter l'aperçu automatique de la vidéo ORTM
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('mali-radios.js')
+          s = p.read_text(encoding='utf-8')
+
+          marker = 'function ortmPreview(){'
+          if marker not in s:
+              code = r'''function ortmPreview(){
+          document.querySelectorAll('.mali-ortm-link').forEach(a=>{
+            const m=(a.href||'').match(/\/live\/([A-Za-z0-9_-]+)/);
+            if(!m)return;
+            const id=m[1];
+            const thumb='https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
+            const fallback='https://upload.wikimedia.org/wikipedia/commons/7/7c/ORTM_1_0.png';
+            a.style.backgroundImage="linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,.08) 58%),url('"+thumb+"'),url('"+fallback+"')";
+            a.style.backgroundSize='cover,cover,contain';
+            a.style.backgroundPosition='center,center,center';
+            a.style.backgroundRepeat='no-repeat';
+            a.classList.add('has-ortm-preview');
+          });
+          }
+          '''
+              s=s.replace('function start(){',code+'function start(){')
+
+          s=s.replace("function start(){init();setTimeout(player,700)}", "function start(){init();setTimeout(ortmPreview,120);setTimeout(player,700)}")
+
+          css_marker='.mali-ortm-link{position:relative;'
+          if css_marker in s and 'has-ortm-preview' not in s:
+              s=s.replace(css_marker, ".mali-ortm-link.has-ortm-preview:before{background:rgba(215,25,32,.95)}\\n"+css_marker)
+
+          p.write_text(s, encoding='utf-8')
+          print('Aperçu ORTM automatique installé.')
+          PY
+
+      - name: Publier uniquement si le code ORTM a changé
         run: |
           if git diff --quiet -- mali-radios.js; then
-            echo 'Aucun changement : le site conserve la vidéo ORTM actuelle.'
+            echo 'Aucun changement à publier.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add mali-radios.js
-          git commit -m 'Mise à jour automatique du JT ORTM'
+          git commit -m 'Afficher automatiquement la miniature du JT ORTM'
           git push
