@@ -1,0 +1,84 @@
+name: Mettre à jour automatiquement la vidéo ORTM
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-ortm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le site
+        uses: actions/checkout@v4
+
+      - name: Détecter la dernière vidéo ORTM
+        id: latest
+        env:
+          ORTM_CHANNEL_ID: UCQhdHZkL2eOBu66gNMCawag
+        run: |
+          python3 - <<'PY'
+          import os
+          import urllib.request
+          import xml.etree.ElementTree as ET
+
+          channel = os.environ['ORTM_CHANNEL_ID']
+          url = f'https://www.youtube.com/feeds/videos.xml?channel_id={channel}'
+          req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+          data = urllib.request.urlopen(req, timeout=20).read()
+          root = ET.fromstring(data)
+          ns = {'yt': 'http://www.youtube.com/xml/schemas/2015', 'atom': 'http://www.w3.org/2005/Atom'}
+          entry = root.find('atom:entry', ns)
+          if entry is None:
+              raise SystemExit('Aucune vidéo trouvée dans le flux ORTM.')
+          video_id = entry.findtext('yt:videoId', namespaces=ns)
+          title = entry.findtext('atom:title', namespaces=ns) or 'Dernière vidéo ORTM'
+          if not video_id:
+              raise SystemExit('ID vidéo introuvable.')
+          print(f'video_id={video_id}')
+          print(f'title={title}')
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
+              f.write(f'video_id={video_id}\n')
+              f.write('title<<EOF\n')
+              f.write(title.replace('\n', ' ') + '\n')
+              f.write('EOF\n')
+          PY
+
+      - name: Mettre à jour le lien ORTM
+        env:
+          VIDEO_ID: ${{ steps.latest.outputs.video_id }}
+          VIDEO_TITLE: ${{ steps.latest.outputs.title }}
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          import re
+
+          p = Path('mali-radios.js')
+          s = p.read_text(encoding='utf-8')
+          new_url = 'https://www.youtube.com/live/' + os.environ['VIDEO_ID']
+          s2, count = re.subn(r'https://www\.youtube\.com/live/[A-Za-z0-9_-]+', new_url, s)
+          if count == 0:
+              raise SystemExit('Lien ORTM actuel introuvable dans mali-radios.js')
+          if s2 == s:
+              print('La vidéo ORTM est déjà à jour.')
+          else:
+              p.write_text(s2, encoding='utf-8')
+              print('Nouvelle vidéo ORTM :', os.environ['VIDEO_TITLE'])
+              print('Nouveau lien :', new_url)
+          PY
+
+      - name: Publier la mise à jour
+        run: |
+          if git diff --quiet -- mali-radios.js; then
+            echo 'Aucun changement à publier.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mali-radios.js
+          git commit -m 'Mise à jour automatique de la dernière vidéo ORTM'
+          git push
