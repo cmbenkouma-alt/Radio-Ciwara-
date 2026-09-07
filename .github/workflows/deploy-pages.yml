@@ -41,11 +41,11 @@ jobs:
               if '.git' in p.parts:
                   continue
               s = p.read_text(encoding='utf-8')
-              s2 = re.sub(pattern, local, s)
+              s2 = re.sub(pattern, local, s).replace('images/astankida.png', local).replace('images/astankida.jpg', local)
               if s2 != s:
                   p.write_text(s2, encoding='utf-8')
           PY
-          echo 'Astan Kida: asset local prêt pour le déploiement.'
+          echo 'Astan Kida: images locales prêtes pour le déploiement.'
 
       - name: Validate JavaScript
         uses: actions/setup-node@v4
