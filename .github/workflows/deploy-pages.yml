@@ -25,13 +25,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare local Astan Kida assets
+        shell: bash
+        run: |
+          set -e
+          mkdir -p assets/artistes
+          curl -L --fail --retry 3 -o assets/artistes/astan-kida.jpg 'https://www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg'
+          test -s assets/artistes/astan-kida.jpg
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          local = 'assets/artistes/astan-kida.jpg'
+          pattern = r'https?://(?:images\.weserv\.nl/\?url=)?www\.musicinafrica\.net/sites/default/files/[^\"\'\s>]+'
+          for p in Path('.').rglob('*.html'):
+              if '.git' in p.parts:
+                  continue
+              s = p.read_text(encoding='utf-8')
+              s2 = re.sub(pattern, local, s)
+              if s2 != s:
+                  p.write_text(s2, encoding='utf-8')
+          PY
+          echo 'Astan Kida: asset local prêt pour le déploiement.'
+
       - name: Validate JavaScript
         uses: actions/setup-node@v4
         with:
           node-version: 20
       - name: Check script syntax
         run: node --check script.js
-
       - name: Validate JSON data
         run: |
           node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
@@ -41,7 +62,8 @@ jobs:
           for f in index.html style.css script.js mali-radios.js mali-radios.css; do
             test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }
           done
-          echo "Fichiers essentiels OK"
+          test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida absente'; exit 1; }
+          echo "Fichiers essentiels et assets OK"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
