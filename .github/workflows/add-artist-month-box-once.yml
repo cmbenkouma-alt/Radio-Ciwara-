@@ -1,0 +1,57 @@
+name: Add artiste du mois box
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  add-box:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Insert box only if absent
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = 'ARTISTE-DU-MOIS-BOX'
+          if marker in s:
+              print('Box already present; nothing to do.')
+              raise SystemExit(0)
+          target = 'ACCÈS RAPIDE'
+          pos = s.lower().find(target.lower())
+          if pos < 0:
+              raise SystemExit('ACCÈS RAPIDE not found')
+          start = s.rfind('<div class="side-box"', 0, pos)
+          if start < 0:
+              start = s.rfind('<div class="side-box ', 0, pos)
+          if start < 0:
+              raise SystemExit('Containing side-box not found')
+          # Find the matching closing div from the side-box opening.
+          tag_re = re.compile(r'<div\b[^>]*>|</div\s*>', re.I)
+          depth = 0
+          end = None
+          for m in tag_re.finditer(s, start):
+              tok = m.group(0).lower()
+              if tok.startswith('<div'):
+                  depth += 1
+              else:
+                  depth -= 1
+                  if depth == 0:
+                      end = m.end()
+                      break
+          if end is None:
+              raise SystemExit('Could not find side-box end')
+          box = '''\n<!-- ARTISTE-DU-MOIS-BOX -->\n<a class="artist-month-box" href="artiste-du-mois.html" aria-label="Artiste du mois : Astan Kida">\n  <div class="artist-month-image"><img src="https://img.youtube.com/vi/X5aHYQqx7UE/maxresdefault.jpg" alt="Astan Kida — Artiste du mois" loading="lazy"></div>\n  <div class="artist-month-copy"><span>ARTISTE DU MOIS</span><strong>ASTAN KIDA</strong><small>Découvrir son portrait, sa biographie et ses vidéos</small><b>VOIR L’ARTISTE →</b></div>\n</a>\n<style id="artist-month-box-style">\n.artist-month-box{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:center;margin-top:15px;padding:12px;background:#fff;border:1px solid #ddd;border-top:4px solid #d71920;border-radius:7px;text-decoration:none;color:#111214;box-shadow:0 7px 18px rgba(0,0,0,.06);transition:transform .18s ease,box-shadow .18s ease}.artist-month-box:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.1)}.artist-month-image{width:92px;height:92px;border-radius:6px;overflow:hidden;background:#111}.artist-month-image img{width:100%;height:100%;object-fit:cover;display:block}.artist-month-copy span{display:inline-block;color:#d71920;font:900 8px Montserrat,Arial;letter-spacing:.5px}.artist-month-copy strong{display:block;font:900 18px/1.1 Montserrat,Arial;margin:4px 0}.artist-month-copy small{display:block;color:#666;font:500 10px/1.35 Roboto,Arial}.artist-month-copy b{display:inline-block;margin-top:8px;color:#d71920;font:900 8px Montserrat,Arial}@media(max-width:650px){.artist-month-box{grid-template-columns:72px 1fr;padding:10px}.artist-month-image{width:72px;height:72px}.artist-month-copy strong{font-size:15px}}\n</style>'''
+          s = s[:end] + box + s[end:]
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit box
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Add Artiste du mois box for Astan Kida"
+          git push
