@@ -1,0 +1,35 @@
+name: Fix Astan Kida images
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace blocked image URLs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          replacements = {
+            'https://www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg?itok=v_uzSpKV': 'https://images.weserv.nl/?url=www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg%3Fitok%3Dv_uzSpKV',
+            'https://www.musicinafrica.net/sites/default/files/styles/profile_images_thumbnail/public/images/artist_profile/201502/astankida1.jpg?itok=471J8eqL': 'https://images.weserv.nl/?url=www.musicinafrica.net/sites/default/files/styles/profile_images_thumbnail/public/images/artist_profile/201502/astankida1.jpg%3Fitok%3D471J8eqL'
+          }
+          for p in Path('.').rglob('*.html'):
+            s = p.read_text(encoding='utf-8')
+            old = s
+            for a,b in replacements.items(): s = s.replace(a,b)
+            if s != old: p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit image fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add '*.html'
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Fix Astan Kida image loading'
+          git push
