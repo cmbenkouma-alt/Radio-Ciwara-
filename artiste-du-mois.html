@@ -3,46 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111214">
+<meta name="theme-color" content="#111111">
 <meta name="description" content="Artiste du mois sur Radio Ciwara : Astan Kida, chanteuse malienne, sa biographie, ses photos et ses vidéos.">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="https://ciwara-medias.ml/artiste-du-mois.html">
 <title>Artiste du mois : Astan Kida | Radio Ciwara 105.5 FM</title>
 <link rel="stylesheet" href="style.css?v=20260902">
 <style>
-:root{--red:#c9212b;--ink:#111214;--muted:#686b70;--green:#198754;--gold:#f5b400}
-body{background:#f4f4f2;color:var(--ink)}
-.artist-wrap{max-width:1220px;margin:0 auto;padding:38px 20px 60px}
-.artist-breadcrumb{font:900 16px Montserrat,Arial;color:#9d2b32;letter-spacing:.2px;margin:0 0 16px}
-.artist-hero{display:grid;grid-template-columns:1.02fr .98fr;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 14px 38px rgba(0,0,0,.10);border-top:6px solid var(--red);min-height:620px}
-.artist-photo{min-height:620px;background:#ddd;overflow:hidden}
-.artist-photo img{width:100%;height:100%;min-height:620px;object-fit:cover;object-position:center top;display:block}
-.artist-intro{padding:58px 54px 44px;display:flex;flex-direction:column;justify-content:center}
-.artist-kicker{display:inline-flex;align-self:flex-start;background:linear-gradient(180deg,#d63a43,#b91924);color:#fff;padding:11px 18px;border-radius:7px;font:900 15px Montserrat,Arial;letter-spacing:.3px;box-shadow:0 3px 8px rgba(0,0,0,.12)}
-.artist-intro h1{font:900 58px/1 Montserrat,Arial;margin:28px 0 8px;letter-spacing:-1.5px}
-.artist-intro .subtitle{font:800 22px/1.35 Montserrat,Arial;color:#151515;margin:0 0 30px;max-width:510px}
-.artist-intro>p:not(.subtitle){font:400 20px/1.7 Roboto,Arial;color:#222;margin:0 0 26px;max-width:540px}
-.artist-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
-.fact{padding:18px 16px 17px;border-radius:10px;background:#f4f4f2;border-left:4px solid var(--green);min-height:76px}
-.fact b{display:block;font:900 15px Montserrat,Arial;margin-bottom:9px}.fact span{font:500 14px/1.4 Roboto,Arial;color:#444}
-.artist-section{margin-top:28px;background:#fff;border-radius:16px;padding:30px;box-shadow:0 8px 25px rgba(0,0,0,.06)}
-.artist-section h2{font:900 24px Montserrat,Arial;margin:0 0 18px;border-left:4px solid var(--red);padding-left:12px}.artist-section p{font:400 15px/1.75 Roboto,Arial;color:#3f4246}
-.artist-gallery{display:grid;grid-template-columns:1fr 1fr;gap:18px}.artist-gallery figure{margin:0;border-radius:12px;overflow:hidden;background:#111;box-shadow:0 6px 18px rgba(0,0,0,.08)}.artist-gallery img{width:100%;height:310px;object-fit:cover;display:block}.artist-gallery figcaption{padding:11px 14px;background:#fff;font:700 11px Roboto,Arial;color:#555}
-.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.video-card{border:1px solid #e4e4e4;border-radius:10px;overflow:hidden;background:#fafafa}.video-card iframe{width:100%;aspect-ratio:16/9;border:0;display:block}.video-card h3{font:800 14px Montserrat,Arial;margin:13px 15px 16px}.back-btn{display:inline-flex;margin-top:24px;background:var(--red);color:#fff;text-decoration:none;padding:12px 18px;border-radius:7px;font:900 10px Montserrat,Arial}
-@media(max-width:900px){.artist-hero{grid-template-columns:1fr;min-height:0}.artist-photo,.artist-photo img{min-height:430px;height:430px}.artist-intro{padding:34px 28px 38px}.artist-intro h1{font-size:45px}.artist-intro .subtitle{font-size:18px}.artist-intro>p:not(.subtitle){font-size:17px}.artist-facts{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.artist-wrap{padding:24px 12px 45px}.artist-breadcrumb{font-size:13px}.artist-photo,.artist-photo img{min-height:330px;height:330px}.artist-intro{padding:28px 22px}.artist-kicker{font-size:12px;padding:9px 13px}.artist-intro h1{font-size:38px;margin-top:20px}.artist-intro .subtitle{font-size:16px;margin-bottom:20px}.artist-intro>p:not(.subtitle){font-size:15px;line-height:1.65}.artist-facts{grid-template-columns:1fr}.artist-section{padding:22px}.artist-gallery,.video-grid{grid-template-columns:1fr}.artist-gallery img{height:280px}}
+/* RESET GENERAL */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background-color:#f4f6f8;color:#222;padding-bottom:90px}
+/* HEADER & NAV */
+.main-header{background-color:#111111;color:#ffffff;padding:15px 0;border-bottom:3px solid #cc1818}
+.header-container{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 20px}
+.logo h1{font-size:24px;font-weight:800}.logo h1 span{color:#cc1818}
+.nav-menu a{color:#fff;text-decoration:none;margin-left:20px;font-size:14px;font-weight:600;transition:color .3s}.nav-menu a:hover,.nav-menu a.active{color:#cc1818}
+/* COMPOSANT : ARTISTE DU MOIS */
+.main-layout{max-width:1100px;margin:40px auto;padding:0 20px}
+.ciwara-artist-card{display:flex;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05);border-top:4px solid #cc1818}
+.artist-image-container{width:45%;min-height:380px;background:#222}
+.artist-image{width:100%;height:100%;object-fit:cover;display:block}
+.artist-content{width:55%;padding:35px;display:flex;flex-direction:column;justify-content:center}
+.badge-culture{font-size:11px;font-weight:bold;color:#cc1818;letter-spacing:1px;margin-bottom:10px}
+.badge-artist-month{background:#cc1818;color:#fff;font-size:11px;font-weight:bold;padding:5px 12px;border-radius:4px;align-self:flex-start;margin-bottom:15px}
+.artist-name{font-size:36px;font-weight:900;margin-bottom:5px}.artist-subtitle{color:#666;font-size:15px;margin-bottom:20px}
+.artist-bio{font-size:14px;line-height:1.6;color:#444;margin-bottom:25px}
+.artist-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.info-block{background:#f8f9fa;padding:12px;border-radius:8px;border-left:3px solid #ccc}.info-block h3{font-size:12px;margin-bottom:5px}.info-block p{font-size:12px;color:#555}.info-block.color-green{border-left-color:#28a745}.info-block.color-dark{border-left-color:#343a40}.info-block.color-dark-alt{border-left-color:#6c757d}
+/* GRILLE D'ACTUALITÉS INFÉRIEURE */
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}.news-card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.03)}.news-tag{font-size:10px;background:#333;color:#fff;padding:3px 8px;border-radius:3px;display:inline-block;margin-bottom:10px;font-weight:bold}.news-card h3{font-size:18px;margin-bottom:10px}.news-card p{font-size:13px;color:#666;line-height:1.5;margin-bottom:15px}.read-more{font-size:13px;color:#cc1818;text-decoration:none;font-weight:bold}
+/* PLAYER AUDIO COLLANT */
+.sticky-audio-player{position:fixed;bottom:0;left:0;width:100%;background:#111;color:#fff;padding:15px 0;box-shadow:0 -4px 20px rgba(0,0,0,.2);z-index:9999;border-top:2px solid #cc1818}.player-container{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding:0 20px}.station-info{display:flex;align-items:center}.live-indicator{background:#cc1818;color:#fff;font-size:10px;font-weight:bold;padding:3px 8px;border-radius:4px;margin-right:15px;animation:pulse 1.5s infinite}.station-info h4{font-size:16px;font-weight:bold}.station-info p{font-size:12px;color:#bbb}.play-button{background:#cc1818;color:#fff;border:none;padding:10px 24px;font-weight:bold;border-radius:30px;cursor:pointer;transition:background .3s}.play-button:hover{background:#e61c1c}.play-button.playing{background:#28a745}
+@keyframes pulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+/* PAGE ARTISTE */
+.artist-page{max-width:1100px;margin:40px auto;padding:0 20px}.artist-breadcrumb{font-size:16px;font-weight:900;color:#cc1818;letter-spacing:1px;margin-bottom:14px}.artist-hero{display:flex;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.05);border-top:4px solid #cc1818;min-height:380px}.artist-hero .artist-image-container{width:45%;min-height:380px}.artist-hero .artist-content{width:55%;padding:35px}.artist-hero .artist-content p{font-size:14px;line-height:1.6;color:#444;margin-bottom:25px}.artist-page .artist-info-grid{grid-template-columns:repeat(3,1fr)}
+.artist-section{background:#fff;margin-top:28px;padding:25px;border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.04)}.artist-section h2{font-size:24px;margin-bottom:18px;border-left:4px solid #cc1818;padding-left:10px}.artist-section p{font-size:14px;line-height:1.7;color:#444;margin-bottom:12px}.artist-gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.artist-gallery figure{margin:0;border-radius:10px;overflow:hidden;background:#222}.artist-gallery img{width:100%;height:300px;object-fit:cover;display:block}.artist-gallery figcaption{background:#fff;padding:10px;font-size:12px;font-weight:700;color:#555}.video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.video-card{background:#fafafa;border:1px solid #e5e5e5;border-radius:10px;overflow:hidden}.video-card iframe{width:100%;aspect-ratio:16/9;border:0;display:block}.video-card h3{font-size:14px;padding:13px 15px}.back-btn{display:inline-block;margin-top:20px;background:#cc1818;color:#fff;text-decoration:none;padding:11px 17px;border-radius:6px;font-size:11px;font-weight:800}
+/* RESPONSIVE SMARTPHONES */
+@media(max-width:768px){.header-container,.player-container{flex-direction:column;text-align:center;gap:10px}.nav-menu a{margin:0 10px}.ciwara-artist-card,.artist-hero{flex-direction:column}.artist-image-container,.artist-content,.artist-hero .artist-image-container,.artist-hero .artist-content{width:100%}.artist-image-container,.artist-hero .artist-image-container{min-height:250px;height:250px}.artist-info-grid,.news-grid,.artist-page .artist-info-grid{grid-template-columns:1fr}.artist-gallery,.video-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header style="background:#111;color:#fff;padding:15px 20px"><div style="max-width:1220px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px"><a href="index.html" style="color:#fff;text-decoration:none;font:900 14px Montserrat,Arial">RADIO CIWARA 105.5 FM</a><a href="index.html" style="color:#fff;text-decoration:none;font:800 10px Montserrat,Arial">ACCUEIL</a></div></header>
-<main class="artist-wrap">
+<header class="main-header"><div class="header-container"><a class="logo" href="index.html" style="color:#fff;text-decoration:none"><h1>RADIO CIWARA <span>105.5 FM</span></h1></a><nav class="nav-menu"><a href="index.html">ACCUEIL</a><a class="active" href="artiste-du-mois.html">ARTISTE DU MOIS</a></nav></div></header>
+<main class="artist-page">
 <div class="artist-breadcrumb">CULTURE · PORTRAIT</div>
 <section class="artist-hero">
-<div class="artist-photo"><img src="assets/astan-kida.jpg?v=20260907" alt="Astan Kida — artiste malienne" loading="eager"></div>
-<div class="artist-intro"><span class="artist-kicker">ARTISTE DU MOIS</span><h1>ASTAN KIDA</h1><p class="subtitle">La perle du Mandingue – Chanteuse malienne</p><p>Astan Kida est une artiste malienne originaire de Ségou, issue d'une famille de griots. Elle s'est imposée sur la scène musicale malienne avec un répertoire qui associe tradition mandingue et sonorités modernes.</p><div class="artist-facts"><div class="fact"><b>Origine</b><span>Ségou, Mali</span></div><div class="fact"><b>Style</b><span>Mandingue · Afro-jazz · Afrobeat</span></div><div class="fact"><b>Albums cités</b><span>Balimaya, Manadjugumana</span></div></div></div>
+<div class="artist-image-container"><img class="artist-image" src="https://www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg" alt="Astan Kida — artiste malienne" loading="eager" onerror="this.onerror=null;this.src='https://www.musicinafrica.net/sites/default/files/styles/profile_images_thumbnail/public/images/artist_profile/201502/astankida1.jpg'"></div>
+<div class="artist-content"><span class="badge-artist-month">ARTISTE DU MOIS</span><h1 class="artist-name">ASTAN KIDA</h1><div class="artist-subtitle">La perle du Mandingue – Chanteuse malienne</div><p class="artist-bio">Astan Kida est une artiste malienne originaire de Ségou, issue d'une famille de griots. Elle s'est imposée sur la scène musicale malienne avec un répertoire qui associe tradition mandingue et sonorités modernes.</p><div class="artist-info-grid"><div class="info-block color-green"><h3>Origine</h3><p>Ségou, Mali</p></div><div class="info-block color-dark"><h3>Style</h3><p>Mandingue · Afro-jazz · Afrobeat</p></div><div class="info-block color-dark-alt"><h3>Albums cités</h3><p>Balimaya, Manadjugumana</p></div></div></div>
 </section>
-<section class="artist-section"><h2>Photos d'Astan Kida</h2><div class="artist-gallery"><figure><img src="assets/astan-kida.jpg?v=20260907" alt="Astan Kida — portrait" loading="lazy"><figcaption>Astan Kida — portrait</figcaption></figure><figure><img src="assets/astan-kida.jpg?v=20260907#photo-2" alt="Astan Kida — photo d'artiste" loading="lazy"><figcaption>Astan Kida — photo d'artiste</figcaption></figure></div></section>
-<section class="artist-section"><h2>Biographie</h2><p>Habituée des scènes depuis son enfance, Astan Kida a étudié la musique à l'Institut National des Arts de Bamako. Son parcours artistique est également marqué par la télévision, notamment avec des émissions musicales destinées au grand public. Sa musique mêle le traditionnel et le moderne, avec des textes en bambara, moré, français et anglais. Elle est aussi connue pour son engagement en faveur des femmes et des enfants.</p><p>Son parcours international comprend notamment des concerts et une tournée en France. Son travail a également été présenté dans des projets de Mansa Live Production autour de son enregistrement au studio Moffou à Bamako.</p></section>
+<section class="artist-section"><h2>Photos d'Astan Kida</h2><div class="artist-gallery"><figure><img src="https://www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg" alt="Astan Kida — portrait" loading="lazy"><figcaption>Astan Kida — portrait</figcaption></figure><figure><img src="https://www.musicinafrica.net/sites/default/files/styles/profile_images_thumbnail/public/images/artist_profile/201502/astankida1.jpg" alt="Astan Kida — photo d'artiste" loading="lazy"><figcaption>Astan Kida — photo d'artiste</figcaption></figure></div></section>
+<section class="artist-section"><h2>Biographie</h2><p>Originaire de Ségou au Mali, Astan Kida est issue d’une famille de griots. Habituée des scènes depuis son enfance, elle a sorti les albums « Balimaya » et « Manadjougoumana », qui ont contribué à l'établir sur la scène bamakoise.</p><p>Elle s'est également fait connaître à la télévision à travers des émissions musicales comme Mini Star et Sumu Kura sur Africable. Son répertoire mêle tradition mandingue et influences modernes, avec des textes en bambara, moré, français et anglais.</p><p>Son parcours comprend aussi des concerts et une tournée en France, ainsi que des projets d'enregistrement autour du studio Moffou à Bamako.</p></section>
 <section class="artist-section"><h2>Vidéos</h2><div class="video-grid"><div class="video-card"><iframe src="https://www.youtube.com/embed/X5aHYQqx7UE?rel=0" title="Astan Kida — Démisénouw" loading="lazy" allowfullscreen></iframe><h3>Astan Kida — Démisénouw</h3></div><div class="video-card"><iframe src="https://www.youtube.com/embed/ayMkoZblz4I?rel=0" title="Astan Kida — concert et studio Moffou" loading="lazy" allowfullscreen></iframe><h3>Astan Kida — concert à Bamako et studio Moffou</h3></div></div><a class="back-btn" href="index.html">← Retour à Radio Ciwara</a></section>
 </main>
 </body>
