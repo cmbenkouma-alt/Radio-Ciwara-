@@ -20,35 +20,31 @@ jobs:
           test -s assets/artistes/astan-kida.jpg
           test -s assets/artistes/astan-kida-2.jpg
           test -s assets/astan-kida.jpg
-      - name: Fix image references without duplicating the same photo
+      - name: Replace external images and remove duplicate gallery reference
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
+          external = re.compile(r"https?://(?:images\.weserv\.nl/\?url=)?www\.musicinafrica\.net/sites/default/files/[^\"'\s>]+")
           for p in Path('.').rglob('*.html'):
               if '.git' in p.parts:
                   continue
               s = p.read_text(encoding='utf-8')
               old = s
-              s = re.sub(r'https?://(?:images\\.weserv\\.nl/\\?url=)?www\\.musicinafrica\\.net/sites/default/files/[^\"\\'\\s>]+', 'assets/artistes/astan-kida.jpg', s)
+              s = external.sub('assets/artistes/astan-kida.jpg', s)
               if p.name == 'artiste-du-mois.html':
-                  # Keep the hero image as the primary local photo and use the second source for the gallery's second card.
-                  gallery = re.sub(r'(<section class="artist-section"><h2>Photos d\'Astan Kida</h2><div class="artist-gallery">.*?<figure>.*?<img [^>]*src=")assets/artistes/artistes/astan-kida.jpg', r'\\1assets/artistes/astan-kida.jpg', s, flags=re.S)
-                  if gallery != s:
-                      s = gallery
-                  # The existing gallery currently contains the same local file twice; make the second card use the second local photo.
-                  first = 'assets/artistes/astan-kida.jpg'
                   marker = '<section class="artist-section"><h2>Photos d\'Astan Kida</h2>'
                   pos = s.find(marker)
                   if pos >= 0:
                       end = s.find('</section>', pos)
                       if end >= 0:
                           block = s[pos:end]
-                          idx = block.find(first)
-                          idx2 = block.find(first, idx + len(first)) if idx >= 0 else -1
-                          if idx2 >= 0:
-                              block = block[:idx2] + 'assets/artistes/astan-kida-2.jpg' + block[idx2+len(first):]
+                          first = 'assets/artistes/astan-kida.jpg'
+                          a = block.find(first)
+                          b = block.find(first, a + len(first)) if a >= 0 else -1
+                          if b >= 0:
+                              block = block[:b] + 'assets/artistes/astan-kida-2.jpg' + block[b + len(first):]
                               s = s[:pos] + block + s[end:]
               if s != old:
                   p.write_text(s, encoding='utf-8')
