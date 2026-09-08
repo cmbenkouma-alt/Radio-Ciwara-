@@ -78,3 +78,4 @@ jobs:
         uses: actions/deploy-pages@v4
 
 # Explicit deployment trigger.
+# CIWARA deployment refresh after clock/weather update.
