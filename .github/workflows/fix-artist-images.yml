@@ -9,40 +9,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download Astan Kida image into local assets
+      - name: Download reliable Astan Kida images into local assets
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
           mkdir -p assets/artistes
-          curl -L --fail --retry 3 -o assets/artistes/astan-kida.jpg 'https://www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg'
+          curl -L --fail --retry 5 --retry-all-errors -o assets/artistes/astan-kida.jpg 'https://images.weserv.nl/?url=www.musicinafrica.net/sites/default/files/styles/profile_photo/public/images/artist_profile/201502/astankida.jpg'
+          curl -L --fail --retry 5 --retry-all-errors -o assets/artistes/astan-kida-2.jpg 'https://images.weserv.nl/?url=www.musicinafrica.net/sites/default/files/styles/profile_images_thumbnail/public/images/artist_profile/201502/astankida1.jpg'
+          cp assets/artistes/astan-kida.jpg assets/astan-kida.jpg
           test -s assets/artistes/astan-kida.jpg
-      - name: Replace every external Astan Kida image with local asset
+          test -s assets/artistes/astan-kida-2.jpg
+          test -s assets/astan-kida.jpg
+      - name: Fix image references without duplicating the same photo
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
-          local = 'assets/artistes/astan-kida.jpg'
-          external_markers = (
-            'musicinafrica.net/sites/default/files/styles/profile_photo/',
-            'musicinafrica.net/sites/default/files/styles/profile_images_thumbnail/',
-            'images.weserv.nl/?url=www.musicinafrica.net/'
-          )
+          import re
           for p in Path('.').rglob('*.html'):
-            if '.git' in p.parts:
-              continue
-            s = p.read_text(encoding='utf-8')
-            old = s
-            import re
-            s = re.sub(r'https?://(?:images\.weserv\.nl/\?url=)?www\.musicinafrica\.net/sites/default/files/[^\"\'\s>]+', local, s)
-            if s != old:
-              p.write_text(s, encoding='utf-8')
+              if '.git' in p.parts:
+                  continue
+              s = p.read_text(encoding='utf-8')
+              old = s
+              s = re.sub(r'https?://(?:images\\.weserv\\.nl/\\?url=)?www\\.musicinafrica\\.net/sites/default/files/[^\"\\'\\s>]+', 'assets/artistes/astan-kida.jpg', s)
+              if p.name == 'artiste-du-mois.html':
+                  # Keep the hero image as the primary local photo and use the second source for the gallery's second card.
+                  gallery = re.sub(r'(<section class="artist-section"><h2>Photos d\'Astan Kida</h2><div class="artist-gallery">.*?<figure>.*?<img [^>]*src=")assets/artistes/artistes/astan-kida.jpg', r'\\1assets/artistes/astan-kida.jpg', s, flags=re.S)
+                  if gallery != s:
+                      s = gallery
+                  # The existing gallery currently contains the same local file twice; make the second card use the second local photo.
+                  first = 'assets/artistes/astan-kida.jpg'
+                  marker = '<section class="artist-section"><h2>Photos d\'Astan Kida</h2>'
+                  pos = s.find(marker)
+                  if pos >= 0:
+                      end = s.find('</section>', pos)
+                      if end >= 0:
+                          block = s[pos:end]
+                          idx = block.find(first)
+                          idx2 = block.find(first, idx + len(first)) if idx >= 0 else -1
+                          if idx2 >= 0:
+                              block = block[:idx2] + 'assets/artistes/astan-kida-2.jpg' + block[idx2+len(first):]
+                              s = s[:pos] + block + s[end:]
+              if s != old:
+                  p.write_text(s, encoding='utf-8')
           PY
-      - name: Commit local image and HTML fixes
+      - name: Commit local image fixes
         shell: bash
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add assets/artistes/astan-kida.jpg '*.html'
+          git add assets/artistes/astan-kida.jpg assets/artistes/astan-kida-2.jpg assets/astan-kida.jpg '*.html'
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Host Astan Kida images locally'
+          git commit -m 'Fix Astan Kida images and remove duplicate photo'
           git push
