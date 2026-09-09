@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/ciwara-hero-player-fix.yml'
+      - '.github/ciwara-hero-force-trigger.txt'
 
 permissions:
   contents: write
