@@ -24,7 +24,8 @@ const stations=[
 {name:'HIT RADIO · 100% Cover',frequency:'Maroc · Web Radio',stream:'https://cover2.ice.infomaniak.ch/cover2-128.mp3',logo:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s'},
 {name:'HIT RADIO · 100% Pop/Rock',frequency:'Maroc · Web Radio',stream:'https://poprock.ice.infomaniak.ch/poprock-128.mp3',logo:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s'},
 {name:'HIT RADIO · 100% French',frequency:'Maroc · Web Radio',stream:'https://french.ice.infomaniak.ch/french-128.mp3',logo:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s'},
-{name:'HIT RADIO · 100% Rock/Metal',frequency:'Maroc · Web Radio',stream:'https://rockmetal.ice.infomaniak.ch/rockmetal-128.mp3',logo:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s'}
+{name:'HIT RADIO · 100% Rock/Metal',frequency:'Maroc · Web Radio',stream:'https://rockmetal.ice.infomaniak.ch/rockmetal-128.mp3',logo:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s'},
+{name:'HIT RADIO Togo',frequency:'Lomé · 104.7 FM · Afrique',stream:'https://hr-togo.ice.infomaniak.ch/hr-togo-64.aac',logo:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s'},
 ];
 function esc(v){return String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function newsImage(url){if(!url)return 'logo.jpg';if(/^https:\/\//i.test(url))return url;if(/^http:\/\//i.test(url))return 'https://images.weserv.nl/?url='+encodeURIComponent(url);return 'logo.jpg'}
