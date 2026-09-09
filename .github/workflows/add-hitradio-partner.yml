@@ -14,7 +14,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ajouter Hit Radio
+      - name: Ajouter les flux Hit Radio vérifiés
         env:
           LOGO: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlzzmnLF5MQ9KtyYCvFIxyNOpF3X6hPcMH5skh43UYg&s"
         run: |
@@ -24,34 +24,23 @@ jobs:
 
           p = Path('mali-radios-original.js')
           s = p.read_text(encoding='utf-8')
-          marker = '/* CIWARA-HITRADIO-PARTNER */'
-          if marker in s:
-              print('Hit Radio déjà installé')
-              raise SystemExit(0)
-
           logo = os.environ['LOGO']
-          stations = f"""\n{marker}\n{{name:'HIT RADIO Maroc',frequency:'Maroc · 100% HITS',stream:'https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% R&B',frequency:'Maroc · Web Radio',stream:'https://rnb.ice.infomaniak.ch/rnb-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% M’Gharba',frequency:'Maroc · Web Radio',stream:'https://mgharba.ice.infomaniak.ch/mgharba-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Latino',frequency:'Maroc · Web Radio',stream:'https://latino.ice.infomaniak.ch/latino-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Gold',frequency:'Maroc · Web Radio',stream:'https://gold.ice.infomaniak.ch/gold-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Dancefloor',frequency:'Maroc · Web Radio',stream:'https://dancefloor.ice.infomaniak.ch/dancefloor-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Buzz',frequency:'Maroc · Web Radio',stream:'https://buzz.ice.infomaniak.ch/buzz-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Cover',frequency:'Maroc · Web Radio',stream:'https://cover2.ice.infomaniak.ch/cover2-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Pop/Rock',frequency:'Maroc · Web Radio',stream:'https://poprock.ice.infomaniak.ch/poprock-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% French',frequency:'Maroc · Web Radio',stream:'https://french.ice.infomaniak.ch/french-128.mp3',logo:'{logo}'}},\n{{name:'HIT RADIO · 100% Rock/Metal',frequency:'Maroc · Web Radio',stream:'https://rockmetal.ice.infomaniak.ch/rockmetal-128.mp3',logo:'{logo}'}}\n"""
 
-          # Ajoute les stations juste avant la fin du tableau initial.
-          pos = s.find('\n];')
-          if pos == -1:
-              raise SystemExit('Tableau stations introuvable')
-          s = s[:pos] + ',' + stations.rstrip() + s[pos:]
+          # Le bloc Maroc existe déjà. On ajoute uniquement les flux africains
+          # dont une URL de streaming directe a été identifiée de façon fiable.
+          additions = """
+          {name:'HIT RADIO Togo',frequency:'Lomé · 104.7 FM · Afrique',stream:'https://hr-togo.ice.infomaniak.ch/hr-togo-64.aac',logo:'LOGO'},
+          """.replace('LOGO', logo).strip()
 
-          css = f"""\n.mali-hitradio-partner{{margin:12px;border:1px solid #e7e7e7;border-left:4px solid #d71920;border-radius:8px;background:#fff;overflow:hidden}}\n.mali-hitradio-partner a{{display:flex;align-items:center;gap:12px;padding:12px;text-decoration:none;color:#111}}\n.mali-hitradio-partner img{{width:58px;height:58px;object-fit:contain;border-radius:7px;background:#fff;border:1px solid #eee;padding:5px;box-sizing:border-box}}\n.mali-hitradio-partner strong{{display:block;font:900 13px/1.2 Montserrat;color:#111}}\n.mali-hitradio-partner span{{display:block;margin-top:4px;font:700 9px Roboto;color:#777}}\n.mali-hitradio-partner em{{display:inline-block;margin-top:6px;font:900 8px Montserrat;color:#d71920;font-style:normal}}\n.mali-hitradio-partner a:hover{{background:#fff7f7}}\n"""
-          anchor = "mali-radio-section{display:block!important;"
-          if anchor in s:
-              s = s.replace(anchor, css + "\n." + anchor, 1)
+          if "name:'HIT RADIO Togo'" not in s:
+              pos = s.find('\n];')
+              if pos == -1:
+                  raise SystemExit('Tableau stations introuvable')
+              s = s[:pos] + ',\n' + additions + s[pos:]
+              p.write_text(s, encoding='utf-8')
+              print('Flux HIT RADIO Togo ajouté')
           else:
-              raise SystemExit('CSS cible introuvable')
-
-          partner = f'''<div class="mali-hitradio-partner"><a href="https://hitradio.ma" target="_blank" rel="noopener sponsored" aria-label="Découvrir Hit Radio Maroc"><img src="{logo}" alt="Logo Hit Radio" loading="lazy"><div><strong>PARTENAIRE · HIT RADIO</strong><span>La radio marocaine 100% HITS</span><em>VISITER HITRADIO.MA ↗</em></div></a></div>'''
-          needle = '<div class="mali-radio-list">'
-          if needle not in s:
-              raise SystemExit('Liste radios introuvable')
-          s = s.replace(needle, partner + needle, 1)
-
-          p.write_text(s, encoding='utf-8')
+              print('Flux HIT RADIO Togo déjà présent')
           PY
 
       - name: Publier les changements
@@ -60,5 +49,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add mali-radios-original.js
           git diff --cached --quiet && exit 0
-          git commit -m "Ajoute Hit Radio comme partenaire et ses flux"
+          git commit -m "Ajoute le flux HIT RADIO Togo"
           git push
