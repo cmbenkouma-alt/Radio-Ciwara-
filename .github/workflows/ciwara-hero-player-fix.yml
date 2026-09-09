@@ -18,26 +18,27 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
+
+          # 1) Reader frame: add a subtle studio/microphone atmosphere without covering controls.
           p = Path('mali-radios.js')
           s = p.read_text()
-          old = """.ciwara-caster-card{position:relative!important;border:2px solid #d71920!important;box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 0 3px rgba(215,25,32,.12)!important;margin-left:-18px!important}"""
-          new = """.ciwara-caster-card{position:relative!important;border:2px solid #d71920!important;box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 0 3px rgba(215,25,32,.12)!important;margin-left:-18px!important}.ciwara-caster-card:before{content:'🎙️';position:absolute;inset:52px 0 0;display:grid;place-items:center;font-size:118px;opacity:.07;filter:grayscale(1);pointer-events:none;z-index:0}.ciwara-caster-card .player-title,.ciwara-caster-card .direct-player{position:relative;z-index:1}.ciwara-caster-card .direct-player{overflow:hidden!important}"""
-          if old not in s:
-              raise SystemExit('style cible introuvable')
-          s = s.replace(old, new, 1)
-          s = s.replace(".ciwara-player-tap-ring{left:auto!important;right:22px!important;top:24px!important;transform:none!important;width:62px!important;height:62px!important;opacity:.9!important}", ".ciwara-player-tap-ring{left:auto!important;right:22px!important;top:24px!important;transform:none!important;width:62px!important;height:62px!important;opacity:.9!important}", 1)
+          css = r'''.ciwara-caster-card{position:relative!important;border:2px solid #d71920!important;box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 0 3px rgba(215,25,32,.12)!important;margin-left:-18px!important;overflow:hidden!important}.ciwara-caster-card:before{content:'🎙️';position:absolute;inset:52px 0 0;display:grid;place-items:center;font-size:118px;opacity:.055;filter:grayscale(1);pointer-events:none;z-index:0}.ciwara-caster-card:after{content:'';position:absolute;inset:52px 0 0;background:radial-gradient(circle at 50% 52%,rgba(215,25,32,.16),transparent 36%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 500'%3E%3Cg fill='none' stroke='%23d71920' stroke-opacity='.12' stroke-width='10'%3E%3Cpath d='M80 340c90-150 210-190 340-145 170 58 290 18 400-105'/%3E%3Cpath d='M100 405c100-115 220-145 330-112 170 50 285-8 370-105'/%3E%3C/g%3E%3Ccircle cx='450' cy='235' r='92'/%3E%3Cpath d='M418 140h64v190h-64z'/%3E%3C/svg%3E") center/cover no-repeat;pointer-events:none;z-index:0;opacity:.9}.ciwara-caster-card .player-title,.ciwara-caster-card .direct-player{position:relative;z-index:1}.ciwara-caster-card .direct-player{overflow:hidden!important}'''
+          if '.ciwara-caster-card:before' not in s:
+              marker = '.ciwara-caster-card{'
+              i = s.find(marker)
+              if i < 0:
+                  raise SystemExit('lecteur hero introuvable')
+              # Insert the new rule immediately before the existing caster-card rule.
+              s = s[:i] + css + s[i:]
           p.write_text(s)
 
+          # 2) Remove the three action buttons under the hero player.
           h = Path('index.html')
           x = h.read_text()
-          old_actions = '<div class="container ciwara-hero-actions"><button class="btn btn-red" data-play>▶ ÉCOUTER EN DIRECT</button><a class="btn btn-outline" href="#programmes">VOIR LA GRILLE</a><a class="btn btn-tv" href="ciwara-tv.html">CIWARA TV</a></div>'
-          if old_actions not in x:
-              raise SystemExit('bloc hero-actions introuvable')
-          x = x.replace(old_actions, '', 1)
-          marker = '<style>.ciwara-hero{'
-          if marker not in x:
-              raise SystemExit('style hero introuvable')
-          x = x.replace(marker, '<style>.ciwara-caster-card:after{content:\'\';position:absolute;inset:52px 0 0;background:radial-gradient(circle at 50% 52%,rgba(215,25,32,.22),transparent 35%),url(\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 900 500%22%3E%3Cg fill=%22none%22 stroke=%22%23d71920%22 stroke-opacity=%22.16%22 stroke-width=%2212%22%3E%3Cpath d=%22M120 330c60-120 180-180 330-150 160 32 270 20 330-70%22/%3E%3Cpath d=%22M150 390c80-100 180-130 300-105 160 35 260 0 330-85%22/%3E%3C/g%3E%3Ccircle cx=%22450%22 cy=%22235%22 r=%2290%22/%3E%3Cpath d=%22M420 145h60v180h-60z%22/%3E%3C/svg%3E\') center/cover no-repeat;pointer-events:none;z-index:0;opacity:.8}.ciwara-hero{', 1)
+          x, n = re.subn(r'<div class="container ciwara-hero-actions">.*?</div>', '', x, count=1, flags=re.S)
+          if n == 0:
+              print('hero-actions déjà absent')
           h.write_text(x)
           PY
       - name: Publier la correction
