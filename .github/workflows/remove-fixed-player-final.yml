@@ -1,0 +1,45 @@
+name: Remove fixed bottom player
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/remove-fixed-player-final.yml'
+permissions:
+  contents: write
+jobs:
+  remove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove fixed player HTML and spacing
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = s
+          s = re.sub(r'<div[^>]*class=["\'][^"\']*bottom-player[^"\']*["\'][^>]*>.*?</div>\s*(?=</(?:body|html))', '', s, flags=re.I|re.S)
+          if s == old:
+              s = re.sub(r'<[^>]*class=["\'][^"\']*bottom-player[^"\']*["\'][^>]*>.*?</[^>]+>', '', s, count=1, flags=re.I|re.S)
+          p.write_text(s, encoding='utf-8')
+          q = Path('style.css')
+          css = q.read_text(encoding='utf-8')
+          css = re.sub(r'body\{margin:0;background:#fff;color:#17181a;font-family:Roboto,Arial,sans-serif;padding-bottom:76px\}', 'body{margin:0;background:#fff;color:#17181a;font-family:Roboto,Arial,sans-serif;padding-bottom:0}', css, count=1)
+          css = re.sub(r'@media\(max-width:760px\)\{body\{padding-bottom:68px\}', '@media(max-width:760px){body{padding-bottom:0}', css, count=1)
+          if 'CIWARA FINAL: fixed player removed' not in css:
+              css += '\n/* CIWARA FINAL: fixed player removed */\n.bottom-player,.bottom-player-inner,.circle-play,[class*="bottom-player"]{display:none!important}\nbody{padding-bottom:0!important}\n'
+          q.write_text(css, encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html style.css
+          git diff --cached --quiet || git commit -m 'Suppression définitive du lecteur fixe en bas'
+          git push
+      - name: Remove temporary workflow
+        run: |
+          git rm .github/workflows/remove-fixed-player-final.yml
+          git commit -m 'Nettoyage du workflow temporaire'
+          git push
