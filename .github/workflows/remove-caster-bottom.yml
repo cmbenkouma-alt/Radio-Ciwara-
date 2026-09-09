@@ -1,0 +1,61 @@
+name: Remove remaining Caster.fm bottom player
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  remove-bottom-caster:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove remaining Caster.fm bottom player
+        shell: bash
+        run: |
+          set -e
+          python -m pip install --disable-pip-version-check beautifulsoup4
+          python - <<'PY'
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          soup = BeautifulSoup(s, 'html.parser')
+
+          # Remove the dedicated bottom-player container that contains the Caster widget.
+          widget = soup.select_one('.caster-bottom-widget')
+          if widget:
+              target = widget.find_parent(class_='bottom-player') or widget.find_parent(class_='caster-bottom-inner')
+              if target:
+                  target.decompose()
+              else:
+                  widget.decompose()
+
+          # Remove only the CSS dedicated to that bottom player.
+          style = soup.find('style', id='caster-bottom-player-style')
+          if style:
+              style.decompose()
+
+          if soup.select_one('.caster-bottom-widget'):
+              raise SystemExit('Caster bottom widget still present after removal')
+
+          p.write_text(str(soup), encoding='utf-8')
+          print('Remaining Caster.fm bottom player removed successfully.')
+          PY
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm .github/workflows/remove-caster-bottom.yml
+          git commit -m "fix: remove remaining Caster.fm bottom player"
+          git push origin main
