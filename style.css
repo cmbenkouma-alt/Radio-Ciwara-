@@ -37,3 +37,8 @@ iframe,video{width:100%}
  .player-title{font-size:12px}
  .section-head{align-items:flex-start;flex-direction:column}
 }
+
+/* CIWARA: fixed bottom player disabled */
+.bottom-player{display:none!important}
+body{padding-bottom:0!important}
+@media(max-width:760px){body{padding-bottom:0!important}}
