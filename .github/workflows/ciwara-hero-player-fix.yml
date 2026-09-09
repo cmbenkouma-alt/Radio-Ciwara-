@@ -1,0 +1,37 @@
+name: Ciwara hero player fix
+
+on:
+  push:
+    paths:
+      - '.github/workflows/ciwara-hero-player-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ajuster le lecteur hero
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('mali-radios.js')
+          s = p.read_text()
+          old = """.ciwara-caster-card{position:relative!important;border:2px solid #d71920!important;box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 0 3px rgba(215,25,32,.12)!important}"""
+          new = """.ciwara-caster-card{position:relative!important;border:2px solid #d71920!important;box-shadow:0 18px 48px rgba(0,0,0,.5),0 0 0 3px rgba(215,25,32,.12)!important;margin-left:-18px!important}.ciwara-caster-card .direct-player{overflow:hidden!important}.ciwara-player-tap-ring{left:auto!important;right:22px!important;top:24px!important;transform:none!important;width:62px!important;height:62px!important;opacity:.9!important}.ciwara-player-tap-ring:after{width:44px!important;height:44px!important;font-size:17px!important}.ciwara-player-guide{left:18px!important;right:18px!important;bottom:10px!important;transform:none!important;width:auto!important}.ciwara-caster-card .direct-player{padding:22px 92px 54px 20px!important}"""
+          if old not in s:
+              raise SystemExit('style cible introuvable')
+          s = s.replace(old, new, 1)
+          s = s.replace("@media(max-width:650px){.ciwara-caster-card .player-title", "@media(max-width:650px){.ciwara-caster-card{margin-left:0!important}.ciwara-caster-card .direct-player{padding:20px 20px 54px!important}.ciwara-player-tap-ring{right:14px!important;top:16px!important;width:52px!important;height:52px!important}.ciwara-player-tap-ring:after{width:38px!important;height:38px!important;font-size:15px!important}.ciwara-caster-card .player-title", 1)
+          p.write_text(s)
+          PY
+      - name: Publier la correction
+        run: |
+          git config user.name 'Ciwara Bot'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mali-radios.js
+          git diff --cached --quiet && exit 0
+          git commit -m "Améliore le positionnement et la lisibilité du lecteur hero"
+          git push
