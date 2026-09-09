@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lecteur Radio Ciwara</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#111214;font-family:Montserrat,Arial,sans-serif;color:#fff}.ciwara-reader{max-width:1100px;margin:24px auto;padding:24px;border-radius:22px;background:linear-gradient(135deg,#111214,#1b1d21);border:1px solid rgba(255,255,255,.09);box-shadow:0 18px 50px rgba(0,0,0,.35);position:relative;overflow:hidden}.ciwara-reader:before{content:'';position:absolute;inset:-120px auto auto -80px;width:300px;height:300px;background:rgba(215,25,32,.18);filter:blur(55px);border-radius:50%}.reader-head,.reader-main{position:relative;z-index:1}.reader-head{display:flex;justify-content:space-between;align-items:center;gap:15px}.station{font-weight:900;font-size:13px;letter-spacing:1px}.live{color:#ff4350;font-size:10px;font-weight:900}.live i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#e81e4d;margin-right:6px;box-shadow:0 0 0 5px rgba(232,30,77,.12);animation:pulse 1.5s infinite}.reader-main{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-top:22px}.current,.next{border-radius:16px;padding:22px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)}.label{font-size:9px;font-weight:900;color:#f7d51b;letter-spacing:1.2px}.current h1{font-size:27px;margin:9px 0 5px}.host{color:#c5c7ca;font-size:12px}.times{display:flex;justify-content:space-between;margin-top:20px;color:#9ea2a7;font-size:10px}.progress{height:5px;background:#303238;border-radius:10px;margin-top:8px;overflow:hidden}.progress b{display:block;width:42%;height:100%;background:linear-gradient(90deg,#d71920,#f7d51b);border-radius:10px}.play{margin-top:20px;width:100%;border:0;border-radius:13px;padding:15px;background:linear-gradient(100deg,#d71920,#e81e4d);color:#fff;font-weight:900;cursor:pointer;box-shadow:0 10px 25px rgba(215,25,32,.28);transition:.2s}.play:hover{transform:translateY(-2px);filter:brightness(1.08)}.next h2{font-size:17px;margin:9px 0}.next p{margin:5px 0;color:#c5c7ca;font-size:11px}.next .time{color:#fff;font-weight:900}.hint{margin-top:15px;color:#85898f;font-size:9px;text-align:center}@keyframes pulse{50%{opacity:.35;transform:scale(.8)}}@media(max-width:700px){.ciwara-reader{margin:12px;padding:17px;border-radius:17px}.reader-main{grid-template-columns:1fr}.current h1{font-size:22px}.reader-head{align-items:flex-start}.next{padding:17px}}
+</style>
+</head>
+<body>
+<section class="ciwara-reader" aria-label="Lecteur Radio Ciwara">
+ <div class="reader-head"><div class="station">RADIO CIWARA · 105.5 FM</div><div class="live"><i></i> EN DIRECT</div></div>
+ <div class="reader-main">
+  <article class="current"><div class="label">VOUS ÉCOUTEZ MAINTENANT</div><h1 id="currentShow">Émission en cours</h1><div class="host" id="currentHost">Radio Ciwara 105.5 FM</div><div class="times"><span id="start">--:--</span><span id="end">--:--</span></div><div class="progress"><b id="progress"></b></div><button class="play" id="play">▶ ÉCOUTER EN DIRECT</button></article>
+  <article class="next"><div class="label">À SUIVRE</div><h2 id="nextShow">Prochaine émission</h2><p id="nextHost">Programme Radio Ciwara</p><p class="time" id="nextTime">--:--</p><div class="hint" id="countdown">Préparation du prochain programme…</div></article>
+ </div>
+</section>
+<script>
+const hero=document.querySelector('.caster-main-player')||document.querySelector('.ciwara-caster-card');
+document.getElementById('play').addEventListener('click',()=>{if(hero){hero.scrollIntoView({behavior:'smooth',block:'center'});hero.style.transition='box-shadow .3s';hero.style.boxShadow='0 0 0 4px #e81e4d,0 0 35px rgba(232,30,77,.45)';setTimeout(()=>hero.style.boxShadow='',2200)}});
+// Structure prête à recevoir la grille officielle CIWARA sans modifier le reste du site.
+const schedule=[
+ {name:'Programme Radio Ciwara',host:'En direct sur 105.5 FM',start:'00:00',end:'23:59'}
+];
+function update(){const n=new Date();const mins=n.getHours()*60+n.getMinutes();let cur=schedule.find(x=>{const [h,m]=x.start.split(':').map(Number),[eh,em]=x.end.split(':').map(Number);return mins>=h*60+m&&mins<eh*60+em})||schedule[0];document.getElementById('currentShow').textContent=cur.name;document.getElementById('currentHost').textContent=cur.host;document.getElementById('start').textContent=cur.start;document.getElementById('end').textContent=cur.end;document.getElementById('progress').style.width=Math.max(4,Math.min(100,(mins-(+cur.start.slice(0,2)*60+ +cur.start.slice(3)))/(+cur.end.slice(0,2)*60+ +cur.end.slice(3)- (+cur.start.slice(0,2)*60+ +cur.start.slice(3)))*100))+'%'}update();setInterval(update,60000);
+</script>
+</body>
+</html>
