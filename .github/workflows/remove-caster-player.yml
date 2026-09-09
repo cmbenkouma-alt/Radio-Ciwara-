@@ -1,0 +1,55 @@
+name: Remove Caster.fm player
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  remove-caster:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove Caster.fm player blocks only
+        shell: bash
+        run: |
+          set -e
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          # Remove the Caster.fm card from the hero while keeping the hero video and layout.
+          hero_pattern = r'<div class="hero-player ciwara-caster-card">.*?</div></div></div></div></section>'
+          s2, hero_count = re.subn(hero_pattern, '</div></section>', s, count=1, flags=re.S)
+          if hero_count != 1:
+              raise SystemExit('Hero Caster.fm block not found; no change made.')
+
+          # Remove the lower duplicate DIRECT section containing the Caster.fm player.
+          direct_pattern = r'<section class="section" id="direct">.*?</section>\s*<script src="https://cdn\.cloud\.caster\.fm/widgets/embed\.js"></script>'
+          s3, direct_count = re.subn(direct_pattern, '', s2, count=1, flags=re.S)
+          if direct_count != 1:
+              raise SystemExit('Lower Caster.fm DIRECT block not found; no change made.')
+
+          p.write_text(s3, encoding='utf-8')
+          print('Caster.fm hero block removed:', hero_count)
+          print('Caster.fm lower DIRECT block removed:', direct_count)
+          PY
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm .github/workflows/remove-caster-player.yml
+          git commit -m "fix: remove Caster.fm player from homepage"
+          git push origin main
