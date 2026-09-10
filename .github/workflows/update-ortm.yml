@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-ortm
+  cancel-in-progress: true
+
 jobs:
   update-ortm:
     runs-on: ubuntu-latest
@@ -18,7 +22,7 @@ jobs:
       - name: Récupérer le site
         uses: actions/checkout@v4
 
-      - name: Détecter le dernier journal télévisé ORTM
+      - name: Détecter la dernière vidéo ORTM
         id: latest
         env:
           ORTM_CHANNEL_ID: UCQhdHZkL2eOBu66gNMCawag
@@ -26,43 +30,64 @@ jobs:
           python3 - <<'PY'
           import os
           import re
+          import time
           import urllib.request
           import xml.etree.ElementTree as ET
 
           channel = os.environ['ORTM_CHANNEL_ID']
           url = f'https://www.youtube.com/feeds/videos.xml?channel_id={channel}'
-          req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-          data = urllib.request.urlopen(req, timeout=20).read()
+          headers = {
+              'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124 Safari/537.36',
+              'Accept': 'application/atom+xml,application/xml,text/xml;q=0.9,*/*;q=0.8',
+          }
+
+          data = None
+          last_error = None
+          for attempt in range(1, 4):
+              try:
+                  req = urllib.request.Request(url, headers=headers)
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      data = response.read()
+                  if data:
+                      break
+              except Exception as exc:
+                  last_error = exc
+                  print(f'Tentative {attempt}/3 échouée: {exc}')
+                  if attempt < 3:
+                      time.sleep(5)
+
+          if not data:
+              raise SystemExit(f'Flux YouTube ORTM inaccessible après 3 tentatives: {last_error}')
+
           root = ET.fromstring(data)
           ns = {
               'yt': 'http://www.youtube.com/xml/schemas/2015',
               'atom': 'http://www.w3.org/2005/Atom'
           }
 
+          entries = root.findall('atom:entry', ns)
+          if not entries:
+              raise SystemExit('Le flux ORTM est accessible mais ne contient aucune vidéo.')
+
+          # Priorité aux journaux, mais on ne bloque plus la mise à jour si ORTM
+          # change le titre ou publie un JT avec une formulation différente.
           journal_re = re.compile(
-              r'(journal\s+t[ée]l[ée]vis[ée]|\bjt\b|\b20h\b|\b13h\b|\b23h30\b|\b19h30\b|\b18h30\b|don\s+kibaru|kibaru)',
+              r'(journal|\bjt\b|\b20h\b|\b13h\b|\b23h30\b|\b19h30\b|\b18h30\b|kibaru|édition|edition)',
               re.IGNORECASE
           )
 
-          entries = root.findall('atom:entry', ns)
-          match = None
-          for entry in entries:
-              title = (entry.findtext('atom:title', namespaces=ns) or '').strip()
-              if journal_re.search(title):
-                  match = entry
-                  break
+          match = next((e for e in entries if journal_re.search(
+              (e.findtext('atom:title', namespaces=ns) or '').strip()
+          )), entries[0])
 
-          if match is None:
-              raise SystemExit('Aucun nouveau journal télévisé ORTM trouvé dans le flux récent.')
+          video_id = (match.findtext('yt:videoId', namespaces=ns) or '').strip()
+          title = (match.findtext('atom:title', namespaces=ns) or 'Journal ORTM').strip()
+          published = (match.findtext('atom:published', namespaces=ns) or '').strip()
 
-          video_id = match.findtext('yt:videoId', namespaces=ns)
-          title = match.findtext('atom:title', namespaces=ns) or 'Journal télévisé ORTM'
-          published = match.findtext('atom:published', namespaces=ns) or ''
+          if not re.fullmatch(r'[A-Za-z0-9_-]{6,20}', video_id):
+              raise SystemExit(f'ID vidéo ORTM invalide: {video_id!r}')
 
-          if not video_id:
-              raise SystemExit('ID vidéo introuvable.')
-
-          print('JT ORTM détecté :', title)
+          print('Vidéo ORTM détectée :', title)
           print('Publié :', published)
           print('ID vidéo :', video_id)
 
@@ -73,7 +98,7 @@ jobs:
               f.write('EOF\n')
           PY
 
-      - name: Mettre à jour le bloc ORTM
+      - name: Mettre à jour uniquement le lecteur ORTM
         env:
           VIDEO_ID: ${{ steps.latest.outputs.video_id }}
           VIDEO_TITLE: ${{ steps.latest.outputs.title }}
@@ -85,67 +110,70 @@ jobs:
 
           p = Path('mali-radios.js')
           s = p.read_text(encoding='utf-8')
-          new_url = 'https://www.youtube.com/live/' + os.environ['VIDEO_ID']
+          video_id = os.environ['VIDEO_ID']
+          new_url = 'https://www.youtube.com/live/' + video_id
 
-          s2, count = re.subn(
-              r'https://www\.youtube\.com/live/[A-Za-z0-9_-]+',
-              new_url,
-              s
+          # Le lecteur ORTM est le bloc .mali-ortm-block. On ne touche qu'à ce
+          # bloc afin de ne jamais modifier les autres lecteurs/vidéos du site.
+          marker = 'mali-ortm-block'
+          pos = s.find(marker)
+          if pos < 0:
+              raise SystemExit('Bloc .mali-ortm-block introuvable dans mali-radios.js')
+
+          start = max(0, s.rfind('<', 0, pos))
+          # Le HTML du bloc est généralement contenu dans la chaîne JS qui suit.
+          # On limite la recherche à une fenêtre suffisamment large autour du bloc.
+          end = min(len(s), pos + 30000)
+          before = s[:start]
+          block = s[start:end]
+          after = s[end:]
+
+          youtube_re = re.compile(
+              r'https://(?:www\.)?youtube\.com/(?:live/|watch\?v=|embed/)[A-Za-z0-9_-]+'
           )
+          block2, count = youtube_re.subn(new_url, block, count=1)
 
           if count == 0:
-              raise SystemExit('Lien ORTM actuel introuvable dans mali-radios.js')
+              # Compatibilité avec une ancienne version qui stockait l'URL dans
+              # une propriété séparée mais toujours à proximité du bloc ORTM.
+              short_re = re.compile(r'(youtube\.com/)(?:live/|watch\?v=|embed/)[A-Za-z0-9_-]+')
+              block2, count = short_re.subn('youtube.com/live/' + video_id, block, count=1)
 
-          p.write_text(s2, encoding='utf-8')
-          print('Bloc ORTM :', os.environ['VIDEO_TITLE'])
-          print('Nouveau lien :', new_url)
+          if count == 0:
+              raise SystemExit('Aucun lien YouTube trouvé dans le bloc ORTM')
+
+          p.write_text(before + block2 + after, encoding='utf-8')
+          print('Lecteur ORTM mis à jour :', os.environ['VIDEO_TITLE'])
+          print('URL :', new_url)
           PY
 
-      - name: Ajouter l'aperçu automatique de la vidéo ORTM
+      - name: Vérifier que le lecteur ORTM pointe bien vers la nouvelle vidéo
+        env:
+          VIDEO_ID: ${{ steps.latest.outputs.video_id }}
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import os
+          import re
 
-          p = Path('mali-radios.js')
-          s = p.read_text(encoding='utf-8')
-
-          marker = 'function ortmPreview(){'
-          if marker not in s:
-              code = r'''function ortmPreview(){
-          document.querySelectorAll('.mali-ortm-link').forEach(a=>{
-            const m=(a.href||'').match(/\/live\/([A-Za-z0-9_-]+)/);
-            if(!m)return;
-            const id=m[1];
-            const thumb='https://i.ytimg.com/vi/'+id+'/hqdefault.jpg';
-            const fallback='https://upload.wikimedia.org/wikipedia/commons/7/7c/ORTM_1_0.png';
-            a.style.backgroundImage="linear-gradient(to top,rgba(0,0,0,.82),rgba(0,0,0,.08) 58%),url('"+thumb+"'),url('"+fallback+"')";
-            a.style.backgroundSize='cover,cover,contain';
-            a.style.backgroundPosition='center,center,center';
-            a.style.backgroundRepeat='no-repeat';
-            a.classList.add('has-ortm-preview');
-          });
-          }
-          '''
-              s=s.replace('function start(){',code+'function start(){')
-
-          s=s.replace("function start(){init();setTimeout(player,700)}", "function start(){init();setTimeout(ortmPreview,120);setTimeout(player,700)}")
-
-          css_marker='.mali-ortm-link{position:relative;'
-          if css_marker in s and 'has-ortm-preview' not in s:
-              s=s.replace(css_marker, ".mali-ortm-link.has-ortm-preview:before{background:rgba(215,25,32,.95)}\\n"+css_marker)
-
-          p.write_text(s, encoding='utf-8')
-          print('Aperçu ORTM automatique installé.')
+          s = Path('mali-radios.js').read_text(encoding='utf-8')
+          pos = s.find('mali-ortm-block')
+          if pos < 0:
+              raise SystemExit('Bloc ORTM introuvable après mise à jour.')
+          block = s[max(0, pos-500):pos+30000]
+          if os.environ['VIDEO_ID'] not in block:
+              raise SystemExit('Le nouvel ID vidéo n’est pas présent dans le bloc ORTM.')
+          print('Vérification OK :', os.environ['VIDEO_ID'])
           PY
 
       - name: Publier uniquement si le code ORTM a changé
         run: |
           if git diff --quiet -- mali-radios.js; then
-            echo 'Aucun changement à publier.'
+            echo 'Aucun changement ORTM à publier.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add mali-radios.js
-          git commit -m 'Afficher automatiquement la miniature du JT ORTM'
+          git commit -m 'Mettre à jour automatiquement le lecteur ORTM'
           git push
