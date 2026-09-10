@@ -1,11 +1,10 @@
-name: Ciwara Infos — mise à jour de l’accueil
+name: Ciwara Infos — nettoyage de l’accueil
 
 on:
   push:
     branches: [main]
     paths:
-      - 'data/ciwara-info.json'
-      - 'data/ciwara-info-images.json'
+      - 'index.html'
       - '.github/workflows/ciwara-infos-home.yml'
   workflow_dispatch:
 
@@ -17,74 +16,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  update-home:
+  remove-home-block:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Générer le bloc Ciwara Infos pour l’accueil
+      - name: Supprimer le bloc Ciwara Infos de l’accueil
         run: |
           python3 - <<'PY'
-          import json, html, pathlib
-
-          data = json.loads(pathlib.Path('data/ciwara-info.json').read_text(encoding='utf-8'))
-          mp = pathlib.Path('data/ciwara-info-images.json')
-          images = json.loads(mp.read_text(encoding='utf-8')) if mp.exists() else {}
-          cards = []
-          for x in data.get('items', [])[:6]:
-              title = html.escape(x.get('title','Article Ciwara Infos'))
-              subtitle = html.escape(x.get('subtitle',''))
-              category = html.escape(x.get('category','CIWARA INFO'))
-              date = html.escape(x.get('date',''))
-              src = images.get(x.get('title',''))
-              if src:
-                  visual = f'<img src="{html.escape(src)}" alt="{title}" loading="lazy">'
-              else:
-                  visual = '<span class="ci-home-placeholder">CI</span>'
-              cards.append(f'<article class="ci-home-card"><a href="ciwara-info.html" aria-label="Lire : {title}"><div class="ci-home-image">{visual}</div><div class="ci-home-body"><span>{category}</span><h3>{title}</h3><p>{subtitle}</p><small>{date} · Lire l’article →</small></div></a></article>')
-
-          block = '''<!-- CIWARA-INFOS-HOME:START -->
-          <section class="ci-home-section section" id="ciwara-infos-parution">
-            <div class="container">
-              <div class="ci-home-head"><div><span class="eyebrow">JOURNAL CIWARA INFOS</span><h2>La dernière parution</h2><p>Les articles de la parution sont désormais séparés et traités individuellement.</p></div><a href="ciwara-info.html">VOIR TOUS LES ARTICLES →</a></div>
-              <div class="ci-home-grid">''' + ''.join(cards) + '''</div>
-            </div>
-          </section>
-          <style id="ciwara-infos-home-style">
-          .ci-home-section{background:#f5f5f3;border-top:1px solid #ddd;border-bottom:1px solid #ddd}.ci-home-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:18px}.ci-home-head h2{font:900 25px Montserrat;margin:5px 0}.ci-home-head p{font-size:11px;color:#777;margin:0}.ci-home-head>a{font:900 9px Montserrat;color:#d71920;text-decoration:none;white-space:nowrap}.ci-home-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.ci-home-card{background:#fff;border:1px solid #ddd;border-radius:8px;overflow:hidden;box-shadow:0 5px 16px rgba(0,0,0,.05)}.ci-home-card>a{display:block;color:#111;text-decoration:none;height:100%}.ci-home-image{height:155px;background:#151719;overflow:hidden}.ci-home-image img{width:100%;height:100%;object-fit:cover;display:block}.ci-home-placeholder{height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#151719,#087f3f);color:#f7d51b;font:900 45px Montserrat}.ci-home-body{padding:15px}.ci-home-body>span{font:900 8px Montserrat;color:#d71920}.ci-home-body h3{font:900 15px/1.3 Montserrat;margin:7px 0}.ci-home-body p{font-size:11px;line-height:1.45;color:#666;margin:0 0 10px}.ci-home-body small{font:700 9px Roboto;color:#888}@media(max-width:900px){.ci-home-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.ci-home-head{align-items:flex-start;flex-direction:column}.ci-home-grid{grid-template-columns:1fr}.ci-home-image{height:175px}}
-          </style>
-          <!-- CIWARA-INFOS-HOME:END -->'''
-
-          index = pathlib.Path('index.html')
-          text = index.read_text(encoding='utf-8')
-          start = text.find('<!-- CIWARA-INFOS-HOME:START -->')
-          end = text.find('<!-- CIWARA-INFOS-HOME:END -->')
+          from pathlib import Path
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          start_marker = '<!-- CIWARA-INFOS-HOME:START -->'
+          end_marker = '<!-- CIWARA-INFOS-HOME:END -->'
+          start = text.find(start_marker)
+          end = text.find(end_marker)
           if start >= 0 and end >= 0:
-              end += len('<!-- CIWARA-INFOS-HOME:END -->')
-              text = text[:start] + block + text[end:]
+              end += len(end_marker)
+              text = text[:start] + text[end:]
+              p.write_text(text, encoding='utf-8')
+              print('Bloc Ciwara Infos supprimé.')
           else:
-              marker = '<section class="portal-main" id="actualites">'
-              pos = text.find(marker)
-              if pos < 0:
-                  raise SystemExit('marker index.html introuvable')
-              text = text[:pos] + block + '\n' + text[pos:]
-          index.write_text(text, encoding='utf-8')
+              print('Bloc déjà absent.')
           PY
 
-      - name: Vérifier la modification
-        run: |
-          test -s index.html
-          grep -q 'CIWARA-INFOS-HOME:START' index.html
-
-      - name: Enregistrer la source de l’accueil
+      - name: Enregistrer la suppression
         run: |
           if git diff --quiet -- index.html; then
-            echo 'Accueil déjà à jour.'
+            echo 'Aucune modification nécessaire.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Mettre à jour le bloc Ciwara Infos de l’accueil'
+          git commit -m 'Supprimer le bloc Ciwara Infos de l’accueil'
           git push
