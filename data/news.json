@@ -1,6 +1,38 @@
 {
-  "generatedAt": "2026-09-10T21:35:21.095370+00:00",
+  "generatedAt": "2026-09-10T23:23:11.193784+00:00",
   "items": [
+    {
+      "title": "Aigle du Mali : le sélectionneur Antony fixe ses conditions pour endosser le maillot national",
+      "link": "https://www.maliweb.net/sports/aigle-du-mali-le-selectionneur-antony-fixe-ses-conditions-pour-endosser-le-maillot-national-3119824.html",
+      "source": "Maliweb",
+      "date": "Thu, 10 Sep 2026 23:11:43 +0000",
+      "description": "Dans le cadre des deux premières journées des éliminatoires de la Coupe d’Afrique des Nations (CAN) de football 2027, contre respectivement le Cap-Vert le 23 septembre à Bamako et le Libéria le 27 septembre, le sélectionneur national des Aigles du Mali, Antony Da Silva, a convoqu",
+      "image": "https://www.maliweb.net/uploads/images/202609/image_870x580_6aa33901ec0e5.jpg"
+    },
+    {
+      "title": "Éducation : la fondation orange mali lance ses bourses d’excellence pour les élèves en situation difficile",
+      "link": "https://www.maliweb.net/education/education-la-fondation-orange-mali-lance-ses-bourses-dexcellence-pour-les-eleves-en-situation-difficile-3119823.html",
+      "source": "Maliweb",
+      "date": "Thu, 10 Sep 2026 23:01:52 +0000",
+      "description": "Dans le cadre de sa mission d’égalité des chances, la Fondation Orange Mali lance un appel à candidatures afin d&#039;accompagner les élèves et étudiants en situation difficile, notamment les lauréats du DEF 2026. Les candidatures sont ouvertes jusqu’au 20 septembre 2026.",
+      "image": "https://www.maliweb.net/uploads/images/202609/image_870x580_6aa336cd76326.jpg"
+    },
+    {
+      "title": "Sikasso : plus de 72 000 produits pharmaceutiques saisis par la Douane",
+      "link": "https://malijet.com/les_faits_divers_au_mali/311767-sikasso-plus-de-72-000-produits-pharmaceutiques-saisis-par.html",
+      "source": "Malijet",
+      "date": "Thu, 10 Sep 2026 21:41:47 +0000",
+      "description": "La Brigade Mobile d’Intervention (BMI) de Sikasso a saisi 72 876 unités de produits pharmaceutiques dans la soirée du 5 septembre 2026.",
+      "image": "https://malijet.com/files/01M26MBVBXFMYP55MZ0H7H2SY4.jpg"
+    },
+    {
+      "title": "Opérations militaires : Les FAMa infligent de lourdes pertes aux groupes terroristes à Dioura, San et Sikasso",
+      "link": "https://malijet.com/actualte_dans_les_regions_du_mali/311766-operations-militaires-les-fama-infligent-de-lourdes-pertes.html",
+      "source": "Malijet",
+      "date": "Thu, 10 Sep 2026 21:37:29 +0000",
+      "description": "Faisant suite à l’attaque perpétrée ce 10 septembre 2026 dans le secteur de Dioura, l’état-major général des armées informe que les Forces Armées Maliennes (FAMa) ont immédiatement engagé de vastes opérations aéroterrestres de riposte et de traque contre les assaillants.",
+      "image": "https://malijet.com/files/01M26M680DQGDBYJ1AJ42Y81BC.jpg"
+    },
     {
       "title": "DIRPA : près de 1 000 terroristes neutralisés et plusieurs otages libérés en août",
       "link": "https://malijet.com/a_la_une_du_mali/311765-dirpa-pres-de-1-000-terroristes-neutralises-et-plusieurs-o.html",
@@ -274,14 +306,6 @@
       "image": "https://malijet.com/files/01M2594PW02Z9SPDS1YM182JZC.png"
     },
     {
-      "title": "Point de Vue : Mali–Chine : l’amitié de l&apos;Hippopotame et du Dragon exige de la lucidité",
-      "link": "https://www.maliweb.net/point-de-vue/point-de-vue-malichine-lamitie-de-lhippopotame-et-du-dragon-exige-de-la-lucidite-3119804.html",
-      "source": "Maliweb",
-      "date": "Thu, 10 Sep 2026 09:04:17 +0000",
-      "description": "À Bamako, une information administrative a suffi à réveiller les passions",
-      "image": "https://www.maliweb.net/uploads/images/202510/image_870x580_68f28879ceb8d.jpg"
-    },
-    {
       "title": "Mali-Chine : l’ambassadeur Li Xiang participe à une remise de kits alimentaires à Bamako",
       "link": "https://malijet.com/actualite-politique-au-mali/311749-mali-chine-lambassadeur-li-xiang-participe-a-une-remise-d.html",
       "source": "Malijet",
@@ -296,30 +320,6 @@
       "date": "Thu, 10 Sep 2026 08:59:16 +0000",
       "description": "Redonner la rue aux piétons et fluidifier la circulation : c’est le pari tenu par l’opération de libération du domaine public routier, actuellement en cours à Bamako et sur les principaux axes interurbains. Lancée dans le cadre de la 22ᵉ semaine nationale de la sécurité routière,",
       "image": "https://malijet.com/files/01M258QKJ1ZH0E785DW6X5NPC2.jpg"
-    },
-    {
-      "title": "Mopti : L’UE et EUCAP Sahel Mali misent sur le dialogue et la justice de proximité pour renforcer la confiance",
-      "link": "https://malijet.com/actualite-politique-au-mali/311747-mopti-lue-et-eucap-sahel-mali-misent-sur-le-dialogue-et-l.html",
-      "source": "Malijet",
-      "date": "Thu, 10 Sep 2026 08:56:01 +0000",
-      "description": "L’Ambassadeur de l’Union européenne au Mali, Alberto Cerezo, et le chef de mission d’EUCAP Sahel Mali, Eugene Van Kemenade, ont effectué une visite de travail à Mopti. Au cœur de leur déplacement : soutenir les initiatives locales visant à retisser les liens de confiance et de co",
-      "image": "https://malijet.com/files/01M258HFJVASPN1R74808CW09Y.jpg"
-    },
-    {
-      "title": "Mauritanie : 17 personnes, dont un ancien porte-parole d’Ansar Dine, arrêtées pour trafic d’armes à la frontière malienne",
-      "link": "https://www.maliweb.net/insecurite/mauritanie-17-personnes-dont-un-ancien-porte-parole-dansar-dine-arretees-pour-trafic-darmes-a-la-frontiere-malienne-3119803.html",
-      "source": "Maliweb",
-      "date": "Thu, 10 Sep 2026 08:52:19 +0000",
-      "description": "Sanda Ould Bouamama, ancien porte-parole du groupe jihadiste malien Ansar Dine, a été arrêté avec 16 autres personnes par l’armée mauritanienne à la frontière avec le Mali.",
-      "image": "https://www.maliweb.net/uploads/images/202609/image_870x580_6aa26fadb9065.jpg"
-    },
-    {
-      "title": "Alerte méteo : Orages et fortes pluies en cours sur une grande partie du territoire",
-      "link": "https://malijet.com/flash-info/311746-alerte-meteo-orages-et-fortes-pluies-en-cours-sur-une-gran.html",
-      "source": "Malijet",
-      "date": "Thu, 10 Sep 2026 08:50:55 +0000",
-      "description": "La Direction Nationale de la Météorologie émet une vigilance particulière pour ce jeudi 10 septembre 2026 en raison de l’activité pluvio-orageuse qui traverse le pays.",
-      "image": "https://malijet.com/files/01M25885P4JNVYEE9XGWPAEGRK.jpg"
     }
   ],
   "sources": [
