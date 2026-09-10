@@ -69,13 +69,10 @@ jobs:
           if not entries:
               raise SystemExit('Le flux ORTM est accessible mais ne contient aucune vidéo.')
 
-          # Priorité aux journaux, mais on ne bloque plus la mise à jour si ORTM
-          # change le titre ou publie un JT avec une formulation différente.
           journal_re = re.compile(
               r'(journal|\bjt\b|\b20h\b|\b13h\b|\b23h30\b|\b19h30\b|\b18h30\b|kibaru|édition|edition)',
               re.IGNORECASE
           )
-
           match = next((e for e in entries if journal_re.search(
               (e.findtext('atom:title', namespaces=ns) or '').strip()
           )), entries[0])
@@ -113,16 +110,14 @@ jobs:
           video_id = os.environ['VIDEO_ID']
           new_url = 'https://www.youtube.com/live/' + video_id
 
-          # Le lecteur ORTM est le bloc .mali-ortm-block. On ne touche qu'à ce
-          # bloc afin de ne jamais modifier les autres lecteurs/vidéos du site.
+          # .mali-ortm-block existe aussi dans le CSS. Le dernier exemplaire
+          # correspond au HTML du lecteur réellement rendu par le script.
           marker = 'mali-ortm-block'
-          pos = s.find(marker)
+          pos = s.rfind(marker)
           if pos < 0:
               raise SystemExit('Bloc .mali-ortm-block introuvable dans mali-radios.js')
 
           start = max(0, s.rfind('<', 0, pos))
-          # Le HTML du bloc est généralement contenu dans la chaîne JS qui suit.
-          # On limite la recherche à une fenêtre suffisamment large autour du bloc.
           end = min(len(s), pos + 30000)
           before = s[:start]
           block = s[start:end]
@@ -134,13 +129,11 @@ jobs:
           block2, count = youtube_re.subn(new_url, block, count=1)
 
           if count == 0:
-              # Compatibilité avec une ancienne version qui stockait l'URL dans
-              # une propriété séparée mais toujours à proximité du bloc ORTM.
               short_re = re.compile(r'(youtube\.com/)(?:live/|watch\?v=|embed/)[A-Za-z0-9_-]+')
               block2, count = short_re.subn('youtube.com/live/' + video_id, block, count=1)
 
           if count == 0:
-              raise SystemExit('Aucun lien YouTube trouvé dans le bloc ORTM')
+              raise SystemExit('Aucun lien YouTube trouvé dans le lecteur ORTM')
 
           p.write_text(before + block2 + after, encoding='utf-8')
           print('Lecteur ORTM mis à jour :', os.environ['VIDEO_TITLE'])
@@ -154,15 +147,14 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os
-          import re
 
           s = Path('mali-radios.js').read_text(encoding='utf-8')
-          pos = s.find('mali-ortm-block')
+          pos = s.rfind('mali-ortm-block')
           if pos < 0:
               raise SystemExit('Bloc ORTM introuvable après mise à jour.')
-          block = s[max(0, pos-500):pos+30000]
+          block = s[max(0, pos-1000):pos+30000]
           if os.environ['VIDEO_ID'] not in block:
-              raise SystemExit('Le nouvel ID vidéo n’est pas présent dans le bloc ORTM.')
+              raise SystemExit('Le nouvel ID vidéo n’est pas présent dans le lecteur ORTM.')
           print('Vérification OK :', os.environ['VIDEO_ID'])
           PY
 
