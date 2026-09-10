@@ -1,6 +1,11 @@
 name: Mettre à jour automatiquement la vidéo ORTM
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'mali-radios-original.js'
+      - '.github/workflows/update-ortm.yml'
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
@@ -57,33 +62,23 @@ jobs:
               raise SystemExit(f'Flux YouTube ORTM inaccessible après 3 tentatives: {last_error}')
 
           root = ET.fromstring(data)
-          ns = {
-              'yt': 'http://www.youtube.com/xml/schemas/2015',
-              'atom': 'http://www.w3.org/2005/Atom'
-          }
+          ns = {'yt': 'http://www.youtube.com/xml/schemas/2015', 'atom': 'http://www.w3.org/2005/Atom'}
           entries = root.findall('atom:entry', ns)
           if not entries:
               raise SystemExit('Le flux ORTM est accessible mais ne contient aucune vidéo.')
 
-          journal_re = re.compile(
-              r'(journal|\bjt\b|\b20h\b|\b13h\b|\b23h30\b|\b19h30\b|\b18h30\b|kibaru|édition|edition)',
-              re.IGNORECASE
-          )
-          match = next((e for e in entries if journal_re.search(
-              (e.findtext('atom:title', namespaces=ns) or '').strip()
-          )), entries[0])
+          journal_re = re.compile(r'(journal|\bjt\b|\b20h\b|\b13h\b|\b23h30\b|\b19h30\b|\b18h30\b|kibaru|édition|edition)', re.IGNORECASE)
+          match = next((e for e in entries if journal_re.search((e.findtext('atom:title', namespaces=ns) or '').strip())), entries[0])
 
           video_id = (match.findtext('yt:videoId', namespaces=ns) or '').strip()
           title = (match.findtext('atom:title', namespaces=ns) or 'Journal ORTM').strip()
           published = (match.findtext('atom:published', namespaces=ns) or '').strip()
-
           if not re.fullmatch(r'[A-Za-z0-9_-]{6,20}', video_id):
               raise SystemExit(f'ID vidéo ORTM invalide: {video_id!r}')
 
           print('Vidéo ORTM détectée :', title)
           print('Publié :', published)
           print('ID vidéo :', video_id)
-
           with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as f:
               f.write(f'video_id={video_id}\n')
               f.write('title<<EOF\n')
@@ -101,36 +96,31 @@ jobs:
           import os
           import re
 
-          # IMPORTANT : le HTML du box ORTM est généré par mali-radios-original.js.
-          # mali-radios.js ne contient que le wrapper qui charge ce fichier.
+          # Le box ORTM est généré dans mali-radios-original.js.
+          # mali-radios.js n'est qu'un wrapper : ne plus modifier le mauvais fichier.
           p = Path('mali-radios-original.js')
           s = p.read_text(encoding='utf-8')
           video_id = os.environ['VIDEO_ID']
           new_url = 'https://www.youtube.com/live/' + video_id
 
-          marker = 'class=\\"mali-ortm-link\\"'
+          marker = 'mali-ortm-link'
           pos = s.find(marker)
-          if pos < 0:
-              # Tolérance si le code est reformatté avec des guillemets simples.
-              pos = s.find('mali-ortm-link')
           if pos < 0:
               raise SystemExit('Box .mali-ortm-link introuvable dans mali-radios-original.js')
 
-          # Limiter la modification au HTML du box ORTM, jamais aux autres liens YouTube.
-          start = max(0, s.rfind('<div class=\\"mali-ortm-block\\"', 0, pos))
+          start = s.rfind('<div class=\\"mali-ortm-block\\"', 0, pos)
           if start < 0:
-              start = max(0, s.rfind('<div class="mali-ortm-block"', 0, pos))
+              start = s.rfind('<div class="mali-ortm-block"', 0, pos)
           if start < 0:
               raise SystemExit('Conteneur .mali-ortm-block introuvable.')
+
           end = s.find('</div></div></div>', pos)
           if end < 0:
               raise SystemExit('Fin du box ORTM introuvable.')
           end += len('</div></div></div>')
 
           block = s[start:end]
-          youtube_re = re.compile(
-              r'https://(?:www\\.)?youtube\\.com/(?:live/|watch\\?v=|embed/)[A-Za-z0-9_-]+'
-          )
+          youtube_re = re.compile(r'https://(?:www\\.)?youtube\\.com/(?:live/|watch\\?v=|embed/)[A-Za-z0-9_-]+')
           block2, count = youtube_re.subn(new_url, block)
           if count < 1:
               raise SystemExit('Aucun lien YouTube trouvé dans le box ORTM.')
@@ -147,11 +137,8 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import os
-
           s = Path('mali-radios-original.js').read_text(encoding='utf-8')
-          pos = s.find('class=\\"mali-ortm-link\\"')
-          if pos < 0:
-              pos = s.find('mali-ortm-link')
+          pos = s.find('mali-ortm-link')
           if pos < 0:
               raise SystemExit('Box ORTM introuvable après mise à jour.')
           block_start = s.rfind('mali-ortm-block', 0, pos)
