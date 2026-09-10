@@ -8,10 +8,14 @@ on:
       - 'scripts/rss_news.py'
       - '.github/workflows/news-rss.yml'
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/15 * * * *"
 
 permissions:
   contents: write
+
+concurrency:
+  group: radio-ciwara-rss
+  cancel-in-progress: false
 
 jobs:
   update-news:
@@ -26,13 +30,24 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
-      - name: Synchroniser Malijet + Maliweb
+      - name: Synchroniser uniquement Maliweb + Malijet
         run: python scripts/rss_news.py
       - name: Publier le cache JSON et les images
+        shell: bash
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/news.json data/news-images/
-          if git diff --cached --quiet; then echo "Aucune modification."; exit 0; fi
-          git commit -m "chore: synchroniser les actualites RSS et leurs images"
-          git push origin main
+          if git diff --cached --quiet; then
+            echo "Aucune modification RSS."
+            exit 0
+          fi
+          git commit -m "chore: synchroniser les actualites Maliweb et Malijet"
+          for attempt in 1 2 3; do
+            git pull --rebase origin main && git push origin main && exit 0
+            echo "Nouvel essai de publication RSS: $attempt/3"
+            sleep $((attempt * 5))
+          done
+          echo "Impossible de publier après 3 tentatives." >&2
+          exit 1
