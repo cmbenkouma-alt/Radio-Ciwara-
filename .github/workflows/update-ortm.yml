@@ -1,9 +1,6 @@
 name: Mettre à jour automatiquement la vidéo ORTM
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
@@ -64,7 +61,6 @@ jobs:
               'yt': 'http://www.youtube.com/xml/schemas/2015',
               'atom': 'http://www.w3.org/2005/Atom'
           }
-
           entries = root.findall('atom:entry', ns)
           if not entries:
               raise SystemExit('Le flux ORTM est accessible mais ne contient aucune vidéo.')
@@ -95,7 +91,7 @@ jobs:
               f.write('EOF\n')
           PY
 
-      - name: Mettre à jour uniquement le lecteur ORTM
+      - name: Mettre à jour le vrai lecteur ORTM
         env:
           VIDEO_ID: ${{ steps.latest.outputs.video_id }}
           VIDEO_TITLE: ${{ steps.latest.outputs.title }}
@@ -105,42 +101,46 @@ jobs:
           import os
           import re
 
-          p = Path('mali-radios.js')
+          # IMPORTANT : le HTML du box ORTM est généré par mali-radios-original.js.
+          # mali-radios.js ne contient que le wrapper qui charge ce fichier.
+          p = Path('mali-radios-original.js')
           s = p.read_text(encoding='utf-8')
           video_id = os.environ['VIDEO_ID']
           new_url = 'https://www.youtube.com/live/' + video_id
 
-          # .mali-ortm-block existe aussi dans le CSS. Le dernier exemplaire
-          # correspond au HTML du lecteur réellement rendu par le script.
-          marker = 'mali-ortm-block'
-          pos = s.rfind(marker)
+          marker = 'class=\\"mali-ortm-link\\"'
+          pos = s.find(marker)
           if pos < 0:
-              raise SystemExit('Bloc .mali-ortm-block introuvable dans mali-radios.js')
+              # Tolérance si le code est reformatté avec des guillemets simples.
+              pos = s.find('mali-ortm-link')
+          if pos < 0:
+              raise SystemExit('Box .mali-ortm-link introuvable dans mali-radios-original.js')
 
-          start = max(0, s.rfind('<', 0, pos))
-          end = min(len(s), pos + 30000)
-          before = s[:start]
+          # Limiter la modification au HTML du box ORTM, jamais aux autres liens YouTube.
+          start = max(0, s.rfind('<div class=\\"mali-ortm-block\\"', 0, pos))
+          if start < 0:
+              start = max(0, s.rfind('<div class="mali-ortm-block"', 0, pos))
+          if start < 0:
+              raise SystemExit('Conteneur .mali-ortm-block introuvable.')
+          end = s.find('</div></div></div>', pos)
+          if end < 0:
+              raise SystemExit('Fin du box ORTM introuvable.')
+          end += len('</div></div></div>')
+
           block = s[start:end]
-          after = s[end:]
-
           youtube_re = re.compile(
-              r'https://(?:www\.)?youtube\.com/(?:live/|watch\?v=|embed/)[A-Za-z0-9_-]+'
+              r'https://(?:www\\.)?youtube\\.com/(?:live/|watch\\?v=|embed/)[A-Za-z0-9_-]+'
           )
-          block2, count = youtube_re.subn(new_url, block, count=1)
+          block2, count = youtube_re.subn(new_url, block)
+          if count < 1:
+              raise SystemExit('Aucun lien YouTube trouvé dans le box ORTM.')
 
-          if count == 0:
-              short_re = re.compile(r'(youtube\.com/)(?:live/|watch\?v=|embed/)[A-Za-z0-9_-]+')
-              block2, count = short_re.subn('youtube.com/live/' + video_id, block, count=1)
-
-          if count == 0:
-              raise SystemExit('Aucun lien YouTube trouvé dans le lecteur ORTM')
-
-          p.write_text(before + block2 + after, encoding='utf-8')
-          print('Lecteur ORTM mis à jour :', os.environ['VIDEO_TITLE'])
+          p.write_text(s[:start] + block2 + s[end:], encoding='utf-8')
+          print('Lecteur ORTM mis à jour :', VIDEO_TITLE)
           print('URL :', new_url)
           PY
 
-      - name: Vérifier que le lecteur ORTM pointe bien vers la nouvelle vidéo
+      - name: Vérifier le lecteur ORTM
         env:
           VIDEO_ID: ${{ steps.latest.outputs.video_id }}
         run: |
@@ -148,24 +148,28 @@ jobs:
           from pathlib import Path
           import os
 
-          s = Path('mali-radios.js').read_text(encoding='utf-8')
-          pos = s.rfind('mali-ortm-block')
+          s = Path('mali-radios-original.js').read_text(encoding='utf-8')
+          pos = s.find('class=\\"mali-ortm-link\\"')
           if pos < 0:
-              raise SystemExit('Bloc ORTM introuvable après mise à jour.')
-          block = s[max(0, pos-1000):pos+30000]
-          if os.environ['VIDEO_ID'] not in block:
-              raise SystemExit('Le nouvel ID vidéo n’est pas présent dans le lecteur ORTM.')
-          print('Vérification OK :', os.environ['VIDEO_ID'])
+              pos = s.find('mali-ortm-link')
+          if pos < 0:
+              raise SystemExit('Box ORTM introuvable après mise à jour.')
+          block_start = s.rfind('mali-ortm-block', 0, pos)
+          block = s[max(0, block_start):pos+2500]
+          expected = os.environ['VIDEO_ID']
+          if expected not in block:
+              raise SystemExit(f'Le nouvel ID ORTM {expected} n’est pas présent dans le box.')
+          print('Vérification ORTM OK :', expected)
           PY
 
-      - name: Publier uniquement si le code ORTM a changé
+      - name: Publier uniquement si le lecteur a changé
         run: |
-          if git diff --quiet -- mali-radios.js; then
+          if git diff --quiet -- mali-radios-original.js; then
             echo 'Aucun changement ORTM à publier.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add mali-radios.js
+          git add mali-radios-original.js
           git commit -m 'Mettre à jour automatiquement le lecteur ORTM'
           git push
