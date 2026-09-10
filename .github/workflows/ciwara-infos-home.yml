@@ -1,4 +1,4 @@
-name: Ciwara Infos — nettoyage de l’accueil
+name: Nettoyage accueil Ciwara
 
 on:
   push:
@@ -12,22 +12,25 @@ permissions:
   contents: write
 
 concurrency:
-  group: ciwara-infos-home
+  group: ciwara-home-cleanup
   cancel-in-progress: true
 
 jobs:
-  remove-home-block:
+  cleanup-home:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Supprimer le bloc Ciwara Infos de l’accueil
+      - name: Nettoyer l’accueil
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           text = p.read_text(encoding='utf-8')
+          changed = False
+
+          # Supprimer le bloc Ciwara Infos injecté précédemment.
           start_marker = '<!-- CIWARA-INFOS-HOME:START -->'
           end_marker = '<!-- CIWARA-INFOS-HOME:END -->'
           start = text.find(start_marker)
@@ -35,20 +38,29 @@ jobs:
           if start >= 0 and end >= 0:
               end += len(end_marker)
               text = text[:start] + text[end:]
-              p.write_text(text, encoding='utf-8')
-              print('Bloc Ciwara Infos supprimé.')
-          else:
-              print('Bloc déjà absent.')
+              changed = True
+
+          # Supprimer entièrement la bannière Dolo Karamoko sous « Réécoutez Ciwara ».
+          start = text.find('<section class="bank-ad">')
+          if start >= 0:
+              end = text.find('</section>', start)
+              if end >= 0:
+                  end += len('</section>')
+                  text = text[:start] + text[end:]
+                  changed = True
+
+          p.write_text(text, encoding='utf-8')
+          print('Accueil nettoyé.' if changed else 'Aucune modification nécessaire.')
           PY
 
-      - name: Enregistrer la suppression
+      - name: Enregistrer le nettoyage
         run: |
           if git diff --quiet -- index.html; then
-            echo 'Aucune modification nécessaire.'
+            echo 'Accueil déjà nettoyé.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Supprimer le bloc Ciwara Infos de l’accueil'
+          git commit -m 'Supprimer le bloc Ciwara Infos et la bannière Dolo Karamoko'
           git push
