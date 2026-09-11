@@ -16,7 +16,15 @@
   liveBox.id = 'ciwaraFacebookLiveBox';
   liveBox.className = 'side-box ciwara-facebook-live-box';
   liveBox.innerHTML = '<div class="side-title">🔴 LIVE FACEBOOK</div><div class="cfb-frame"><iframe src="https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fradiociwarafm%2Fvideos%2F1079483461717667%2F&show_text=false&width=560&t=0" width="560" height="314" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" title="Live Facebook Radio Ciwara"></iframe></div><div class="cfb-note">Suivez le direct Facebook de Radio Ciwara 105.5 FM</div>';
-  sidebar.prepend(liveBox);
+
+  // Place the Facebook player immediately below the existing “À L’ANTENNE” box.
+  const antennaBox = Array.from(sidebar.querySelectorAll('.side-box')).find(el => /à\s*l.?antenne/i.test(el.textContent || ''));
+  if (antennaBox) {
+    antennaBox.insertAdjacentElement('afterend', liveBox);
+  } else {
+    // Fallback: keep it at the bottom of the sidebar if the antenna box is unavailable.
+    sidebar.appendChild(liveBox);
+  }
 
   fetch('data/events.json?v=' + Date.now())
     .then(r => r.json())
