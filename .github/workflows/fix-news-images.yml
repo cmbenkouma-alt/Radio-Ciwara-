@@ -24,10 +24,8 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-          import json
+          import re
 
-          # Les images de la parution 514 sont stockées dans assets/ à la racine.
-          # Les JSON pointaient par erreur vers un dossier inexistant assets/ciwara-info/514/.
           for name in ('data/ciwara-info.json', 'data/news.json'):
               p = Path(name)
               if p.exists():
@@ -35,17 +33,14 @@ jobs:
                   s = s.replace('assets/ciwara-info/514/', 'assets/')
                   p.write_text(s, encoding='utf-8')
 
-          # Le moteur de la page d'accueil refusait toutes les images locales
-          # (assets/...) et remplaçait systématiquement leur URL par logo.jpg.
           p = Path('script.js')
           s = p.read_text(encoding='utf-8')
-          old = "function imageSrc(url){if(!url)return 'logo.jpg';if(/^https:\\/\\/i.test(url))return url;if(/^http:\\/\\/i.test(url))return 'https://images.weserv.nl/?url='+encodeURIComponent(url);if(url.startsWith('data/'))return url;return 'logo.jpg'}"
-          new = "function imageSrc(url){if(!url)return 'logo.jpg';if(/^https:\\/\\/i.test(url))return url;if(/^http:\\/\\/i.test(url))return 'https://images.weserv.nl/?url='+encodeURIComponent(url);if(url.startsWith('data/'))return url;return url}"
-          if old not in s:
+          new_fn = "function imageSrc(url){if(!url)return 'logo.jpg';if(/^https:\\/\\/i.test(url))return url;if(/^http:\\/\\/i.test(url))return 'https://images.weserv.nl/?url='+encodeURIComponent(url);if(url.startsWith('data/'))return url;return url}"
+          s2, count = re.subn(r'function imageSrc\\(url\\)\\{.*?\\}', new_fn, s, count=1)
+          if count != 1:
               raise SystemExit('Fonction imageSrc introuvable: arrêt pour éviter une modification incorrecte.')
-          p.write_text(s.replace(old, new), encoding='utf-8')
+          p.write_text(s2, encoding='utf-8')
 
-          # La page Ciwara Infos doit utiliser le visuel présent dans chaque article.
           p = Path('ciwara-info.html')
           s = p.read_text(encoding='utf-8')
           s = s.replace('const src=images[x?.title];', "const src=images[x?.title] || x?.image;")
