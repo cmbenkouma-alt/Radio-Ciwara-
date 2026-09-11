@@ -1,0 +1,10 @@
+name = "radio-ciwara-admin-api"
+main = "functions/admin-api.js"
+compatibility_date = "2026-09-11"
+workers_dev = true
+
+[vars]
+GITHUB_OWNER = "cmbenkouma-alt"
+GITHUB_REPO = "Radio-Ciwara-"
+GITHUB_BRANCH = "main"
+ADMIN_ORIGIN = "https://ciwara-medias.ml"
