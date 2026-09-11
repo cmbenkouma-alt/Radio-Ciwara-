@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Événements | Radio Ciwara 105.5 FM</title>
+<meta name="description" content="Retrouvez tous les événements, émissions spéciales et rendez-vous de Radio Ciwara 105.5 FM.">
+<link rel="stylesheet" href="style.css?v=20260902">
+<style>
+.ev-wrap{padding:45px 0 80px}.ev-head{display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid #ddd;margin-bottom:22px}.ev-head h1{font:900 38px Montserrat;margin:0 0 10px}.ev-head p{color:#666}.ev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.ev-card{background:#fff;border:1px solid #ddd;border-radius:10px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.06)}.ev-card img{width:100%;height:235px;object-fit:cover;display:block;background:#111}.ev-body{padding:18px}.ev-tag{display:inline-block;background:#d71920;color:#fff;padding:5px 8px;font:900 9px Montserrat;border-radius:3px}.ev-date{font:900 11px Montserrat;color:#d71920;margin-top:12px}.ev-body h2{font:900 20px Montserrat;margin:7px 0}.ev-body h3{font:800 13px Montserrat;margin:0 0 10px}.ev-body p{font-size:12px;line-height:1.5;color:#666}.ev-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.ev-meta span{background:#f3f3f3;padding:7px 9px;border-radius:5px;font-size:10px;font-weight:700}.ev-actions{margin-top:15px;display:flex;gap:8px}.ev-actions a{background:#d71920;color:#fff;padding:10px 12px;text-decoration:none;font:900 9px Montserrat;border-radius:4px}.empty{padding:35px;background:#f5f5f5;border-left:4px solid #d71920}@media(max-width:900px){.ev-grid{grid-template-columns:1fr 1fr}}@media(max-width:650px){.ev-grid{grid-template-columns:1fr}.ev-head{display:block}.ev-head h1{font-size:30px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container nav-row"><a class="brand" href="index.html"><img src="logo.jpg" alt="Radio Ciwara"><span>RADIO<br><b>CIWARA</b><small>105.5 <i>FM</i></small></span></a><nav><a href="index.html">ACCUEIL</a><a class="active" href="events.html">ÉVÉNEMENTS</a><a href="ciwara-info.html">CIWARA INFOS</a><a href="radio-player.html">ÉCOUTER</a></nav></div></header>
+<main class="ev-wrap"><div class="container"><div class="ev-head"><div><span class="section-label">RADIO CIWARA</span><h1>Événements</h1><p>Les rendez-vous, émissions spéciales et événements de votre radio.</p></div><a class="more" href="admin-evenements.html">ADMINISTRATION</a></div><section id="eventsGrid" class="ev-grid" aria-live="polite"></section></div></main>
+<script>
+(async()=>{const el=document.getElementById('eventsGrid');try{const r=await fetch('data/events.json?v='+Date.now());const events=await r.json();const list=events.filter(e=>e.published!==false);if(!list.length){el.innerHTML='<div class="empty">Aucun événement publié pour le moment.</div>';return}el.innerHTML=list.map(e=>`<article class="ev-card">${e.image?`<img src="${e.image}" alt="${e.title}" loading="lazy">`:''}<div class="ev-body"><span class="ev-tag">${e.category||'ÉVÉNEMENT'}</span><div class="ev-date">${e.dateLabel||e.date||''} · ${e.time||''}</div><h2>${e.title||''}</h2><h3>${e.show||''}${e.host?' · '+e.host:''}</h3><p>${e.description||''}</p><div class="ev-meta">${e.guest?`<span>Invité : ${e.guest}</span>`:''}${e.phone?`<span>WhatsApp : ${e.phone}</span>`:''}</div>${e.website?`<div class="ev-actions"><a href="${e.website}">SITE RADIO CIWARA</a></div>`:''}</div></article>`).join('')}catch(err){el.innerHTML='<div class="empty">Impossible de charger les événements pour le moment.</div>'}})();
+</script>
+</body></html>
