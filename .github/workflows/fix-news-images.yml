@@ -1,0 +1,73 @@
+name: Fix images Ciwara Infos
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-news-images.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Corriger les chemins et le rendu des images
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          # Les images de la parution 514 sont stockées dans assets/ à la racine.
+          # Les JSON pointaient par erreur vers un dossier inexistant assets/ciwara-info/514/.
+          for name in ('data/ciwara-info.json', 'data/news.json'):
+              p = Path(name)
+              if p.exists():
+                  s = p.read_text(encoding='utf-8')
+                  s = s.replace('assets/ciwara-info/514/', 'assets/')
+                  p.write_text(s, encoding='utf-8')
+
+          # Le moteur de la page d'accueil refusait toutes les images locales
+          # (assets/...) et remplaçait systématiquement leur URL par logo.jpg.
+          p = Path('script.js')
+          s = p.read_text(encoding='utf-8')
+          old = "function imageSrc(url){if(!url)return 'logo.jpg';if(/^https:\\/\\/i.test(url))return url;if(/^http:\\/\\/i.test(url))return 'https://images.weserv.nl/?url='+encodeURIComponent(url);if(url.startsWith('data/'))return url;return 'logo.jpg'}"
+          new = "function imageSrc(url){if(!url)return 'logo.jpg';if(/^https:\\/\\/i.test(url))return url;if(/^http:\\/\\/i.test(url))return 'https://images.weserv.nl/?url='+encodeURIComponent(url);if(url.startsWith('data/'))return url;return url}"
+          if old not in s:
+              raise SystemExit('Fonction imageSrc introuvable: arrêt pour éviter une modification incorrecte.')
+          p.write_text(s.replace(old, new), encoding='utf-8')
+
+          # La page Ciwara Infos doit utiliser le visuel présent dans chaque article.
+          p = Path('ciwara-info.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('const src=images[x?.title];', "const src=images[x?.title] || x?.image;")
+          s = s.replace('const src=images[x.title];', "const src=images[x.title] || x.image;")
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Publier la correction
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ciwara-info.json data/news.json script.js ciwara-info.html
+          if git diff --cached --quiet; then
+            echo "Aucune correction nécessaire."
+          else
+            git commit -m "fix: afficher les images de la parution 514"
+            git pull --rebase origin main
+            git push origin main
+          fi
+          rm -f .github/workflows/fix-news-images.yml
+          git add -u .github/workflows/fix-news-images.yml
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: retirer le workflow de réparation temporaire"
+            git push origin main
+          fi
