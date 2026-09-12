@@ -94,6 +94,16 @@
     });
   }
 
+  function removeOldPlayerBox() {
+    // Supprimer uniquement l ancien cadre autonome qui charge lecteur-ciwara.html.
+    // Le lecteur Caster.fm n est pas ciblé.
+    document.querySelectorAll('iframe[src="lecteur-ciwara.html"]').forEach((frame) => {
+      const oldBox = frame.closest('.ciwara-direct-widget');
+      if (oldBox) oldBox.remove();
+      else frame.remove();
+    });
+  }
+
   function render() {
     const hero = document.querySelector('.ciwara-hero');
     const left = document.querySelector('.ciwara-hero-video-col');
@@ -102,6 +112,8 @@
     const newsGrid = document.querySelector('#newsGrid');
 
     if (!hero || !left || !facebook || !newsMain || !newsGrid) return;
+
+    removeOldPlayerBox();
 
     // Le Hero ne contient plus le Facebook Live : on y conserve les émissions.
     if (!left.querySelector('.ciwara-emissions-slider')) {
