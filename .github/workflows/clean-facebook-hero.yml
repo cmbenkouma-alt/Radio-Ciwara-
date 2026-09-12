@@ -1,0 +1,40 @@
+name: Nettoyer Facebook du Hero
+
+on:
+  push:
+    paths:
+      - '.github/workflows/clean-facebook-hero.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Supprimer la légende Facebook restante
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s2, n = re.subn(r'<p class="ciwara-hero-caption">.*?</p>', '', s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit(f'Légende Facebook introuvable (matches={n})')
+          p.write_text(s2, encoding='utf-8')
+      - name: Vérifier Caster.fm et supprimer le workflow temporaire
+        shell: bash
+        run: |
+          grep -q 'data-publicToken="236f6884-9ad2-465f-a29e-5f349a8dac8e"' index.html
+          grep -q 'data-channelId="a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47"' index.html
+          rm -f .github/workflows/clean-facebook-hero.yml
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Supprimer la légende Facebook du Hero' || exit 0
+          git push
