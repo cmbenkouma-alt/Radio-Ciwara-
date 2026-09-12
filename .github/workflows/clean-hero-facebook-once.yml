@@ -1,0 +1,46 @@
+name: Nettoyage ponctuel du Hero Facebook
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  clean:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Supprimer uniquement le vestige Facebook du Hero
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = '<p class="ciwara-hero-caption">Suivez Radio Ciwara en direct sur Facebook</p>'
+          if old in s:
+              s = s.replace(old, '')
+          p.write_text(s, encoding='utf-8')
+
+      - name: Vérifier le lecteur Caster.fm
+        shell: python
+        run: |
+          s = Path('index.html').read_text(encoding='utf-8')
+          assert '236f6884-9ad2-465f-a29e-5f349a8dac8e' in s
+          assert 'a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47' in s
+          assert 'ciwara-hero-caption' not in s
+
+      - name: Publier le nettoyage et supprimer ce workflow
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'Supprimer le vestige Facebook du Hero'
+          git push
+          git rm .github/workflows/clean-hero-facebook-once.yml || true
+          git diff --cached --quiet || git commit -m 'Supprimer le workflow temporaire de nettoyage'
+          git push || true
