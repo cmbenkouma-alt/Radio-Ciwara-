@@ -41,8 +41,8 @@
   `;
   const style = document.createElement('style');
   style.id = 'ciwara-facebook-player-placement';
-  style.textContent = css;
   document.head.appendChild(style);
+  style.textContent = css;
 
   const shows = [
     ['LUNDI · 07:00 — 08:00','TOUR D’HORIZON','Actualités et informations'],
@@ -95,12 +95,19 @@
   }
 
   function removeOldPlayerBox() {
-    // Supprimer uniquement l ancien cadre autonome qui charge lecteur-ciwara.html.
-    // Le lecteur Caster.fm n est pas ciblé.
-    document.querySelectorAll('iframe[src="lecteur-ciwara.html"]').forEach((frame) => {
-      const oldBox = frame.closest('.ciwara-direct-widget');
-      if (oldBox) oldBox.remove();
-      else frame.remove();
+    // Supprimer uniquement les anciens lecteurs/cadres autonomes.
+    // NE PAS toucher au lecteur Caster.fm (.ciwara-caster-card / .cstrEmbed).
+    document.querySelectorAll('iframe[src*="lecteur-ciwara.html"], .ciwara-direct-widget, .ciwara-facebook-live-in-player').forEach((element) => {
+      const box = element.matches('.ciwara-direct-widget, .ciwara-facebook-live-in-player')
+        ? element
+        : (element.closest('.ciwara-direct-widget, .ciwara-facebook-live-in-player') || element);
+      box.remove();
+    });
+  }
+
+  function removeDuplicateFacebookBoxes(keep) {
+    document.querySelectorAll('.ciwara-facebook-live').forEach((box) => {
+      if (box !== keep && !box.classList.contains('ciwara-facebook-live-below-news')) box.remove();
     });
   }
 
@@ -125,10 +132,12 @@
     }
 
     // Le Caster.fm reste totalement intact dans le Hero.
-    // Le Facebook Live est placé uniquement sous le bloc À LA UNE,
-    // juste avant la grille des actualités.
+    // Le Facebook Live reste uniquement sous le bloc À LA UNE.
     const existingBelow = newsMain.querySelector('.ciwara-facebook-live-below-news');
-    if (existingBelow) return;
+    if (existingBelow) {
+      removeDuplicateFacebookBoxes(existingBelow);
+      return;
+    }
 
     facebook.classList.add('ciwara-facebook-live-below-news');
     facebook.setAttribute('aria-label', 'Facebook Live Radio Ciwara');
@@ -143,6 +152,7 @@
       </div>
     `;
     newsMain.insertBefore(facebook, newsGrid.parentElement || newsGrid);
+    removeDuplicateFacebookBoxes(facebook);
   }
 
   if (document.readyState === 'loading') {
