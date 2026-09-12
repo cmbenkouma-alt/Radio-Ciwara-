@@ -38,3 +38,5 @@ jobs:
           git add -A
           git commit -m 'Supprimer la légende Facebook du Hero' || exit 0
           git push
+
+# déclenchement de nettoyage
