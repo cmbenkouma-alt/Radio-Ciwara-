@@ -4,6 +4,7 @@
   const VIDEO_URL = 'https://www.facebook.com/plugins/video.php?height=314&href=https%3A%2F%2Fwww.facebook.com%2Fradiociwarafm%2Fvideos%2F3154611518262011%2F&show_text=false&width=560&t=0';
   const PAGE_URL = 'https://www.facebook.com/radiociwarafm';
   const BOX_CLASS = 'ciwara-facebook-live-below-news';
+  const STYLE_ID = 'ciwara-facebook-player-placement';
 
   const css = `
     .${BOX_CLASS}{
@@ -43,25 +44,21 @@
   `;
 
   function addStyles() {
-    document.getElementById('ciwara-facebook-player-placement')?.remove();
+    document.getElementById(STYLE_ID)?.remove();
     const style = document.createElement('style');
-    style.id = 'ciwara-facebook-player-placement';
+    style.id = STYLE_ID;
     style.textContent = css;
     document.head.appendChild(style);
   }
 
-  function removeLegacyFacebookBoxes() {
-    document.querySelectorAll('.ciwara-facebook-live:not(.ciwara-facebook-live-below-news), .ciwara-facebook-live-in-player').forEach(el => el.remove());
-  }
-
   function buildFacebookBox() {
-    const box = document.createElement('div');
-    box.className = `ciwara-facebook-live ${BOX_CLASS}`;
+    const box = document.createElement('section');
+    box.className = BOX_CLASS;
     box.setAttribute('aria-label', 'Facebook Live Radio Ciwara');
     box.innerHTML = `
       <div class="facebook-live-title"><b>CIWARA LIVE</b><span>● FACEBOOK LIVE</span></div>
       <div class="facebook-live-frame">
-        <iframe src="${VIDEO_URL}" title="Radio Ciwara 105.5 FM — Facebook Live" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe src="${VIDEO_URL}" title="Radio Ciwara 105.5 FM — Facebook Live" loading="lazy" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
       <div class="facebook-live-foot">
         <span>Suivez Radio Ciwara 105.5 FM en direct sur Facebook.</span>
@@ -74,22 +71,25 @@
   function render() {
     addStyles();
 
-    // Facebook Live est géré ici uniquement. Aucun élément du Hero ou du Caster.fm n'est modifié.
     const newsMain = document.querySelector('.portal-main .portal-columns > div');
     const newsGrid = document.querySelector('#newsGrid');
     if (!newsMain || !newsGrid) return;
 
-    removeLegacyFacebookBoxes();
-
-    // Supprimer les anciens doublons du même bloc, puis conserver un seul Facebook Live.
+    // Ne touche ni au Hero, ni au lecteur Caster.fm, ni aux émissions.
+    // On supprime uniquement les anciens doublons de CE bloc sous À LA UNE.
     newsMain.querySelectorAll(`.${BOX_CLASS}`).forEach(el => el.remove());
 
     const box = buildFacebookBox();
-    newsMain.insertBefore(box, newsGrid.parentElement || newsGrid);
+    const newsGridWrapper = newsGrid.parentElement;
+    if (newsGridWrapper && newsGridWrapper.parentElement === newsMain) {
+      newsMain.insertBefore(box, newsGridWrapper);
+    } else {
+      newsMain.appendChild(box);
+    }
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', render, {once:true});
+    document.addEventListener('DOMContentLoaded', render, { once: true });
   } else {
     render();
   }
