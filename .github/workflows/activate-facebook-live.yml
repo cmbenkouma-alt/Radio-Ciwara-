@@ -29,12 +29,8 @@ jobs:
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          # Supprimer toutes les anciennes références du script afin d'éviter
-          # les versions en cache ou les doubles chargements.
+          # Retirer uniquement les anciennes balises script facebook-live.js.
           s = re.sub(r'\s*<script\s+src=["\']facebook-live\.js[^>]*></script>', '', s, flags=re.I)
-
-          # Supprimer les anciens blocs Facebook Live écrits directement dans HTML.
-          s = re.sub(r'\s*<div class=["\']ciwara-facebook-live(?:\s+[^"\']*)?["\'][\s\S]*?</div>\s*', '\n', s, count=1, flags=re.I)
 
           script = '<script src="facebook-live.js?v=20260912-3" defer></script>'
           marker = '</body>'
