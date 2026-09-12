@@ -5,19 +5,18 @@
   const PAGE_URL = 'https://www.facebook.com/radiociwarafm';
 
   const css = `
-    .ciwara-facebook-live-in-player{
+    .ciwara-facebook-live-below-news{
       width:100%!important;
-      max-width:500px!important;
-      margin:0!important;
-      justify-self:end;
+      max-width:none!important;
+      margin:20px 0 0!important;
       border:2px solid #1877f2!important;
       border-radius:8px!important;
       overflow:hidden;
       background:#000;
-      box-shadow:0 12px 30px rgba(0,0,0,.5);
+      box-shadow:0 12px 30px rgba(0,0,0,.18);
       box-sizing:border-box;
     }
-    .ciwara-facebook-live-in-player .facebook-live-title{
+    .ciwara-facebook-live-below-news .facebook-live-title{
       height:44px;
       padding:0 14px;
       background:linear-gradient(90deg,#111214,#1877f2);
@@ -28,13 +27,17 @@
       border-bottom:3px solid #f7d51b;
       color:#fff;
     }
-    .ciwara-facebook-live-in-player .facebook-live-title span{color:#f7d51b;font-size:8px}
-    .ciwara-facebook-live-in-player .facebook-live-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden}
-    .ciwara-facebook-live-in-player .facebook-live-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
-    .ciwara-facebook-live-in-player .facebook-live-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#111214;color:#bbb;font:500 9px Roboto,Arial,sans-serif}
-    .ciwara-facebook-live-in-player .facebook-live-button{display:inline-flex;align-items:center;justify-content:center;padding:8px 10px;border-radius:6px;background:#1877f2;color:#fff;text-decoration:none;font:900 8px Montserrat,Arial,sans-serif;white-space:nowrap}
-    @media(max-width:900px){.ciwara-facebook-live-in-player{max-width:620px!important;justify-self:center;margin:0 auto!important}}
-    @media(max-width:650px){.ciwara-facebook-live-in-player .facebook-live-title{height:40px}.ciwara-facebook-live-in-player .facebook-live-foot{flex-direction:column;align-items:stretch}.ciwara-facebook-live-in-player .facebook-live-button{width:100%;box-sizing:border-box}}
+    .ciwara-facebook-live-below-news .facebook-live-title span{color:#f7d51b;font-size:8px}
+    .ciwara-facebook-live-below-news .facebook-live-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden}
+    .ciwara-facebook-live-below-news .facebook-live-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+    .ciwara-facebook-live-below-news .facebook-live-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#111214;color:#bbb;font:500 9px Roboto,Arial,sans-serif}
+    .ciwara-facebook-live-below-news .facebook-live-button{display:inline-flex;align-items:center;justify-content:center;padding:8px 10px;border-radius:6px;background:#1877f2;color:#fff;text-decoration:none;font:900 8px Montserrat,Arial,sans-serif;white-space:nowrap}
+    @media(max-width:650px){
+      .ciwara-facebook-live-below-news{margin-top:16px!important}
+      .ciwara-facebook-live-below-news .facebook-live-title{height:40px}
+      .ciwara-facebook-live-below-news .facebook-live-foot{flex-direction:column;align-items:stretch}
+      .ciwara-facebook-live-below-news .facebook-live-button{width:100%;box-sizing:border-box}
+    }
   `;
   const style = document.createElement('style');
   style.id = 'ciwara-facebook-player-placement';
@@ -94,24 +97,31 @@
   function render() {
     const hero = document.querySelector('.ciwara-hero');
     const left = document.querySelector('.ciwara-hero-video-col');
-    const caster = document.querySelector('.ciwara-caster-card');
     const facebook = document.querySelector('.ciwara-facebook-live');
+    const newsMain = document.querySelector('.portal-main .portal-columns > div');
+    const newsGrid = document.querySelector('#newsGrid');
 
-    if (!hero || !left || !caster || !facebook) return;
+    if (!hero || !left || !facebook || !newsMain || !newsGrid) return;
 
-    // 1. Remettre les émissions à gauche : Facebook ne doit plus occuper cet emplacement.
-    const caption = left.querySelector('.ciwara-hero-caption');
-    const slider = makeShowsSlider();
-    const oldFacebook = facebook;
-    oldFacebook.replaceWith(slider);
-    if (caption) caption.textContent = 'Programmes et émissions de Radio Ciwara 105.5 FM';
-    initSlider(slider);
+    // Le Hero ne contient plus le Facebook Live : on y conserve les émissions.
+    if (!left.querySelector('.ciwara-emissions-slider')) {
+      const caption = left.querySelector('.ciwara-hero-caption');
+      const slider = makeShowsSlider();
+      facebook.replaceWith(slider);
+      if (caption) caption.textContent = 'Programmes et émissions de Radio Ciwara 105.5 FM';
+      initSlider(slider);
+    }
 
-    // 2. Déplacer exactement le même lecteur Facebook à la place du lecteur Caster.fm.
-    oldFacebook.classList.add('ciwara-facebook-live-in-player');
-    oldFacebook.setAttribute('aria-label', 'Facebook Live Radio Ciwara');
-    oldFacebook.innerHTML = `
-      <div class="facebook-live-title"><b>LIVE FACEBOOK</b><span>● FACEBOOK LIVE</span></div>
+    // Le Caster.fm reste totalement intact dans le Hero.
+    // Le Facebook Live est placé uniquement sous le bloc À LA UNE,
+    // juste avant la grille des actualités.
+    const existingBelow = newsMain.querySelector('.ciwara-facebook-live-below-news');
+    if (existingBelow) return;
+
+    facebook.classList.add('ciwara-facebook-live-below-news');
+    facebook.setAttribute('aria-label', 'Facebook Live Radio Ciwara');
+    facebook.innerHTML = `
+      <div class="facebook-live-title"><b>CIWARA LIVE</b><span>● FACEBOOK LIVE</span></div>
       <div class="facebook-live-frame">
         <iframe src="${VIDEO_URL}" title="Radio Ciwara 105.5 FM — Facebook Live" scrolling="no" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
@@ -120,7 +130,7 @@
         <a class="facebook-live-button" href="${PAGE_URL}" target="_blank" rel="noopener noreferrer">Voir sur Facebook</a>
       </div>
     `;
-    caster.replaceWith(oldFacebook);
+    newsMain.insertBefore(facebook, newsGrid.parentElement || newsGrid);
   }
 
   if (document.readyState === 'loading') {
