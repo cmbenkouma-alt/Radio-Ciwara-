@@ -31,7 +31,14 @@ export default {
       if(url.pathname==='/auth'&&request.method==='POST'){const body=await request.json();if(!body.password||body.password!==env.ADMIN_PASSWORD)return json({error:'Identifiants invalides'},401);return json({ok:true,token:await sign({sub:'admin',exp:Math.floor(Date.now()/1000)+28800}),expiresIn:28800});}
       if(!(await auth()))return json({error:'Non autorisé'},401);
       if(url.pathname==='/file'&&request.method==='GET'){const path=url.searchParams.get('path');if(!path||path.includes('..')||!path.endsWith('.json'))return json({error:'Chemin invalide'},400);const d=await gh(path);return json({path,sha:d.sha,data:JSON.parse(unb64(d.content))});}
-      if(url.pathname==='/file'&&request.method==='PUT'){const body=await request.json();if(!body.path||!body.path.endsWith('.json')||body.path.includes('..'))return json({error:'Chemin invalide'},400);const d=await gh(body.path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:body.message||'admin: update data',content:b64(JSON.stringify(body.data,null,2)+'\n'),sha:body.sha,branch:env.GITHUB_BRANCH||'main'})});return json({ok:true,sha:d.content?.sha});}
+      if(url.pathname==='/file'&&request.method==='PUT'){
+        const body=await request.json();
+        if(!body.path||!body.path.endsWith('.json')||body.path.includes('..'))return json({error:'Chemin invalide'},400);
+        const data=body.data!==undefined?body.data:(body.content!==undefined?JSON.parse(body.content):null);
+        if(data===null)return json({error:'Données JSON manquantes'},400);
+        const d=await gh(body.path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:body.message||'admin: update data',content:b64(JSON.stringify(data,null,2)+'\n'),sha:body.sha,branch:env.GITHUB_BRANCH||'main'})});
+        return json({ok:true,sha:d.content?.sha});
+      }
       if(url.pathname==='/image'&&request.method==='POST'){
         const body=await request.json();
         if(!safeAsset(body.path))return json({error:'Chemin image invalide'},400);
