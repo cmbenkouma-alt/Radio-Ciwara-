@@ -1,1 +1,23 @@
-{"name":"Radio Ciwara 105.5 FM","short_name":"Radio Ciwara","description":"Radio Ciwara 105.5 FM — Bamako. Direct, infos, podcasts et Ciwara TV.","start_url":"./","scope":"./","display":"standalone","background_color":"#111214","theme_color":"#111214","lang":"fr","icons":[{"src":"logo.jpg","sizes":"192x192","type":"image/jpeg","purpose":"any maskable"}]}
+{
+  "id": "https://ciwara-medias.ml/",
+  "name": "Radio Ciwara 105.5 FM",
+  "short_name": "Radio Ciwara",
+  "description": "Radio Ciwara 105.5 FM — Bamako. Direct, actualités, programmes, podcasts et Ciwara TV.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#111214",
+  "theme_color": "#111214",
+  "lang": "fr",
+  "dir": "ltr",
+  "categories": ["news", "music", "entertainment"],
+  "icons": [
+    {
+      "src": "logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
