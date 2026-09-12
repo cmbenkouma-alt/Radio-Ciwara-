@@ -20,31 +20,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Injecter le script Facebook Live dans index.html
+      - name: Injecter la version du script Facebook Live dans index.html
         shell: bash
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          tag = '<script src="facebook-live.js?v=20260912" defer></script>'
-          if tag not in s:
+          old = '<script src="facebook-live.js?v=20260912" defer></script>'
+          new = '<script src="facebook-live.js?v=20260912-2" defer></script>'
+          if old in s:
+              s = s.replace(old, new, 1)
+          elif new not in s:
               marker = '</body>'
               if marker not in s:
                   raise SystemExit('Impossible de trouver </body> dans index.html')
-              s = s.replace(marker, f'  {tag}\n{marker}', 1)
-              p.write_text(s, encoding='utf-8')
+              s = s.replace(marker, f'  {new}\n{marker}', 1)
+          p.write_text(s, encoding='utf-8')
           PY
 
       - name: Publier la modification
         shell: bash
         run: |
           if git diff --quiet -- index.html; then
-            echo 'Facebook Live déjà activé.'
+            echo 'Version Facebook Live déjà à jour.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'feat: activer le nouvel espace Facebook Live [skip-facebook-live]'
+          git commit -m 'chore: versionner Facebook Live [skip-facebook-live]'
           git push
