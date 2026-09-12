@@ -1,0 +1,50 @@
+name: Remplacer le lecteur Facebook
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/replace-facebook-player.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remplacer uniquement le lecteur Facebook
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          pattern = re.compile(r'<iframe[^>]*facebook\.com/plugins/video[^>]*>\s*</iframe>', re.I | re.S)
+          replacement = '''<div class="ciwara-direct-widget"><iframe src="lecteur-ciwara.html" title="Lecteur direct Radio Ciwara 105.5 FM" loading="lazy" style="width:100%;height:250px;border:0;display:block;border-radius:10px;overflow:hidden" scrolling="no"></iframe></div>'''
+          s2, n = pattern.subn(replacement, s, count=1)
+          if n != 1:
+              raise SystemExit('Lecteur Facebook introuvable : aucune modification effectuée.')
+          p.write_text(s2, encoding='utf-8')
+          print('Lecteur Facebook remplacé :', n)
+      - name: Ajouter le style responsive du lecteur
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          style = '''<style id="ciwara-direct-widget-style">.ciwara-direct-widget{width:100%;border-radius:10px;overflow:hidden;background:#07182d}.ciwara-direct-widget iframe{max-width:100%}@media(max-width:600px){.ciwara-direct-widget iframe{height:300px!important}}</style>'''
+          if 'id="ciwara-direct-widget-style"' not in s:
+              s = s.replace('</head>', style + '</head>', 1)
+              p.write_text(s, encoding='utf-8')
+      - name: Commit et supprimer le workflow temporaire
+        shell: bash
+        run: |
+          rm -f .github/workflows/replace-facebook-player.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html .github/workflows/replace-facebook-player.yml
+          git diff --cached --quiet && exit 0
+          git commit -m 'Remplacer le lecteur Facebook par le lecteur Ciwara'
+          git push
