@@ -1,0 +1,12 @@
+{
+  "station": "Radio Ciwara 105.5 FM",
+  "frequency": "105.5 FM",
+  "slogan": "AU COEUR DE LA CULTURE",
+  "presentation": "Radio Ciwara 105.5 émettant depuis Bamako.",
+  "casterFm": {
+    "publicToken": "236f6884-9ad2-465f-a29e-5f349a8dac8e",
+    "channelId": "a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47",
+    "theme": "light",
+    "color": "e81e4d"
+  }
+}
