@@ -15,7 +15,7 @@ export default {
       if (!env.GITHUB_TOKEN) throw new Error('Configuration Worker incomplète : GITHUB_TOKEN manquant');
       const r = await fetch(`https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/${path}?ref=${env.GITHUB_BRANCH || 'main'}`, {
         ...init,
-        headers: { 'Accept': 'application/vnd.github+json', 'Authorization': `Bearer ${env.GITHUB_TOKEN}`, 'X-GitHub-Api-Version': '2022-11-28', ...(init.headers || {}) }
+        headers: { 'Accept': 'application/vnd.github+json', 'Authorization': `Bearer ${env.GITHUB_TOKEN}`, 'X-GitHub-Api-Version': '2022-11-28', 'User-Agent': 'Radio-Ciwara-Admin-CMS', ...(init.headers || {}) }
       });
       const text = await r.text();
       if (!r.ok) throw new Error(`GitHub ${r.status}: ${text}`);
