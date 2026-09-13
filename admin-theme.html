@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thème | Administration Radio Ciwara</title>
+<link rel="stylesheet" href="style.css?v=20260911">
+<style>
+body{background:#f4f4f2}.theme-admin{max-width:1180px;margin:auto;padding:28px 16px 70px}.panel{background:#fff;border:1px solid #ddd;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 7px 24px #0000000d}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font:800 11px Arial}.input,.textarea{box-sizing:border-box;width:100%;padding:11px;border:1px solid #ccc;border-radius:7px;background:#fff}.textarea{min-height:360px;font-family:monospace}.btn{border:0;border-radius:7px;padding:11px 15px;font-weight:800;cursor:pointer}.primary{background:#d71920;color:#fff}.dark{background:#111;color:#fff}.green{background:#087f44;color:#fff}.muted{color:#666;font-size:12px;line-height:1.5}.status{margin-top:10px;font-size:12px}.swatch{height:40px;padding:0;border:1px solid #ccc;border-radius:7px;width:100%}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}@media(max-width:700px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container nav-row"><a class="brand" href="index.html"><img src="logo.jpg" alt="Radio Ciwara"><span>RADIO<br><b>CIWARA</b><small>105.5 <i>FM</i></small></span></a><nav><a href="index.html">ACCUEIL</a><a href="admin.html">ADMINISTRATION</a></nav></div></header>
+<main class="theme-admin">
+<div class="panel"><h1>Thème visuel — Radio Ciwara</h1><p class="muted">Ce panneau utilise la même API d’administration que le site. Il modifie uniquement <strong>data/theme.json</strong>. Il ne modifie ni les articles, ni le lecteur, ni les autres données.</p>
+<div class="grid"><div class="field"><label>Adresse de l’API</label><input id="apiUrl" class="input" value="https://radio-ciwara-admin-api.cmbenkouma.workers.dev"></div><div class="field"><label>Mot de passe administrateur</label><input id="password" class="input" type="password"></div></div>
+<div class="actions"><button class="btn primary" id="login">SE CONNECTER</button><button class="btn dark" id="logout" style="display:none">SE DÉCONNECTER</button></div><div id="status" class="status"></div></div>
+<section id="dashboard" style="display:none">
+<div class="panel"><h2>Couleurs</h2><div class="grid">
+<div class="field"><label>Couleur principale</label><input id="primary" class="swatch" type="color"><input id="primaryText" class="input"></div>
+<div class="field"><label>Rouge foncé</label><input id="primaryDark" class="swatch" type="color"><input id="primaryDarkText" class="input"></div>
+<div class="field"><label>Bleu/noir nuit</label><input id="night" class="swatch" type="color"><input id="nightText" class="input"></div>
+<div class="field"><label>Fond sombre</label><input id="dark" class="swatch" type="color"><input id="darkText" class="input"></div>
+<div class="field"><label>Vert Mali</label><input id="maliGreen" class="swatch" type="color"><input id="maliGreenText" class="input"></div>
+<div class="field"><label>Jaune Mali</label><input id="maliYellow" class="swatch" type="color"><input id="maliYellowText" class="input"></div>
+</div></div>
+<div class="panel"><h2>Typographie et dimensions</h2><div class="grid">
+<div class="field"><label>Police des titres</label><input id="heading" class="input"></div><div class="field"><label>Police du texte</label><input id="body" class="input"></div>
+<div class="field"><label>Largeur maximale</label><input id="maxWidth" class="input"></div><div class="field"><label>Largeur de contenu</label><input id="contentWidth" class="input"></div>
+<div class="field"><label>Rayon des cartes</label><input id="cardRadius" class="input"></div><div class="field"><label>Espace entre sections</label><input id="sectionSpacing" class="input"></div>
+</div></div>
+<div class="panel"><h2>Identité</h2><div class="grid"><div class="field"><label>Nom</label><input id="stationName" class="input"></div><div class="field"><label>Fréquence</label><input id="frequency" class="input"></div><div class="field"><label>Slogan</label><input id="tagline" class="input"></div><div class="field"><label>Bouton direct</label><input id="liveLabel" class="input"></div></div></div>
+<div class="panel"><h2>Données du thème</h2><textarea id="json" class="textarea"></textarea><div class="actions"><button class="btn dark" id="reload">RECHARGER</button><button class="btn green" id="save">ENREGISTRER LE THÈME</button></div></div>
+</section></main>
+<script>
+let API='',AUTH='',theme=null,themeSha='';const $=id=>document.getElementById(id);function msg(t,ok=false){$('status').textContent=t;$('status').style.color=ok?'#087f44':'#b51c26'}
+async function call(path,opt={}){const r=await fetch(API.replace(/\/$/,'')+path,{...opt,headers:{'Content-Type':'application/json',...(opt.headers||{}),Authorization:'Bearer '+AUTH}});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
+async function login(){API=$('apiUrl').value.trim();const password=$('password').value;if(!API||!password)return msg('Renseigne l’adresse de l’API et ton mot de passe.');try{const d=await call('/auth',{method:'POST',body:JSON.stringify({password})});AUTH=d.token;$('password').value='';$('dashboard').style.display='block';$('logout').style.display='inline-block';$('login').style.display='none';msg('Connexion sécurisée réussie.',true);await load()}catch(e){msg('Connexion refusée : '+e.message)}}
+async function load(){const d=await call('/file?path='+encodeURIComponent('data/theme.json'));theme=d.data;themeSha=d.sha;fill();$('json').value=JSON.stringify(theme,null,2)}
+function fill(){const c=theme.colors||{},t=theme.typography||{},l=theme.layout||{},b=theme.branding||{};[['primary',c.primary],['primaryDark',c.primaryDark],['night',c.night],['dark',c.dark],['maliGreen',c.maliGreen],['maliYellow',c.maliYellow]].forEach(([id,v])=>{$(id).value=v||'#000000';$(id+'Text').value=v||''});$('heading').value=t.heading||'';$('body').value=t.body||'';$('maxWidth').value=l.maxWidth||'';$('contentWidth').value=l.contentWidth||'';$('cardRadius').value=l.cardRadius||'';$('sectionSpacing').value=l.sectionSpacing||'';$('stationName').value=b.stationName||'';$('frequency').value=b.frequency||'';$('tagline').value=b.tagline||'';$('liveLabel').value=b.liveLabel||''}
+function sync(){try{theme=JSON.parse($('json').value)}catch(e){msg('JSON du thème invalide.');return false}theme.colors=theme.colors||{};theme.typography=theme.typography||{};theme.layout=theme.layout||{};theme.branding=theme.branding||{};['primary','primaryDark','night','dark','maliGreen','maliYellow'].forEach(id=>theme.colors[id]=$(id+'Text').value.trim());theme.typography.heading=$('heading').value.trim();theme.typography.body=$('body').value.trim();theme.layout.maxWidth=$('maxWidth').value.trim();theme.layout.contentWidth=$('contentWidth').value.trim();theme.layout.cardRadius=$('cardRadius').value.trim();theme.layout.sectionSpacing=$('sectionSpacing').value.trim();theme.branding.stationName=$('stationName').value.trim();theme.branding.frequency=$('frequency').value.trim();theme.branding.tagline=$('tagline').value.trim();theme.branding.liveLabel=$('liveLabel').value.trim();return true}
+async function save(){if(!sync())return;$('json').value=JSON.stringify(theme,null,2);const d=await call('/file',{method:'PUT',body:JSON.stringify({path:'data/theme.json',data:theme,sha:themeSha,message:'admin: update theme'})});themeSha=d.sha;msg('Thème enregistré. Le site pourra appliquer ces valeurs avec le futur chargeur de thème.',true)}
+$('login').onclick=()=>login();$('logout').onclick=()=>{AUTH='';$('dashboard').style.display='none';$('logout').style.display='none';$('login').style.display='inline-block';msg('Session fermée.',true)};$('reload').onclick=()=>load().catch(e=>msg(e.message));$('save').onclick=()=>save().catch(e=>msg(e.message));['primary','primaryDark','night','dark','maliGreen','maliYellow'].forEach(id=>$(id).oninput=()=>$(id+'Text').value=$(id).value);
+</script></body></html>
