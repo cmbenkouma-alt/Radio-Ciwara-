@@ -1,6 +1,1 @@
-(()=>{'use strict';
-const loadCss=href=>{if(document.querySelector('link[data-ciwara-refonte]'))return;const l=document.createElement('link');l.rel='stylesheet';l.href=href+'?v=20260913';l.dataset.ciwaraRefonte='1';document.head.appendChild(l)};
-const applyTheme=theme=>{if(!theme)return;const r=document.documentElement,s=theme.colors||{};const map={primary:'--red',primaryDark:'--red2',night:'--black',dark:'--dark',white:'--white',surface:'--gray',line:'--line',muted:'--muted'};Object.keys(map).forEach(k=>{if(s[k])r.style.setProperty(map[k],s[k])});if(theme.layout?.maxWidth)r.style.setProperty('--max',theme.layout.maxWidth);if(theme.typography?.heading)r.style.setProperty('--theme-heading',theme.typography.heading);if(theme.typography?.body)r.style.setProperty('--theme-body',theme.typography.body);document.body?.setAttribute('data-ciwara-theme',theme.name||'ciwara')};
-const start=()=>{loadCss('refonte-maquette.css');fetch('data/theme.json?ts='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(applyTheme).catch(()=>{});};
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
-})();
+(()=>{'use strict';const s=document.createElement('script');s.src='refonte-home.js?v=20260913';s.defer=true;document.head.appendChild(s);})();
