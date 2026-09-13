@@ -24,7 +24,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
 
       - name: Installer Wrangler
         run: npm install --no-save --no-package-lock wrangler@4.44.0
@@ -39,6 +38,7 @@ jobs:
       - name: Vérifier la santé du Worker
         run: |
           set -e
+          response=""
           for i in 1 2 3 4 5; do
             response=$(curl -fsS https://radio-ciwara-admin-api.cmbenkouma.workers.dev/health) && break || true
             sleep 5
