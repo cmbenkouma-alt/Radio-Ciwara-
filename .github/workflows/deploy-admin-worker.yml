@@ -51,3 +51,5 @@ jobs:
           done
           echo "$response"
           echo "$response" | grep -q '"ok":true'
+
+# Déploiement volontairement piloté par le token Cloudflare : aucun Account ID GitHub requis.
