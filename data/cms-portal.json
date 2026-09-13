@@ -1,0 +1,12 @@
+{
+  "breaking": {"enabled": true, "text": "", "link": ""},
+  "tv": {"enabled": true, "title": "Ciwara TV", "description": "", "items": []},
+  "podcasts": {"enabled": true, "items": []},
+  "music": {"enabled": true, "title": "Musique & Top", "items": []},
+  "games": {"enabled": true, "title": "Jeux & Concours", "items": []},
+  "ads": {"enabled": true, "items": []},
+  "partners": {"enabled": true, "items": [{"name":"HIT RADIO","logo":"","url":"","active":true}]},
+  "contact": {"enabled": true, "phone":"", "email":"", "whatsapp":"", "address":"", "facebook":"", "instagram":"", "youtube":"", "tiktok":""},
+  "seo": {"title":"Radio Ciwara 105.5 FM — Au cœur de la culture","description":"Radio Ciwara 105.5 FM émettant depuis Bamako.","keywords":"Radio Ciwara, 105.5 FM, Bamako, Mali, culture, musique, actualités"},
+  "app": {"enabled": true, "androidUrl":"", "iosUrl":""}
+}
