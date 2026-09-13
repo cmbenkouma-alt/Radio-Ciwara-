@@ -28,12 +28,21 @@ jobs:
       - name: Installer Wrangler
         run: npm install --no-save --no-package-lock wrangler@4.44.0
 
+      - name: Vérifier la configuration Cloudflare
+        env:
+          CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -e
+          test -n "$CF_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN manquant dans GitHub Actions."; exit 1; }
+          test -n "$CF_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID manquant dans GitHub Actions (Secret ou Variable)."; exit 1; }
+          echo "Configuration Cloudflare détectée."
+
       - name: Déployer le Worker Cloudflare
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID || vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler deploy --account-id "$CLOUDFLARE_ACCOUNT_ID"
 
       - name: Vérifier la santé du Worker
         run: |
