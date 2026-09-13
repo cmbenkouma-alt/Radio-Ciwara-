@@ -1,0 +1,133 @@
+/* Radio Ciwara — architecture UI inspirée des grands portails radio
+   Référence UX : RFM.fr | Contenu : Ciwara
+   Cette feuille ne remplace ni le lecteur Caster.fm ni les données CMS. */
+:root{
+  --rfm-red:#e51b3e;
+  --rfm-red-dark:#bd1432;
+  --rfm-ink:#111214;
+  --rfm-text:#181a1e;
+  --rfm-muted:#72767d;
+  --rfm-bg:#f3f3f1;
+  --rfm-card:#fff;
+  --rfm-line:#e2e3e5;
+  --rfm-shadow:0 7px 22px rgba(17,18,20,.08);
+  --rfm-shadow-hover:0 14px 34px rgba(17,18,20,.14);
+  --rfm-radius:7px;
+}
+
+body{background:var(--rfm-bg)!important;color:var(--rfm-text)}
+#contenu{overflow:clip}
+#contenu>.ciwara-hero{margin-bottom:0!important}
+
+/* Barre breaking */
+.portal-top{background:var(--rfm-ink)!important}
+.portal-top .container{max-width:1180px!important;margin:auto}
+.portal-top b{background:var(--rfm-red)!important}
+
+/* Header */
+.portal-nav{background:#fff!important;border-bottom:1px solid #ddd!important}
+.portal-nav .container{max-width:1180px!important;margin:auto;min-height:78px!important}
+.brand-pair{gap:20px!important}
+.portal-links{gap:20px!important}
+.portal-links a{position:relative;padding:28px 0!important}
+.portal-links a.active:after,.portal-links a:hover:after{content:"";position:absolute;left:0;right:0;bottom:18px;height:3px;background:var(--rfm-red);border-radius:4px}
+
+/* Navigation catégories */
+.portal-cats{background:#fff!important}
+.portal-cats .container{max-width:1180px!important;margin:auto}
+.portal-cats a{transition:background .2s ease,color .2s ease}
+.portal-cats a:first-child{color:var(--rfm-red)!important}
+
+/* Publicité : format compact et régulier */
+.portal-ads{background:#e9e9e6!important;padding:8px 0!important}
+.portal-ads .container{max-width:1180px!important;margin:auto}
+.portal-ad-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+.portal-ad{height:82px!important;min-height:82px!important;border-radius:6px!important}
+
+/* Nouveau shell éditorial */
+.rv2-shell{max-width:1180px!important;margin:0 auto!important}
+.rv2-news-stage{padding:24px 0 10px!important}
+.rv2-news-stage>.portal-main{padding:0!important}
+.rv2-news-stage .portal-columns{grid-template-columns:minmax(0,1fr) 285px!important;gap:18px!important}
+.rv2-news-stage .lead-news{grid-template-columns:minmax(0,1.65fr) minmax(245px,.75fr)!important;gap:12px!important}
+
+/* Une grande carte + deux cartes secondaires = logique éditoriale */
+.rv2-news-stage .lead-card{height:330px!important;min-height:330px!important;border-radius:7px!important;box-shadow:var(--rfm-shadow)!important}
+.rv2-news-stage .lead-card:hover{box-shadow:var(--rfm-shadow-hover)!important;transform:translateY(-2px)}
+.rv2-news-stage .side-news{gap:9px!important}
+.rv2-news-stage .mini-card{min-height:101px!important;padding:12px!important;border:1px solid var(--rfm-line)!important;border-left:3px solid var(--rfm-red)!important;box-shadow:0 3px 12px rgba(17,18,20,.04)!important;transition:transform .2s ease,box-shadow .2s ease}
+.rv2-news-stage .mini-card:hover{transform:translateY(-2px);box-shadow:var(--rfm-shadow)!important}
+.rv2-news-stage .portal-sidebar{gap:12px!important}
+.rv2-side-caption{padding:17px;background:var(--rfm-ink);color:#fff;border-radius:var(--rfm-radius);box-shadow:var(--rfm-shadow)}
+.rv2-side-caption span{display:block;color:#f7d51b;font:900 8px Montserrat;letter-spacing:1px}
+.rv2-side-caption b{display:block;font:900 18px/1.1 Montserrat;margin:6px 0}
+.rv2-side-caption small{display:block;color:#c9c9c9;font:500 10px Roboto}
+
+/* Quick access : direct / TV / application */
+.rv2-hub{padding:10px 0 18px!important}
+.rv2-hub-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important}
+.rv2-hub-card{min-height:112px!important;border-radius:7px!important;padding:18px!important;color:#fff!important;text-decoration:none!important;box-shadow:var(--rfm-shadow)!important;transition:transform .2s ease,box-shadow .2s ease}
+.rv2-hub-card:hover{transform:translateY(-3px);box-shadow:var(--rfm-shadow-hover)!important}
+.rv2-hub-card span{font:900 8px Montserrat;letter-spacing:.7px}
+.rv2-hub-card b{display:block;font:900 17px/1.15 Montserrat;margin:8px 0 5px}
+.rv2-hub-card small{font:500 10px Roboto;opacity:.9}
+.rv2-radio{background:linear-gradient(120deg,#111214,#35373b)!important;border-top:4px solid var(--rfm-red)}
+.rv2-tv{background:linear-gradient(120deg,#111214,#3a3b40)!important;border-top:4px solid #f7d51b}
+.rv2-app{background:linear-gradient(120deg,#0a7040,#0b9b55)!important;border-top:4px solid #f7d51b}
+
+/* Titres de section : signature portail radio */
+.section-title{margin:0 0 14px!important;padding:0 0 9px!important;border-bottom:2px solid var(--rfm-ink)!important}
+.section-title h2{font-size:21px!important;letter-spacing:-.2px}
+.section-title .eyebrow{font-size:8px!important;letter-spacing:.8px;color:var(--rfm-red)!important}
+
+/* Cartes actualités */
+.rv2-news-stage .news-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:11px!important;margin-top:14px!important}
+.rv2-news-stage .news-card{background:#fff!important;border:1px solid var(--rfm-line)!important;border-radius:6px!important;overflow:hidden!important;box-shadow:0 3px 12px rgba(17,18,20,.04)!important;transition:transform .2s ease,box-shadow .2s ease}
+.rv2-news-stage .news-card:hover{transform:translateY(-3px);box-shadow:var(--rfm-shadow-hover)!important}
+.rv2-news-stage .news-image{height:145px!important}
+.rv2-news-stage .news-content{padding:12px!important}
+
+/* Médias */
+.rv2-media-stage,.rv2-program-stage,.rv2-podcast-stage,.rv2-partner-stage{padding:8px 0!important}
+.rv2-media-stage .media-section,.rv2-program-stage #programmes,.rv2-podcast-stage #podcasts{padding:25px 0!important}
+.rv2-media-stage .media-duo{gap:11px!important}
+.rv2-media-stage .media-box{min-height:190px!important;border-radius:7px!important;box-shadow:var(--rfm-shadow)!important}
+
+/* Emissions */
+.rv2-program-stage .ciwara-emissions-slider{margin:10px 0 15px!important;border-radius:7px!important;box-shadow:var(--rfm-shadow)!important}
+.rv2-program-stage .schedule>div{min-height:55px!important}
+
+/* Podcasts */
+.rv2-podcast-stage .podcast-list{gap:11px!important}
+.rv2-podcast-stage .podcast-list article{border-radius:7px!important;box-shadow:0 3px 12px rgba(17,18,20,.05)!important}
+
+/* Partenaires / contact */
+.rv2-partner-stage{padding-bottom:28px!important}
+.rv2-partner-stage>.canal-plus-block,.rv2-partner-stage>.bank-ad,.rv2-partner-stage>#contact{margin-left:0!important;margin-right:0!important}
+.canal-plus-block{border-radius:7px!important;box-shadow:var(--rfm-shadow)!important;margin:10px 0!important}
+.contact-box{box-shadow:var(--rfm-shadow)!important}
+
+/* Suppression systématique des hauteurs artificielles responsables des espaces morts */
+.rv2-shell .portal-main,.rv2-shell .lead-news,.rv2-shell .portal-sidebar,.rv2-shell .side-news,.rv2-shell .media-section,#programmes,#podcasts{min-height:0!important;height:auto!important}
+.rv2-shell section{box-sizing:border-box}
+
+@media(max-width:1050px){
+  .rv2-shell{padding:0 16px!important}
+  .rv2-news-stage .portal-columns{grid-template-columns:1fr!important}
+  .rv2-news-stage .portal-sidebar{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important}
+  .rv2-news-stage .lead-card{height:320px!important}
+}
+@media(max-width:720px){
+  .portal-nav .container{padding:0 12px!important}
+  .portal-links{display:none!important}
+  .rv2-shell{padding:0 12px!important}
+  .portal-ad-grid{grid-template-columns:1fr!important}
+  .portal-ad{height:70px!important;min-height:70px!important}
+  .rv2-hub-grid{grid-template-columns:1fr!important}
+  .rv2-hub-card{min-height:96px!important}
+  .rv2-news-stage .lead-news{grid-template-columns:1fr!important}
+  .rv2-news-stage .lead-card{height:285px!important;min-height:285px!important}
+  .rv2-news-stage .portal-sidebar{grid-template-columns:1fr!important}
+  .rv2-news-stage .news-grid{grid-template-columns:1fr!important}
+  .rv2-media-stage .media-duo{grid-template-columns:1fr!important}
+}
