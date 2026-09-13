@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CMS Portail — Radio Ciwara</title>
+<style>
+:root{--red:#e81e4d;--ink:#111318;--bg:#f4f5f7;--line:#e1e4e8}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#17191d;font:14px Arial,sans-serif}.top{background:#111318;color:#fff;padding:18px}.wrap{max-width:1180px;margin:auto;padding:0 18px}.brand{font-weight:900;font-size:18px}.sub{opacity:.7;font-size:12px;margin-top:4px}.tabs{display:flex;gap:8px;flex-wrap:wrap;padding:20px 0}.tabs button,.btn{border:0;border-radius:8px;padding:10px 13px;font-weight:800;cursor:pointer}.tabs button{background:#fff;border:1px solid var(--line)}.tabs button.on,.primary{background:var(--red);color:#fff}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 8px 25px #0000000a}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:11px;font-weight:900;text-transform:uppercase}.input,.textarea{width:100%;padding:11px;border:1px solid #cdd2d8;border-radius:8px}.textarea{min-height:110px;resize:vertical}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.dark{background:#111318;color:#fff}.muted{color:#70757d;font-size:12px;line-height:1.5}.status{margin-top:10px;font-weight:800}.hidden{display:none!important}.item{border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0;background:#fafafa}.itemhead{display:flex;justify-content:space-between;gap:12px}.danger{background:#8e1522;color:#fff}.ok{color:#087f44}@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}}
+</style></head>
+<body>
+<header class="top"><div class="wrap"><div class="brand">RADIO CIWARA 105.5 FM · CMS PORTAIL</div><div class="sub">Gestion de la nouvelle architecture éditoriale inspirée des grands portails radio.</div></div></header>
+<main class="wrap">
+<div class="tabs">
+<button class="on" data-tab="breaking">BREAKING NEWS</button><button data-tab="tv">CIWARA TV</button><button data-tab="podcasts">PODCASTS</button><button data-tab="music">MUSIQUE / TOP</button><button data-tab="games">JEUX / CONCOURS</button><button data-tab="ads">PUBLICITÉS</button><button data-tab="partners">PARTENAIRES</button><button data-tab="contact">CONTACT / RÉSEAUX</button><button data-tab="seo">SEO</button><button data-tab="app">APPLICATION</button><a class="btn dark" href="../admin.html">← CMS principal</a>
+</div>
+<section class="panel"><div id="content"></div><div id="status" class="status"></div></section>
+</main>
+<script>
+'use strict';
+const API='https://radio-ciwara-admin-api.cmbenkouma.workers.dev',KEY='ciwara_admin_token';
+const $=id=>document.getElementById(id), token=()=>sessionStorage.getItem(KEY);
+function esc(s){return String(s??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]))}
+async function auth(){if(token())return true;const p=prompt('Mot de passe administrateur');if(!p)return false;const r=await fetch(API+'/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:p})});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Connexion refusée');sessionStorage.setItem(KEY,d.token);return true}
+async function api(path,opt={}){const r=await fetch(API+path,{...opt,headers:{...(opt.headers||{}),Authorization:'Bearer '+token()}});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||('HTTP '+r.status));return d}
+async function load(){return api('/file?path='+encodeURIComponent('data/cms-portal.json'))}
+async function save(data,sha){return api('/file',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({path:'data/cms-portal.json',data,sha,message:'admin: portail CMS'})})}
+let model=null,sha='';
+function field(id,label,value,type='text'){return `<div class="field"><label>${label}</label>${type==='textarea'?`<textarea id="f_${id}" class="textarea">${esc(value)}</textarea>`:`<input id="f_${id}" class="input" type="${type}" value="${esc(value)}">`}</div>`}
+function setTab(t){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));window.location.hash=t;render(t)}
+async function render(t){try{if(!model){const d=await load();model=d.data;sha=d.sha}const x=model[t];let h='';
+if(t==='breaking')h=`<h2>Breaking News</h2><p class="muted">Bandeau d'actualité prioritaire visible en haut du portail.</p><div class="grid">${field('enabled','Activé (true/false)',model.breaking.enabled)}${field('text','Texte',model.breaking.text)}${field('link','Lien',model.breaking.link)} </div><div class="actions"><button class="btn primary" onclick="saveSimple('breaking')">ENREGISTRER</button></div>`;
+if(t==='tv')h=listEditor('tv','Ciwara TV',['title','description','image','video','link','active']);
+if(t==='podcasts')h=listEditor('podcasts','Podcasts',['title','description','image','audio','date','category','active']);
+if(t==='music')h=listEditor('music','Musique / Top',['title','artist','image','link','position','active']);
+if(t==='games')h=listEditor('games','Jeux / Concours',['title','description','image','link','startDate','endDate','active']);
+if(t==='ads')h=listEditor('ads','Publicités',['title','image','link','position','active']);
+if(t==='partners')h=listEditor('partners','Partenaires',['name','logo','url','active']);
+if(t==='contact')h=`<h2>Contact et réseaux sociaux</h2><div class="grid">${field('phone','Téléphone',x.phone)}${field('email','E-mail',x.email)}${field('whatsapp','WhatsApp',x.whatsapp)}${field('address','Adresse',x.address)}${field('facebook','Facebook',x.facebook)}${field('instagram','Instagram',x.instagram)}${field('youtube','YouTube',x.youtube)}${field('tiktok','TikTok',x.tiktok)}</div><div class="actions"><button class="btn primary" onclick="saveSimple('contact')">ENREGISTRER</button></div>`;
+if(t==='seo')h=`<h2>SEO du portail</h2>${field('title','Title',x.title)}${field('description','Meta description',x.description,'textarea')}${field('keywords','Mots-clés',x.keywords,'textarea')}<div class="actions"><button class="btn primary" onclick="saveSimple('seo')">ENREGISTRER</button></div>`;
+if(t==='app')h=`<h2>Application mobile</h2>${field('enabled','Activée (true/false)',x.enabled)}${field('androidUrl','Lien Android',x.androidUrl)}${field('iosUrl','Lien iOS',x.iosUrl)}<div class="actions"><button class="btn primary" onclick="saveSimple('app')">ENREGISTRER</button></div>`;
+$('content').innerHTML=h;$('status').textContent='';
+}catch(e){$('content').innerHTML='<div class="danger" style="padding:12px;border-radius:8px">'+esc(e.message)+'</div>'}}
+function listEditor(section,title,fields){const x=model[section];x.items=x.items||[];let h=`<h2>${title}</h2><p class="muted">Ajoute, modifie, active/désactive ou supprime les éléments de cette section. Les données sont enregistrées dans GitHub via le CMS sécurisé.</p><div id="list">`;x.items.forEach((it,i)=>{h+=`<div class="item"><div class="itemhead"><div><b>${esc(it.title||it.name||('Élément '+(i+1)))}</b><small>${esc(it.description||it.artist||it.category||it.url||it.link||'')}</small></div><div class="actions"><button class="btn dark" onclick="edit('${section}',${i})">MODIFIER</button><button class="btn danger" onclick="removeItem('${section}',${i})">SUPPRIMER</button></div></div></div>`});h+='</div><div class="actions"><button class="btn primary" onclick="edit(\''+section+'\',-1)">+ AJOUTER</button><button class="btn dark" onclick="saveSection(\''+section+'\')">ENREGISTRER</button></div>';return h}
+function edit(section,i){const x=model[section];const fields={tv:['title','description','image','video','link','active'],podcasts:['title','description','image','audio','date','category','active'],music:['title','artist','image','link','position','active'],games:['title','description','image','link','startDate','endDate','active'],ads:['title','image','link','position','active'],partners:['name','logo','url','active']}[section];const it=i<0?{active:true}:({...x.items[i]});let h=`<h2>${i<0?'Ajouter':'Modifier'} · ${section.toUpperCase()}</h2><div class="grid">`;fields.forEach(k=>h+=field(k,k,it[k]??(k==='position'?x.items.length+1:'')));h+='</div><div class="actions"><button class="btn primary" id="saveItem">ENREGISTRER</button><button class="btn dark" onclick="render(\''+section+'\')">ANNULER</button></div>';$('content').innerHTML=h;$('saveItem').onclick=async()=>{const o={...it};fields.forEach(k=>{const e=$('f_'+k);if(e)o[k]=k==='active'?e.value!=='false':e.value});if(i<0)x.items.push(o);else x.items[i]=o;await save(model,sha).then(d=>sha=d.sha);render(section)}}
+async function removeItem(section,i){if(!confirm('Supprimer cet élément ?'))return;model[section].items.splice(i,1);const d=await save(model,sha);sha=d.sha;render(section)}
+async function saveSection(section){const d=await save(model,sha);sha=d.sha;$('status').textContent='Enregistré dans GitHub.';$('status').className='status ok'}
+async function saveSimple(section){const x=model[section];Object.keys(x).forEach(k=>{const e=$('f_'+k);if(e)x[k]=['enabled'].includes(k)?e.value!=='false':e.value});const d=await save(model,sha);sha=d.sha;$('status').textContent='Enregistré dans GitHub.';$('status').className='status ok';render(section)}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+(async()=>{try{if(await auth())setTab(location.hash.slice(1)||'breaking')}catch(e){$('content').innerHTML='<p>'+esc(e.message)+'</p>'}})();
+</script></body></html>
