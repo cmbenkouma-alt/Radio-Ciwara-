@@ -24,6 +24,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+
+      - name: Installer Wrangler
+        run: npm install --no-save --no-package-lock wrangler@4.44.0
 
       - name: Déployer le Worker Cloudflare
         uses: cloudflare/wrangler-action@v3
@@ -31,3 +35,13 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
+      - name: Vérifier la santé du Worker
+        run: |
+          set -e
+          for i in 1 2 3 4 5; do
+            response=$(curl -fsS https://radio-ciwara-admin-api.cmbenkouma.workers.dev/health) && break || true
+            sleep 5
+          done
+          echo "$response"
+          echo "$response" | grep -q '"ok":true'
