@@ -1,0 +1,35 @@
+name: Patch menu Accueil avancé
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-admin-home-menu.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Modifier le menu CMS
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('admin/index.html')
+          s = p.read_text(encoding='utf-8')
+          old = "function start(){if(!tok())return;$(\'loginView\').classList.add(\'hidden\');$(\'app\').classList.remove(\'hidden\');$(\'nav\').innerHTML=\'<button data-k=\"dashboard\">Tableau de bord</button><button data-k=\"parutions\">Parutions Ciwara Infos</button>\'+Object.entries(C).map(([k,v])=>\'<button data-k=\"\'+k+\'\">\'+v[0]+\'</button>\').join(\'\');$(\'nav\').querySelectorAll(\'button\').forEach(b=>b.onclick=()=>show(b.dataset.k));show(\'dashboard\')}"
+          new = "function start(){if(!tok())return;$(\'loginView\').classList.add(\'hidden\');$(\'app\').classList.remove(\'hidden\');$(\'nav\').innerHTML=\'<button data-k=\"dashboard\">Tableau de bord</button><button data-k=\"parutions\">Parutions Ciwara Infos</button><button data-k=\"home-advanced\">Accueil avancé</button>\'+Object.entries(C).map(([k,v])=>\'<button data-k=\"\'+k+\'\">\'+v[0]+\'</button>\').join(\'\');$(\'nav\').querySelectorAll(\'button\').forEach(b=>b.onclick=()=>b.dataset.k===\'home-advanced\'?location.href=\'home.html\':show(b.dataset.k));show(\'dashboard\')}"
+          if old not in s:
+              raise SystemExit('Bloc start() introuvable: aucune modification effectuée')
+          p.write_text(s.replace(old, new, 1), encoding='utf-8')
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add admin/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'feat: ajouter Accueil avancé au menu CMS'
+          git push
