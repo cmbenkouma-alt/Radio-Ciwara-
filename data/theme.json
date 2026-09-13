@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "name": "Ciwara FM — Thème principal",
+  "colors": {
+    "primary": "#ef2b2b",
+    "primaryDark": "#c91f27",
+    "night": "#111214",
+    "dark": "#191a1d",
+    "white": "#ffffff",
+    "surface": "#f7f7f7",
+    "line": "#dedede",
+    "muted": "#6c6d72",
+    "maliGreen": "#087f44",
+    "maliYellow": "#f7d51b"
+  },
+  "typography": {
+    "heading": "Montserrat",
+    "body": "Roboto",
+    "headingWeight": 900,
+    "bodyWeight": 400
+  },
+  "layout": {
+    "maxWidth": "1180px",
+    "contentWidth": "92%",
+    "cardRadius": "8px",
+    "sectionSpacing": "48px",
+    "headerHeight": "94px"
+  },
+  "branding": {
+    "stationName": "RADIO CIWARA",
+    "frequency": "105.5 FM",
+    "tagline": "La radio qui vous écoute !",
+    "liveLabel": "ÉCOUTER EN DIRECT"
+  },
+  "home": {
+    "heroStyle": "news-slider-with-player",
+    "newsColumns": 4,
+    "showFloatingPlayer": true,
+    "showAds": true,
+    "showPartner": true,
+    "showPodcasts": true,
+    "showWebTV": true
+  }
+}
