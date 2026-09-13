@@ -1,5 +1,9 @@
 {
   "enabled": true,
   "title": "À ne pas manquer",
-  "items": []
+  "items": [
+    {"title":"Ciwara Infos","text":"Toute l’actualité du Mali et de la région.","image":"assets/ciwara-infos-logo.jpg","link":"ciwara-info.html","active":true,"order":1},
+    {"title":"Radio Ciwara 105.5 FM","text":"Écoutez la radio en direct depuis Bamako.","image":"logo.jpg","link":"#direct","active":true,"order":2},
+    {"title":"Ciwara TV","text":"Retrouvez nos vidéos et contenus médias.","image":"logo.jpg","link":"#tv","active":true,"order":3}
+  ]
 }
