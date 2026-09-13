@@ -1,0 +1,11 @@
+{
+  "enabled": true,
+  "eyebrow": "Radio Ciwara 105.5 FM",
+  "title": "AU COEUR DE LA CULTURE",
+  "text": "Radio Ciwara 105.5 émettant depuis Bamako.",
+  "image": "logo.jpg",
+  "buttonText": "ÉCOUTER EN DIRECT",
+  "buttonLink": "#direct",
+  "secondaryText": "Découvrir Ciwara Infos",
+  "secondaryLink": "ciwara-info.html"
+}
