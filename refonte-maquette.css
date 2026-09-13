@@ -1,0 +1,41 @@
+/* CIWARA V2 — finition visuelle inspirée de la maquette */
+:root{--v2-red:#d71920;--v2-yellow:#f7d51b;--v2-black:#101114;--v2-line:#e2e2e2;--v2-soft:#f5f5f3}
+body{background:#f7f7f5;color:#151619}
+.container{width:min(1180px,92vw)}
+.portal-nav{box-shadow:0 2px 12px rgba(0,0,0,.04);position:relative;z-index:60}
+.portal-nav .container{min-height:84px}
+.portal-cats{box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.portal-main{padding:34px 0 26px}
+.portal-columns{align-items:start;gap:28px}
+.section-title{margin-bottom:18px}
+.section-title h2{font-size:27px;letter-spacing:-.7px}
+.lead-news{gap:16px}
+.lead-card{min-height:385px;border-radius:9px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.lead-card .lead-copy{left:25px;right:25px;bottom:24px}
+.mini-card{border:1px solid #e0e0e0;box-shadow:0 4px 15px rgba(0,0,0,.035);transition:.2s ease}
+.mini-card:hover{transform:translateX(3px);box-shadow:0 8px 20px rgba(0,0,0,.07)}
+.portal-sidebar{position:sticky;top:18px}
+.side-box{box-shadow:0 6px 20px rgba(0,0,0,.045)}
+.portal-ad-grid{gap:10px}
+.portal-ad{box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.cms-edition-banner{margin-top:4px!important;margin-bottom:10px!important;box-shadow:0 7px 20px rgba(0,0,0,.08)}
+.cms-news-grid{gap:15px!important}
+.cms-news-card{border-color:#e1e1e1!important;border-radius:8px!important;box-shadow:0 5px 18px rgba(0,0,0,.045)}
+.cms-news-card:hover{transform:translateY(-4px)!important;box-shadow:0 12px 28px rgba(0,0,0,.1)!important}
+.cms-news-card .news-content{padding:15px}
+.cms-news-card h3{font-size:14px!important;line-height:1.28!important}
+.cms-news-featured{border-top:4px solid var(--v2-red)!important}
+.cms-news-featured .news-source{background:var(--v2-red)!important}
+.cms-news-featured:nth-child(2),.cms-news-featured:nth-child(3){border-top-color:var(--v2-yellow)!important}
+.artist-month-box{box-shadow:0 12px 28px rgba(0,0,0,.12)!important}
+.canal-plus-block{margin-top:12px}
+.media-duo{gap:16px}
+.media-box{box-shadow:0 8px 22px rgba(0,0,0,.08);transition:.2s ease}
+.media-box:hover{transform:translateY(-3px)}
+.schedule{box-shadow:0 6px 18px rgba(0,0,0,.045);overflow:hidden}
+.partner-card{box-shadow:0 10px 25px rgba(0,0,0,.06)}
+.podcast-list article{box-shadow:0 5px 16px rgba(0,0,0,.045)}
+.contact-box{box-shadow:0 10px 28px rgba(0,0,0,.07)!important}
+footer{border-top:4px solid var(--v2-red)}
+@media(max-width:900px){.portal-sidebar{position:static}.portal-columns{gap:20px}}
+@media(max-width:650px){.portal-main{padding-top:20px}.section{padding:34px 0}.lead-card{min-height:315px}.section-title h2{font-size:22px}.cms-news-grid{gap:12px!important}.portal-ad-grid{gap:8px}}
