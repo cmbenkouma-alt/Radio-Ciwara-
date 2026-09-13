@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - refonte-maquette-2026
   workflow_dispatch:
 
 permissions:
