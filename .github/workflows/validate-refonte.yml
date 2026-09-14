@@ -1,0 +1,58 @@
+name: Validate refonte-maquette-2026
+
+on:
+  push:
+    branches:
+      - refonte-maquette-2026
+  pull_request:
+    branches:
+      - refonte-maquette-2026
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.event_name == 'push' || github.base_ref == 'refonte-maquette-2026'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JavaScript
+        run: node --check script.js
+
+      - name: Validate JSON
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          for (const f of fs.readdirSync('data').filter(f=>f.endsWith('.json'))) {
+            JSON.parse(fs.readFileSync('data/'+f,'utf8'));
+            console.log('OK', f);
+          }
+          NODE
+
+      - name: Validate essential files
+        run: |
+          for f in index.html script.js style.css refonte-maquette.css CNAME sw.js; do
+            test -s "$f" || { echo "Missing or empty: $f"; exit 1; }
+          done
+          test "$(cat CNAME | tr -d '\r\n')" = "ciwara-medias.ml"
+
+      - name: Validate Caster.fm isolation
+        run: |
+          grep -q 'cstrEmbed' index.html
+          grep -q 'cdn.cloud.caster.fm/widgets/embed.js' script.js
+          echo 'Caster.fm OK'
+
+      - name: Validate Facebook placement isolation
+        run: |
+          grep -q 'renderFacebookAfterNews' script.js
+          grep -q 'data/facebook-live.json' script.js
+          ! grep -q 'cms-facebook.*portal-sidebar' script.js
+          echo 'Facebook placement isolation OK'
