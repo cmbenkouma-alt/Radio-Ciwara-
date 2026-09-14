@@ -13,7 +13,10 @@
   "house": "Radio Ciwara 105.5 FM",
   "quote": "Une voix et une identité qui font rayonner la musique malienne.",
   "gallery": [
-    {"image":"Astan_Kida0.jpg","caption":"Astan Kida · Artiste du mois"}
+    {
+      "image": "Astan_Kida0.jpg",
+      "caption": "Astan Kida · Artiste du mois"
+    }
   ],
   "videos": [],
   "updatedAt": "2026-09-14"
