@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "templates": [
+    {"type":"text","label":"Texte / éditorial","settings":{"title":"Notre actualité","text":"Ajoutez ici votre contenu éditorial."}},
+    {"type":"image","label":"Image","settings":{"title":"Image","image":"","alt":""}},
+    {"type":"banner","label":"Bannière promotionnelle","settings":{"title":"Offre / événement","image":"","link":"#","button":"En savoir plus"}},
+    {"type":"video","label":"Vidéo","settings":{"title":"Vidéo Ciwara","url":""}},
+    {"type":"audio","label":"Audio / replay","settings":{"title":"Écouter","url":""}},
+    {"type":"columns","label":"Deux colonnes","settings":{"title":"À découvrir","items":[{"title":"Bloc 1","text":"Votre contenu"},{"title":"Bloc 2","text":"Votre contenu"}]}},
+    {"type":"spacer","label":"Espacement","settings":{"height":40}},
+    {"type":"html","label":"HTML personnalisé","settings":{"title":"Section personnalisée","html":"<p>Votre contenu HTML</p>"}}
+  ]
+}
