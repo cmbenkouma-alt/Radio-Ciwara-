@@ -1,0 +1,62 @@
+name: Validation refonte-maquette-2026
+
+on:
+  push:
+    branches: [refonte-maquette-2026]
+  pull_request:
+    branches: [refonte-maquette-2026]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/refonte-maquette-2026' || github.base_ref == 'refonte-maquette-2026'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JavaScript
+        run: node --check script.js
+
+      - name: Validate all JSON files
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r -d '' file; do
+            node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'));" "$file"
+          done < <(find data -type f -name '*.json' -print0)
+
+      - name: Verify required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in index.html script.js style.css refonte-maquette.css CNAME sw.js; do
+            test -f "$file" || { echo "Fichier manquant: $file"; exit 1; }
+          done
+
+      - name: Verify Caster.fm integration remains present
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'cstrEmbed' index.html
+          grep -q 'cdn.cloud.caster.fm/widgets/embed.js' script.js
+
+      - name: Verify Facebook Live is isolated from Caster.fm
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'renderFacebookAfterNews' script.js
+          grep -q 'data/facebook-live.json' script.js
+          ! grep -q 'cms-facebook.*portal-sidebar' script.js
+
+      - name: Verify custom domain
+        shell: bash
+        run: |
+          test "$(tr -d '\r\n' < CNAME)" = "ciwara-medias.ml"
