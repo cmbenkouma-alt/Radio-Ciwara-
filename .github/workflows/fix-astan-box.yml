@@ -1,0 +1,38 @@
+name: Fix Astan Kida sidebar box
+
+on:
+  push:
+    paths:
+      - '.deploy-astan-fix'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix index placement
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          old='''<script id="ciwara-astan-kida-static-mover">(()=>{const move=()=>{const box=document.getElementById('ciwara-astan-kida-static-box'),panel=document.querySelector('.mali-radio-panel'),ortm=panel&&panel.querySelector('.mali-ortm-block');if(!box||!panel||!ortm)return false;ortm.parentNode.insertBefore(box,ortm);return true};if(!move()){const o=new MutationObserver(()=>{if(move())o.disconnect()});o.observe(document.body,{childList:true,subtree:true});setTimeout(()=>o.disconnect(),20000)}})();</script>'''
+          new='''<script id="ciwara-astan-kida-static-mover">(()=>{const move=()=>{const box=document.getElementById('ciwara-astan-kida-static-box'),ortm=document.querySelector('.mali-ortm-block');if(!box||!ortm||!ortm.parentNode)return false;ortm.parentNode.insertBefore(box,ortm);return true};if(!move()){const o=new MutationObserver(()=>{if(move())o.disconnect()});o.observe(document.body,{childList:true,subtree:true});setTimeout(()=>o.disconnect(),30000)}})();</script>'''
+          if old not in s:
+              raise SystemExit('old mover not found')
+          s=s.replace(old,new,1)
+          oldcss='''<style>.artist-month-box{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:auto!important;overflow:hidden!important;background:#08090b!important}.artist-month-box .artist-month-image{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:auto!important;max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;object-fit:contain!important;object-position:center!important;filter:none!important}.artist-month-shade,.artist-month-content,.artist-note{display:none!important}</style>'''
+          s=s.replace(oldcss,'',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "fix: correctly position Astan Kida box"
+          git push
