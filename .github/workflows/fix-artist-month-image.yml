@@ -1,0 +1,78 @@
+name: Fix Astan Kida artist image display
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Force visible artist image
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          pattern = re.compile(
+              r'<a aria-label="Artiste du mois : Astan Kida" class="artist-month-box" href="artiste-du-mois\.html">.*?</style></aside>',
+              re.S
+          )
+
+          replacement = '''<a aria-label="Artiste du mois : Astan Kida" class="artist-month-box" href="artiste-du-mois.html">
+            <img class="artist-month-image" src="/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914" alt="Astan Kida – Artiste du mois">
+          </a>
+          <style>
+            .artist-month-box {
+              display: block !important;
+              width: 100% !important;
+              height: auto !important;
+              min-height: 0 !important;
+              aspect-ratio: auto !important;
+              overflow: hidden !important;
+              background: #08090b !important;
+              padding: 0 !important;
+            }
+            .artist-month-box .artist-month-image {
+              display: block !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+              width: 100% !important;
+              height: auto !important;
+              max-width: none !important;
+              max-height: none !important;
+              min-width: 0 !important;
+              min-height: 0 !important;
+              object-fit: contain !important;
+              object-position: center !important;
+              filter: none !important;
+            }
+            .artist-month-shade,
+            .artist-month-content,
+            .artist-note {
+              display: none !important;
+            }
+          </style></aside>'''
+
+          ns, n = pattern.subn(replacement, s, count=1)
+          if n != 1:
+              raise SystemExit('Artist month block not found exactly once')
+          p.write_text(ns, encoding='utf-8')
+
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/fix-artist-month-image.yml
+          git add index.html
+          git commit -m "Fix Astan Kida artist image display"
+          git push
