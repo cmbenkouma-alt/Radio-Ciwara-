@@ -1,6 +1,7 @@
 name: Astan static fix
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 permissions:
   contents: write
 jobs:
@@ -14,15 +15,11 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          # Remove the previous dynamic integration if present.
           a=s.find('<style id="ciwara-astan-kida-new-style">')
           b=s.find('<script id="ciwara-astan-kida-new-script">', a)
           if a>=0 and b>=0:
               e=s.find('</script>', b)
               if e>=0: s=s[:a]+s[e+9:]
-          # Static box is inserted into the sidebar; the radio script renders its
-          # radio panel before existing sidebar children, so this remains visually
-          # above the ORTM block while preserving all radio code.
           if 'ciwara-astan-kida-static-box' not in s:
               box='''<div id="ciwara-astan-kida-static-box" class="ciwara-astan-kida-static"><a href="artiste-du-mois.html"><div class="title">ARTISTE À L’HONNEUR</div><img src="/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3" alt="Astan Kida — artiste à l’honneur"><div class="caption">ASTAN KIDA<small>Artiste à l’honneur</small></div></a></div>'''
               css='''<style id="ciwara-astan-kida-static-style">.ciwara-astan-kida-static{background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden;box-sizing:border-box}.ciwara-astan-kida-static a{display:block;color:inherit;text-decoration:none}.ciwara-astan-kida-static .title{padding:12px 14px;border-top:4px solid var(--ci-red);font:900 11px Montserrat;color:#111}.ciwara-astan-kida-static img{display:block;width:100%;height:auto;max-width:100%;background:#fff}.ciwara-astan-kida-static .caption{padding:9px 12px 11px;font:800 10px/1.25 Montserrat;color:#222;text-align:center;border-top:1px solid #eee}.ciwara-astan-kida-static .caption small{display:block;margin-top:3px;font:600 9px Roboto;color:#777}</style>'''
