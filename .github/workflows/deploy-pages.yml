@@ -37,13 +37,29 @@ jobs:
         run: |
           node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
 
-      - name: Verify essential site files
+      - name: Verify essential site files and Astan Kida asset
         run: |
           for f in index.html style.css script.js mali-radios.js mali-radios.css; do
             test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }
           done
-          test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida absente'; exit 1; }
-          echo "Fichiers essentiels et assets OK"
+          test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
+          test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
+          echo "Fichiers essentiels et assets Astan Kida OK"
+
+      - name: Normalize Astan Kida image URL for GitHub Pages and custom domain
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          old = '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3'
+          new = 'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4'
+          if old not in s:
+              raise SystemExit('Référence Astan Kida attendue introuvable dans index.html')
+          p.write_text(s.replace(old, new), encoding='utf-8')
+          print('Chemin Astan Kida normalisé:', new)
+          PY
+          grep -q 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4"' index.html || { echo 'Correction Astan Kida non appliquée'; exit 1; }
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
