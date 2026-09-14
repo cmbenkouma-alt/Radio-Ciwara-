@@ -1,6 +1,6 @@
-const CACHE='ciwara-v20260919';
+const CACHE='ciwara-v20260920';
 const SAFE_RUNTIME='./refonte-dynamique-safe.js?v=20260917';
-const EMISSIONS_RUNTIME='./refonte-emissions.js?v=20260919';
+const EMISSIONS_RUNTIME='./refonte-emissions.js?v=20260920';
 const SEO_RUNTIME='./refonte-seo.js?v=20260917';
 const CORE=['./','./index.html','./style.css?v=20260902','./script.js?v=20260902','./refonte-maquette.css?v=20260913','./refonte-premium.css?v=20260913','./refonte-total-v2.css?v=20260913','./refonte-rfm-layout.css?v=20260915','./refonte-cms-portal.css?v=20260915','./refonte-cms-portal.js?v=20260915','./refonte-ux-v4.css?v=20260916','./refonte-ux-v4.js?v=20260916','./refonte-dynamique.css?v=20260913',SAFE_RUNTIME,'./refonte-total-v2.js?v=20260917',EMISSIONS_RUNTIME,SEO_RUNTIME,'./refonte-structure-v3.css?v=20260914','./manifest.webmanifest','./favicon-ciwara.svg','./logo.jpg','./logo%20hitradio.png','./data/news.json','./data/ciwara-info.json','./data/programmes.json','./data/cms-portal.json','./ciwara-info.html','./ciwara-tv.html','./download-app.html'];
 const DATA_PREFIX='/data/';
