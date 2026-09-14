@@ -1,0 +1,29 @@
+{
+  "title": "Ciwara Infos | Actualités du Mali & Radio Ciwara 105.5 FM",
+  "description": "Ciwara Infos, l'actualité du Mali, la radio Ciwara 105.5 FM, les émissions, podcasts et directs depuis Bamako.",
+  "canonical": "https://ciwara-medias.ml/",
+  "robots": "index,follow,max-image-preview:large",
+  "language": "fr-ML",
+  "og": {
+    "type": "website",
+    "title": "Ciwara Infos | Radio Ciwara 105.5 FM",
+    "description": "Actualités, radio, émissions, podcasts et directs de Ciwara depuis Bamako.",
+    "image": ""
+  },
+  "twitter": {
+    "card": "summary_large_image",
+    "title": "Ciwara Infos | Radio Ciwara 105.5 FM",
+    "description": "Actualités du Mali et Radio Ciwara 105.5 FM.",
+    "image": ""
+  },
+  "schema": {
+    "type": "RadioStation",
+    "name": "Radio Ciwara 105.5 FM",
+    "url": "https://ciwara-medias.ml/",
+    "areaServed": "Mali"
+  },
+  "sitemap": {
+    "enabled": true,
+    "url": "https://ciwara-medias.ml/sitemap.xml"
+  }
+}
