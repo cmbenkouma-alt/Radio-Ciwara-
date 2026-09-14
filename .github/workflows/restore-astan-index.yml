@@ -1,0 +1,35 @@
+name: Restore index and fix Astan Kida
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore index from known good commit and fix image path
+        shell: bash
+        run: |
+          git show 5be10c8a363ccdd86e9325c3b9dc018358b7a016:index.html > index.html
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('src="/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914"', 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914"')
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Remove temporary workflow and commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/restore-astan-index.yml
+          git add index.html
+          git commit -m "Restore index and fix Astan Kida image path"
+          git push
