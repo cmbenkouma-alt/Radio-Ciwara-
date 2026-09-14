@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "folders": ["logo", "news", "emissions", "partners", "ads", "social"],
+  "assets": [
+    {
+      "id": "radio-logo",
+      "title": "Logo Radio Ciwara 105.5 FM",
+      "url": "",
+      "type": "image",
+      "alt": "Radio Ciwara 105.5 FM",
+      "folder": "logo",
+      "tags": ["logo", "radio", "ciwara"],
+      "enabled": true
+    }
+  ]
+}
