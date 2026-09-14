@@ -1,0 +1,70 @@
+name: Apply Astan Kida artist visual
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  replace:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Replace artist month block
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+
+          pattern = re.compile(
+              r'<a aria-label="Artiste du mois : Astan Kida" class="artist-month-box" href="artiste-du-mois\.html">.*?</style></aside>',
+              re.S
+          )
+
+          replacement = '''<a aria-label="Artiste du mois : Astan Kida" class="artist-month-box" href="artiste-du-mois.html">
+            <img class="artist-month-image" src="assets/artistes/astan-kida-artiste-du-mois.png" alt="Astan Kida – Artiste du mois">
+          </a>
+          <style>
+            .artist-month-box {
+              display: block;
+              aspect-ratio: 1454 / 1082;
+              height: auto;
+              min-height: 0;
+              overflow: hidden;
+              background: #08090b;
+            }
+            .artist-month-box .artist-month-image {
+              display: block;
+              width: 100%;
+              height: 100%;
+              object-fit: contain;
+              object-position: center;
+              filter: none;
+            }
+            .artist-month-shade,
+            .artist-month-content,
+            .artist-note {
+              display: none !important;
+            }
+          </style></aside>'''
+
+          ns, n = pattern.subn(replacement, s, count=1)
+          if n != 1:
+              raise SystemExit("Artist month block not found exactly once")
+          p.write_text(ns, encoding="utf-8")
+
+      - name: Commit and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/artist-month-replace.yml
+          git add index.html
+          git commit -m "Replace Astan Kida artist month visual"
+          git push
