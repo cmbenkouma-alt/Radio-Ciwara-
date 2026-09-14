@@ -3,7 +3,6 @@ name: Deploy Radio Ciwara site
 on:
   push:
     branches:
-      - main
       - refonte-maquette-2026
   workflow_dispatch:
 
@@ -13,18 +12,20 @@ permissions:
   id-token: write
 
 concurrency:
-  group: radio-ciwara-pages
+  group: radio-ciwara-refonte-pages
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: refonte-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
+      - name: Checkout refonte
         uses: actions/checkout@v4
+        with:
+          ref: refonte-maquette-2026
 
       - name: Validate JavaScript
         uses: actions/setup-node@v4
@@ -50,7 +51,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: .
 
