@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "pages": [
+    {"id":"home","title":"Accueil","slug":"/","enabled":true,"template":"home"},
+    {"id":"ciwara-infos","title":"Ciwara Infos","slug":"/ciwara-info.html","enabled":true,"template":"news"},
+    {"id":"radio","title":"Radio Ciwara","slug":"/radio.html","enabled":true,"template":"radio"},
+    {"id":"tv","title":"Ciwara TV","slug":"/tv.html","enabled":true,"template":"media"},
+    {"id":"emissions","title":"Nos émissions","slug":"/emissions.html","enabled":true,"template":"programs"},
+    {"id":"podcasts","title":"Podcasts","slug":"/podcasts.html","enabled":true,"template":"podcasts"},
+    {"id":"partenaires","title":"Partenaires","slug":"/partenaires.html","enabled":true,"template":"partners"},
+    {"id":"contact","title":"Contact","slug":"/contact.html","enabled":true,"template":"contact"}
+  ]
+}
