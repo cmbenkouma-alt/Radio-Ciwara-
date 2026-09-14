@@ -1,0 +1,22 @@
+{
+  "enabled": true,
+  "logoUrl": "",
+  "logoAlt": "Radio Ciwara 105.5 FM",
+  "stationName": "Radio Ciwara",
+  "frequency": "105.5 FM",
+  "location": "Bamako, Mali",
+  "alert": {
+    "enabled": true,
+    "text": "CIWARA 105.5 FM — AU CŒUR DE LA CULTURE"
+  },
+  "navigation": {
+    "enabled": true,
+    "showCategories": true,
+    "showSocial": true
+  },
+  "cta": {
+    "enabled": true,
+    "label": "Écouter en direct",
+    "url": "#radioPlayer"
+  }
+}
