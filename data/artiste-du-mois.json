@@ -1,0 +1,20 @@
+{
+  "category": "Artiste du mois",
+  "active": true,
+  "showOnHome": true,
+  "name": "Astan Kida",
+  "subtitle": "La perle du Mandingue · Chanteuse malienne",
+  "eyebrow": "Portrait exclusif · Radio Ciwara",
+  "bio": "Astan Kida est une artiste malienne originaire de Ségou, issue d'une famille de griots. Elle s'est imposée sur la scène musicale malienne avec un répertoire qui associe tradition mandingue et sonorités modernes.",
+  "image": "Astan_Kida0.jpg",
+  "origin": "Ségou, Mali",
+  "style": "Mandingue · Afro-jazz · Afrobeat",
+  "albums": "Balimaya · Manadjougumana",
+  "house": "Radio Ciwara 105.5 FM",
+  "quote": "Une voix et une identité qui font rayonner la musique malienne.",
+  "gallery": [
+    {"image":"Astan_Kida0.jpg","caption":"Astan Kida · Artiste du mois"}
+  ],
+  "videos": [],
+  "updatedAt": "2026-09-14"
+}
