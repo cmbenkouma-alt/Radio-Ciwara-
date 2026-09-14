@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "theme": {
+    "primary": "#0b8f4d",
+    "secondary": "#f7d51b",
+    "accent": "#d71920",
+    "text": "#111214",
+    "background": "#f1f1ef",
+    "radius": 10,
+    "maxWidth": 1180
+  },
+  "pages": {
+    "home": {
+      "title": "Accueil",
+      "slug": "/",
+      "blocks": [
+        {"id":"top-alert","type":"existing","label":"Barre d'alerte","enabled":true,"order":10,"target":".portal-top","settings":{"text":"Radio Ciwara 105.5 FM — La radio qui vous écoute !"}},
+        {"id":"header","type":"existing","label":"En-tête / navigation","enabled":true,"order":20,"target":".portal-nav","settings":{}},
+        {"id":"categories","type":"existing","label":"Menu catégories","enabled":true,"order":30,"target":".portal-cats","settings":{}},
+        {"id":"ads","type":"existing","label":"Publicités","enabled":true,"order":40,"target":".portal-ads","settings":{}},
+        {"id":"hero","type":"existing","label":"Hero / À la une","enabled":true,"order":50,"target":".ciwara-hero","settings":{}},
+        {"id":"news","type":"existing","label":"Actualités / À la une","enabled":true,"order":60,"target":"#newsGrid","settings":{"title":"À LA UNE"}},
+        {"id":"facebook-live","type":"facebook-live","label":"Facebook Live","enabled":false,"order":70,"target":"#newsGrid","settings":{"title":"Facebook Live","height":420}},
+        {"id":"sidebar","type":"existing","label":"Colonne latérale","enabled":true,"order":80,"target":".portal-sidebar","settings":{}},
+        {"id":"world","type":"existing","label":"Actualité du Mali et du monde","enabled":true,"order":90,"target":".cms-world-slider","settings":{}},
+        {"id":"media","type":"existing","label":"Ciwara TV / Radio","enabled":true,"order":100,"target":".media-duo","settings":{}},
+        {"id":"canal","type":"existing","label":"Canal+","enabled":true,"order":110,"target":".canal-plus-block","settings":{}},
+        {"id":"radio","type":"existing","label":"Radio en direct / Caster.fm","enabled":true,"order":120,"target":".ciwara-caster-card","settings":{}},
+        {"id":"programs","type":"existing","label":"Nos émissions","enabled":true,"order":130,"target":"#programmes","settings":{}},
+        {"id":"podcasts","type":"existing","label":"Podcasts","enabled":true,"order":140,"target":"#podcasts","settings":{}},
+        {"id":"partners","type":"existing","label":"Partenaires","enabled":true,"order":150,"target":"#partenaires","settings":{}},
+        {"id":"custom-zone","type":"custom-zone","label":"Nouvelles sections CMS","enabled":true,"order":160,"target":"#cmsBuilder","settings":{"title":"Sections personnalisées"}}
+      ]
+    }
+  }
+}
