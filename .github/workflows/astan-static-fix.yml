@@ -20,19 +20,22 @@ jobs:
           if a>=0 and b>=0:
               e=s.find('</script>', b)
               if e>=0: s=s[:a]+s[e+9:]
-          if 'ciwara-astan-kida-static-box' not in s:
-              box='''<div id="ciwara-astan-kida-static-box" class="ciwara-astan-kida-static"><a href="artiste-du-mois.html"><div class="title">ARTISTE À L’HONNEUR</div><img src="/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3" alt="Astan Kida — artiste à l’honneur"><div class="caption">ASTAN KIDA<small>Artiste à l’honneur</small></div></a></div>'''
-              css='''<style id="ciwara-astan-kida-static-style">.ciwara-astan-kida-static{background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden;box-sizing:border-box}.ciwara-astan-kida-static a{display:block;color:inherit;text-decoration:none}.ciwara-astan-kida-static .title{padding:12px 14px;border-top:4px solid var(--ci-red);font:900 11px Montserrat;color:#111}.ciwara-astan-kida-static img{display:block;width:100%;height:auto;max-width:100%;background:#fff}.ciwara-astan-kida-static .caption{padding:9px 12px 11px;font:800 10px/1.25 Montserrat;color:#222;text-align:center;border-top:1px solid #eee}.ciwara-astan-kida-static .caption small{display:block;margin-top:3px;font:600 9px Roboto;color:#777}</style>'''
-              marker='<aside class="portal-sidebar">'
-              if marker not in s: raise SystemExit('portal sidebar not found')
-              pos=s.find(marker)+len(marker)
-              s=s[:pos]+css+box+s[pos:]
+          old_artist='<style>.artist-month-box{display:block!important;width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:auto!important;overflow:hidden!important}.artist-month-box .artist-month-image{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:auto!important;max-width:none!important;max-height:none!important;min-width:0!important;min-height:0!important;object-fit:contain!important;object-position:center!important;filter:none!important}.artist-month-shade,.artist-month-content,.artist-note{display:none!important}</style>'
+          s=s.replace(old_artist,'')
+          if 'id="ciwara-astan-kida-static-mover"' not in s:
+              script='''<script id="ciwara-astan-kida-static-mover">(()=>{const move=()=>{const box=document.getElementById('ciwara-astan-kida-static-box'),panel=document.querySelector('.mali-radio-panel'),ortm=panel&&panel.querySelector('.mali-ortm-block');if(!box||!panel||!ortm)return false;ortm.parentNode.insertBefore(box,ortm);return true};if(!move()){const o=new MutationObserver(()=>{if(move())o.disconnect()});o.observe(document.body,{childList:true,subtree:true});setTimeout(()=>o.disconnect(),20000)}})();</script>'''
+              marker='</aside>'
+              pos=s.find(marker)
+              if pos<0: raise SystemExit('aside close not found')
+              s=s[:pos]+script+s[pos:]
           p.write_text(s,encoding='utf-8')
           PY
           grep -q 'ciwara-astan-kida-static-box' index.html
+          grep -q 'ciwara-astan-kida-static-mover' index.html
           grep -q '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3' index.html
+          grep -q 'data-publicToken="236f6884-9ad2-465f-a29e-5f349a8dac8e"' index.html
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'fix: integrate Astan Kida poster statically'
+          git diff --cached --quiet || git commit -m 'fix: place Astan Kida box above ORTM'
           git push origin main
