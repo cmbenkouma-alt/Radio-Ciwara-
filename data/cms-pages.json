@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "pages": {
+    "radio": {
+      "title": "Radio Ciwara 105.5 FM",
+      "slug": "/radio.html",
+      "enabled": true,
+      "blocks": [
+        {"id":"radio-intro","type":"text","order":10,"enabled":true,"settings":{"title":"Radio Ciwara 105.5 FM","kicker":"EN DIRECT","text":"Écoutez Radio Ciwara depuis Bamako, 24h/24.","html":"<p>Radio Ciwara 105.5 FM — au cœur de la culture.</p>"}},
+        {"id":"radio-player","type":"existing","order":20,"enabled":true,"target":"#radioPlayer","settings":{}},
+        {"id":"radio-info","type":"columns","order":30,"enabled":true,"settings":{"title":"La radio","items":[{"title":"Fréquence","text":"105.5 FM"},{"title":"Ville","text":"Bamako, Mali"}]}}
+      ]
+    },
+    "tv": {
+      "title":"Ciwara TV",
+      "slug":"/tv.html",
+      "enabled":true,
+      "blocks":[
+        {"id":"tv-intro","type":"text","order":10,"enabled":true,"settings":{"title":"Ciwara TV","text":"Retrouvez les vidéos, directs et contenus audiovisuels de Ciwara."}},
+        {"id":"tv-video","type":"video","order":20,"enabled":true,"settings":{"title":"Vidéo à la une","url":""}}
+      ]
+    },
+    "emissions": {
+      "title":"Nos émissions",
+      "slug":"/emissions.html",
+      "enabled":true,
+      "blocks":[
+        {"id":"programs-intro","type":"text","order":10,"enabled":true,"settings":{"title":"Nos émissions","text":"Découvrez les programmes et rendez-vous de Radio Ciwara 105.5 FM."}},
+        {"id":"programs-content","type":"existing","order":20,"enabled":true,"target":"#programmes","settings":{}}
+      ]
+    },
+    "podcasts": {
+      "title":"Podcasts Ciwara",
+      "slug":"/podcasts.html",
+      "enabled":true,
+      "blocks":[
+        {"id":"podcasts-intro","type":"text","order":10,"enabled":true,"settings":{"title":"Podcasts","text":"Réécoutez les émissions et contenus audio de Radio Ciwara."}},
+        {"id":"podcasts-content","type":"existing","order":20,"enabled":true,"target":"#podcasts","settings":{}}
+      ]
+    },
+    "partenaires": {
+      "title":"Partenaires",
+      "slug":"/partenaires.html",
+      "enabled":true,
+      "blocks":[
+        {"id":"partners-intro","type":"text","order":10,"enabled":true,"settings":{"title":"Nos partenaires","text":"Les partenaires qui accompagnent Radio Ciwara."}},
+        {"id":"partners-banner","type":"image","order":20,"enabled":true,"settings":{"title":"Partenaires","image":"","alt":"Partenaires Radio Ciwara"}}
+      ]
+    },
+    "contact": {
+      "title":"Contact",
+      "slug":"/contact.html",
+      "enabled":true,
+      "blocks":[
+        {"id":"contact-intro","type":"text","order":10,"enabled":true,"settings":{"title":"Contactez Radio Ciwara","text":"Une question, une annonce ou un partenariat ? Contactez-nous depuis Bamako."}},
+        {"id":"contact-info","type":"columns","order":20,"enabled":true,"settings":{"title":"Informations","items":[{"title":"Adresse","text":"Bamako, Mali"},{"title":"Radio","text":"105.5 FM"}]}}
+      ]
+    }
+  }
+}
