@@ -1,0 +1,28 @@
+{
+  "enabled": true,
+  "about": {
+    "title": "Radio Ciwara 105.5 FM",
+    "text": "Radio Ciwara 105.5 FM émettant depuis Bamako, au cœur de la culture et de l'information."
+  },
+  "contact": {
+    "title": "Contact",
+    "address": "Bamako, Mali",
+    "phone": "",
+    "email": ""
+  },
+  "columns": [
+    {"title":"Navigation","links":[{"label":"Accueil","url":"/"},{"label":"Ciwara Infos","url":"/ciwara-info.html"},{"label":"Radio","url":"/radio.html"},{"label":"Émissions","url":"/emissions.html"}]},
+    {"title":"Médias","links":[{"label":"TV","url":"/tv.html"},{"label":"Podcasts","url":"/podcasts.html"},{"label":"Partenaires","url":"/partenaires.html"},{"label":"Contact","url":"/contact.html"}]}
+  ],
+  "social": {
+    "facebook": "",
+    "youtube": "",
+    "instagram": "",
+    "whatsapp": ""
+  },
+  "newsletter": {
+    "enabled": false,
+    "title": "Restez informé"
+  },
+  "copyright": "© {year} Radio Ciwara 105.5 FM — Tous droits réservés."
+}
