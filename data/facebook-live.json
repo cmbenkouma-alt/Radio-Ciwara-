@@ -1,8 +1,8 @@
 {
-  "enabled": false,
-  "title": "Facebook Live",
-  "url": "",
-  "embedUrl": "",
+  "enabled": true,
+  "title": "CIWARA LIVE — Facebook",
+  "url": "https://www.facebook.com/RadioCiwaraFM/videos/3154611518262011/",
+  "embedUrl": "https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2FRadioCiwaraFM%2Fvideos%2F3154611518262011%2F&show_text=false&width=500",
   "height": 420,
   "showTitle": true
 }
