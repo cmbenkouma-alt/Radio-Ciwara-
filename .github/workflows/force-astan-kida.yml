@@ -1,0 +1,48 @@
+name: Force Astan Kida sidebar integration
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install new Astan Kida box
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          if 'ciwara-astan-kida-new-box' in s:
+              print('Already integrated')
+              raise SystemExit(0)
+          hook=r'''<style id="ciwara-astan-kida-new-style">.ciwara-astan-kida-new{background:#fff;border:1px solid #ddd;border-radius:6px;overflow:hidden;box-sizing:border-box}.ciwara-astan-kida-new a{display:block;color:inherit;text-decoration:none}.ciwara-astan-kida-new .title{padding:12px 14px;border-top:4px solid var(--ci-red);font:900 11px Montserrat;color:#111}.ciwara-astan-kida-new .poster{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;object-position:center;background:#fff}.ciwara-astan-kida-new .caption{padding:9px 12px 11px;font:800 10px/1.25 Montserrat;color:#222;text-align:center;border-top:1px solid #eee}.ciwara-astan-kida-new .caption small{display:block;margin-top:3px;font:600 9px Roboto;color:#777}</style><script id="ciwara-astan-kida-new-script">(()=>{const add=()=>{const ortm=document.querySelector('.mali-ortm-block');if(!ortm||document.getElementById('ciwara-astan-kida-new-box'))return false;const wrap=document.createElement('div');wrap.innerHTML='<div id="ciwara-astan-kida-new-box" class="ciwara-astan-kida-new" aria-label="Astan Kida artiste à l’honneur"><a href="artiste-du-mois.html"><div class="title">ARTISTE À L’HONNEUR</div><img class="poster" src="assets/artistes/astan-kida-artiste-du-mois.png" alt="Astan Kida — artiste à l’honneur"><div class="caption">ASTAN KIDA<small>Artiste à l’honneur</small></div></a></div>';ortm.parentNode.insertBefore(wrap.firstElementChild,ortm);return true};if(!add()){const o=new MutationObserver(()=>{if(add())o.disconnect()});o.observe(document.body,{childList:true,subtree:true});setTimeout(()=>o.disconnect(),15000)}})();</script>'''
+          if '</body>' not in s:
+              raise SystemExit('No body marker')
+          p.write_text(s.replace('</body>',hook+'</body>',1),encoding='utf-8')
+          PY
+      - name: Validate and publish
+        shell: bash
+        run: |
+          grep -q 'ciwara-astan-kida-new-box' index.html
+          grep -q 'assets/artistes/astan-kida-artiste-du-mois.png' index.html
+          grep -q '.mali-ortm-block' index.html
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'feat: add new Astan Kida sidebar box'
+          git push
+      - name: Remove temporary workflows
+        if: always()
+        shell: bash
+        run: |
+          git rm -f .github/workflows/force-astan-kida.yml .github/workflows/add-astan-kida-right-box.yml 2>/dev/null || true
+          git commit -m 'chore: remove temporary Astan Kida workflows' || true
+          git push || true
