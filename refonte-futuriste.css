@@ -1,0 +1,173 @@
+/* Radio Ciwara — Futuristic 2026 home skin
+   Additive layer only. It does not alter Caster.fm markup or configuration. */
+:root{
+  --f-blue:#1769ff;
+  --f-blue-2:#0737b9;
+  --f-cyan:#35c8ff;
+  --f-pink:#ff3f91;
+  --f-pink-2:#ff72b2;
+  --f-ink:#081329;
+  --f-muted:#63708a;
+  --f-white:#fff;
+  --f-bg:#f5f8ff;
+  --f-line:#dce5f5;
+  --f-shadow:0 22px 60px rgba(24,58,135,.14);
+  --f-shadow-soft:0 10px 30px rgba(24,58,135,.10);
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(53,200,255,.16),transparent 26rem),
+    radial-gradient(circle at 94% 12%,rgba(255,63,145,.13),transparent 25rem),
+    var(--f-bg)!important;
+  color:var(--f-ink)!important;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:linear-gradient(rgba(23,105,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(23,105,255,.035) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(to bottom,black,transparent 72%);
+}
+
+/* Header / navigation: completely new visual language */
+header,.site-header,.top-header,.main-header{
+  background:rgba(255,255,255,.92)!important;
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(23,105,255,.12)!important;
+  box-shadow:0 8px 30px rgba(8,35,90,.06)!important;
+}
+.brand-pair,.site-brand,.brand{filter:drop-shadow(0 8px 16px rgba(23,105,255,.10))}
+nav a,.main-nav a,.nav-link{
+  border-radius:999px!important;
+  transition:transform .2s ease,background .2s ease,color .2s ease,box-shadow .2s ease;
+}
+nav a:hover,.main-nav a:hover,.nav-link:hover{
+  background:linear-gradient(90deg,rgba(23,105,255,.10),rgba(255,63,145,.10))!important;
+  color:var(--f-blue)!important;
+  transform:translateY(-1px);
+}
+
+/* Main hero becomes a premium two-column media stage. */
+.hero-grid,.hero-layout,.hero-shell{
+  position:relative;
+  overflow:visible!important;
+}
+.hero-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.72fr) minmax(320px,.78fr)!important;
+  gap:18px!important;
+  align-items:stretch;
+}
+.hero-video-col,.hero-news-col{
+  border:1px solid rgba(23,105,255,.14)!important;
+  border-radius:28px!important;
+  background:rgba(255,255,255,.88)!important;
+  box-shadow:var(--f-shadow)!important;
+  overflow:hidden!important;
+  position:relative;
+}
+.hero-video-col:before,.hero-news-col:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(135deg,rgba(53,200,255,.10),transparent 38%,rgba(255,63,145,.10));
+}
+.hero-video-col{min-height:500px}
+.hero-news-col{min-height:500px}
+
+/* Futuristic emission slider injected by refonte-futuriste.js */
+.ciwara-future-emissions{
+  position:relative;z-index:2;height:100%;min-height:500px;display:flex;flex-direction:column;
+  background:linear-gradient(145deg,#071b46 0%,#0a45b9 52%,#1769ff 100%);
+  color:#fff;
+}
+.ciwara-future-emissions:after{
+  content:"";position:absolute;inset:auto -10% -35% 35%;height:55%;
+  background:radial-gradient(circle,rgba(255,63,145,.42),transparent 65%);pointer-events:none;
+}
+.future-kicker{
+  position:relative;z-index:3;display:flex;justify-content:space-between;align-items:center;
+  padding:20px 22px 8px;text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:800;
+}
+.future-kicker strong{font-size:12px}.future-live-dot{display:inline-flex;gap:7px;align-items:center;color:#fff}
+.future-live-dot:before{content:"";width:8px;height:8px;border-radius:50%;background:#ff4d9a;box-shadow:0 0 0 6px rgba(255,77,154,.16),0 0 18px #ff4d9a}
+.future-emission-slider{position:relative;z-index:3;flex:1;min-height:0}
+.future-emission-slide{position:absolute;inset:0;opacity:0;transform:translateX(28px) scale(.985);transition:opacity .55s ease,transform .55s ease;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(230px,.75fr);gap:22px;padding:10px 22px 22px}
+.future-emission-slide.is-active{opacity:1;transform:none}
+.future-emission-copy{align-self:end;padding:18px 0 24px;max-width:580px}
+.future-emission-copy .eyebrow{display:inline-flex;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.14);font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.future-emission-copy h2{font-size:clamp(28px,4vw,54px);line-height:.96;margin:0 0 12px;color:#fff;letter-spacing:-.04em}
+.future-emission-copy p{margin:0;color:rgba(255,255,255,.82);font-size:14px;line-height:1.55}
+.future-emission-art{align-self:stretch;min-height:300px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.20);box-shadow:0 20px 45px rgba(0,0,0,.25);background:rgba(255,255,255,.08)}
+.future-emission-art img{width:100%;height:100%;display:block;object-fit:cover;object-position:center}
+.future-emission-dots{position:absolute;z-index:5;left:22px;bottom:22px;display:flex;gap:7px}
+.future-emission-dots button{width:8px;height:8px;border:0;border-radius:99px;padding:0;background:rgba(255,255,255,.34);cursor:pointer;transition:.25s}
+.future-emission-dots button.is-active{width:28px;background:#fff}
+
+/* Keep the Caster player intact; style only its outer card. */
+.hero-news-col .direct-player,.hero-news-col .caster-main-player,.hero-news-col .cstrEmbed{
+  position:relative;z-index:3;
+}
+.hero-news-col .direct-player,.hero-news-col .caster-main-player{
+  margin:18px!important;border-radius:22px!important;overflow:hidden;
+  border:1px solid rgba(23,105,255,.14)!important;
+  box-shadow:0 18px 40px rgba(8,35,90,.13)!important;
+  background:#fff!important;
+}
+.hero-news-col .cstrEmbed{min-height:240px}
+
+/* News slider */
+.ciwara-news-stage{
+  margin:26px auto!important;max-width:1180px;position:relative;overflow:hidden;
+  border-radius:28px;border:1px solid rgba(23,105,255,.12);
+  background:rgba(255,255,255,.92);box-shadow:var(--f-shadow);
+}
+.ciwara-news-stage-head{display:flex;justify-content:space-between;align-items:end;gap:16px;padding:24px 26px 16px}
+.ciwara-news-stage-head h2{margin:0;font-size:clamp(22px,3vw,34px);letter-spacing:-.035em;color:var(--f-ink)}
+.ciwara-news-stage-head h2 span{color:var(--f-pink)}
+.ciwara-news-stage-head p{margin:4px 0 0;color:var(--f-muted);font-size:13px}
+.ciwara-news-track{display:flex;gap:16px;overflow:auto;scroll-snap-type:x mandatory;padding:4px 26px 26px;scrollbar-width:none}
+.ciwara-news-track::-webkit-scrollbar{display:none}
+.ciwara-news-card{flex:0 0 min(360px,78vw);scroll-snap-align:start;border:1px solid var(--f-line);border-radius:20px;overflow:hidden;background:#fff;box-shadow:var(--f-shadow-soft);transition:transform .25s ease,box-shadow .25s ease}
+.ciwara-news-card:hover{transform:translateY(-5px);box-shadow:0 18px 38px rgba(24,58,135,.16)}
+.ciwara-news-card a{text-decoration:none;color:inherit}
+.ciwara-news-card img{display:block;width:100%;height:190px;object-fit:cover;background:#eef3ff}
+.ciwara-news-card-body{padding:15px 16px 18px}.ciwara-news-card-body small{color:var(--f-pink);font-weight:800;text-transform:uppercase;letter-spacing:.08em}.ciwara-news-card-body h3{font-size:18px;line-height:1.18;margin:7px 0 0;color:var(--f-ink)}
+.ciwara-news-card-body p{font-size:12px;line-height:1.5;color:var(--f-muted);margin:8px 0 0}
+.ciwara-rss-pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 12px;background:linear-gradient(90deg,#eef5ff,#fff0f7);color:var(--f-blue);font-weight:800;font-size:11px}
+
+/* Sections inspired by the existing portal, but visually rebuilt. */
+main section:not(.ciwara-news-stage),.content-section,.section-block,.program-section,.podcast-section,.partners-section{
+  border-radius:22px;
+}
+.section-title,.section-heading,.section-title h2{letter-spacing:-.035em}
+.card,.news-card,.program-card,.podcast-card,.partner-card,.content-card{
+  border:1px solid rgba(23,105,255,.10)!important;border-radius:18px!important;
+  box-shadow:0 12px 32px rgba(24,58,135,.08)!important;
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+}
+.card:hover,.news-card:hover,.program-card:hover,.podcast-card:hover,.partner-card:hover,.content-card:hover{transform:translateY(-4px);border-color:rgba(255,63,145,.28)!important;box-shadow:0 20px 42px rgba(24,58,135,.13)!important}
+.btn,.button,.cta{border-radius:999px!important;background:linear-gradient(90deg,var(--f-blue),var(--f-pink))!important;color:#fff!important;border:0!important;box-shadow:0 10px 24px rgba(23,105,255,.22)!important}
+
+footer{background:#06122b!important;color:#dce8ff!important;border-top:3px solid transparent!important;border-image:linear-gradient(90deg,var(--f-blue),var(--f-pink)) 1!important}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr!important}
+  .hero-video-col,.hero-news-col{min-height:420px}
+  .future-emission-slide{grid-template-columns:1fr;gap:12px;padding-bottom:54px}
+  .future-emission-art{min-height:235px;max-height:270px}
+  .future-emission-copy{align-self:auto;padding-top:4px}
+  .future-emission-copy h2{font-size:34px}
+  .future-emission-dots{bottom:18px}
+}
+@media(max-width:600px){
+  .hero-grid{gap:12px!important}
+  .hero-video-col,.hero-news-col{border-radius:20px!important;min-height:400px}
+  .future-kicker{padding:15px 16px 4px}
+  .future-emission-slide{padding:8px 16px 50px}
+  .future-emission-art{min-height:200px;max-height:220px}
+  .future-emission-copy h2{font-size:29px}
+  .ciwara-news-stage{margin:18px 10px!important;border-radius:20px}
+  .ciwara-news-stage-head{padding:19px 18px 12px;display:block}
+  .ciwara-news-track{padding:3px 18px 20px}
+  .ciwara-news-card{flex-basis:82vw}
+}
