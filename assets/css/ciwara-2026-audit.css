@@ -55,6 +55,21 @@ section{scroll-margin-top:88px}
 /* Artist / premium feature cards */
 [class*="artist"],.artist-card,.artiste-card{border-radius:var(--ci-radius);overflow:hidden}
 
+/* Homepage Astan Kida artwork: preserve the supplied image, prevent crop/distortion, and let it fill the card width */
+#ciwara-astan-kida-static-box{overflow:hidden}
+#ciwara-astan-kida-static-box a{display:block}
+#ciwara-astan-kida-static-box img{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  margin:0 auto!important;
+}
+
 /* Event artwork: enlarge the supplied square poster and keep the full artwork visible */
 .event-card,.events-card,.event-poster,.events-grid{overflow:hidden}
 .event-card img,.events-card img,.event-poster img,.events-grid img{
