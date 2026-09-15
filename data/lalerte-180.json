@@ -2,19 +2,108 @@
   "edition": "L'ALERTE N°180",
   "date": "15 septembre 2026",
   "pdf": "media/lalerte/editions/L'ALERTE N°180.pdf",
-  "generatedAt": "2026-09-15T19:20:00Z",
-  "imagePolicy": "Chaque carte utilise un recadrage de la photographie ou illustration réellement placée avec le sujet dans le PDF. Les pages complètes restent disponibles séparément pour la lecture de l’édition.",
+  "generatedAt": "2026-09-15T19:25:14.557952+00:00",
+  "imagePolicy": "Chaque carte utilise un recadrage de la photographie ou illustration réellement placée avec le sujet dans le PDF. Les pages complètes sont conservées séparément pour la lecture de l’édition.",
   "articles": [
-    {"id":"article-01","page":1,"category":"À LA UNE","title":"L’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP","excerpt":"Le Cadre de concertation des faîtières de la presse écrite privée conteste la méthode engagée par la Maison de la Presse autour de l’organe d’autorégulation et de la relecture de la Convention collective.","image":"assets/lalerte/n180/articles/article-01.jpg"},
-    {"id":"article-02","page":2,"category":"INTERVIEW","title":"« Samaké Voyage et Fret, c’est l’acheminement des colis et passeports en toute confiance et en toute sécurité »","excerpt":"Sékou Samaké, PDG de Samaké Voyage et Fret, présente une société logistique active entre le Mali, le Sénégal, la Guinée, l’Italie et la France.","image":"assets/lalerte/n180/articles/article-02.jpg"},
-    {"id":"article-03","page":2,"category":"ÉCONOMIE · PRESSE","title":"ASSEP-APEX : Vers la concrétisation d’un partenariat stratégique","excerpt":"Une délégation de l’Association des Éditeurs de Presse Privée, conduite par Boubacar Yalkoué, a rencontré le directeur général de l’APEX Massoudou Cissé pour avancer vers un partenariat formel.","image":"assets/lalerte/n180/articles/article-03.jpg"},
-    {"id":"article-04","page":3,"category":"À LA UNE","title":"Organe d’autorégulation et relecture de la Convention collective : l’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP","excerpt":"Les organisations de la presse écrite privée réaffirment leur attachement au dialogue, à la concertation et à l’autorégulation, tout en demandant une démarche inclusive.","image":"assets/lalerte/n180/articles/article-04.jpg"},
-    {"id":"article-05","page":4,"category":"NATION","title":"Ancien DG des Douanes Amadou Konaté : Un modèle de l’excellence et de rigueur !","excerpt":"L’édition revient sur le bilan d’Amadou Konaté à la tête des Douanes maliennes, notamment les résultats de mobilisation des recettes et les réformes structurelles.","image":"assets/lalerte/n180/articles/article-05.jpg"},
-    {"id":"article-06","page":4,"category":"NATION","title":"Présidence malienne de l’OMD-AOC : Le bilan jugé exceptionnel","excerpt":"Le Mali a transmis le flambeau de la Vice-Présidence de la Région Afrique Occidentale et Centrale de l’Organisation Mondiale des Douanes après un mandat marqué par la modernisation et la lutte contre la fraude.","image":"assets/lalerte/n180/articles/article-06.jpg"},
-    {"id":"article-07","page":7,"category":"VIE DES STARS","title":"Elton John donne un concert de plus de deux heures à Rio","excerpt":"Elton John s’est produit au festival Rock in Rio avec un concert de plus de deux heures et vingt-quatre chansons devant 100.000 spectateurs.","image":"assets/lalerte/n180/articles/article-07.jpg","source":"20 Minutes"},
-    {"id":"article-08","page":7,"category":"INSOLITE","title":"La plus petite voiture au monde","excerpt":"Réalisée à partir d’une Fiat Panda 1993, cette voiture mesure seulement 50,20 cm de large, 3,40 mètres de long et 1,45 mètre de haut. Andrea Marazzi a fait inscrire son record au Livre Guinness.","image":"assets/lalerte/n180/articles/article-08.jpg","source":"Le Dauphiné Libéré"}
+    {
+      "id": "article-01",
+      "page": 1,
+      "category": "À LA UNE",
+      "title": "L’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP",
+      "excerpt": "Le Cadre de concertation des faîtières de la presse écrite privée conteste la méthode engagée par la Maison de la Presse autour de l’organe d’autorégulation et de la relecture de la Convention collective.",
+      "image": "assets/lalerte/n180/articles/article-01.jpg"
+    },
+    {
+      "id": "article-02",
+      "page": 2,
+      "category": "INTERVIEW",
+      "title": "« Samaké Voyage et Fret, c’est l’acheminement des colis et passeports en toute confiance et en toute sécurité »",
+      "excerpt": "Sékou Samaké, PDG de Samaké Voyage et Fret, présente une société logistique active entre le Mali, le Sénégal, la Guinée, l’Italie et la France.",
+      "image": "assets/lalerte/n180/articles/article-02.jpg"
+    },
+    {
+      "id": "article-03",
+      "page": 2,
+      "category": "ÉCONOMIE · PRESSE",
+      "title": "ASSEP-APEX : Vers la concrétisation d’un partenariat stratégique",
+      "excerpt": "Une délégation de l’Association des Éditeurs de Presse Privée, conduite par Boubacar Yalkoué, a rencontré le directeur général de l’APEX Massoudou Cissé pour avancer vers un partenariat formel.",
+      "image": "assets/lalerte/n180/articles/article-03.jpg"
+    },
+    {
+      "id": "article-04",
+      "page": 3,
+      "category": "À LA UNE",
+      "title": "Organe d’autorégulation et relecture de la Convention collective : l’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP",
+      "excerpt": "Les organisations de la presse écrite privée réaffirment leur attachement au dialogue, à la concertation et à l’autorégulation, tout en demandant une démarche inclusive.",
+      "image": "assets/lalerte/n180/articles/article-04.jpg"
+    },
+    {
+      "id": "article-05",
+      "page": 4,
+      "category": "NATION",
+      "title": "Ancien DG des Douanes Amadou Konaté : Un modèle de l’excellence et de rigueur !",
+      "excerpt": "L’édition revient sur le bilan d’Amadou Konaté à la tête des Douanes maliennes, notamment les résultats de mobilisation des recettes et les réformes structurelles.",
+      "image": "assets/lalerte/n180/articles/article-05.jpg"
+    },
+    {
+      "id": "article-06",
+      "page": 4,
+      "category": "NATION",
+      "title": "Présidence malienne de l’OMD-AOC : Le bilan jugé exceptionnel",
+      "excerpt": "Le Mali a transmis le flambeau de la Vice-Présidence de la Région Afrique Occidentale et Centrale de l’Organisation Mondiale des Douanes après un mandat marqué par la modernisation et la lutte contre la fraude.",
+      "image": "assets/lalerte/n180/articles/article-06.jpg"
+    },
+    {
+      "id": "article-07",
+      "page": 7,
+      "category": "VIE DES STARS",
+      "title": "Elton John donne un concert de plus de deux heures à Rio",
+      "excerpt": "Elton John s’est produit au festival Rock in Rio avec un concert de plus de deux heures et vingt-quatre chansons devant 100.000 spectateurs.",
+      "image": "assets/lalerte/n180/articles/article-07.jpg",
+      "source": "20 Minutes"
+    },
+    {
+      "id": "article-08",
+      "page": 7,
+      "category": "INSOLITE",
+      "title": "La plus petite voiture au monde",
+      "excerpt": "Réalisée à partir d’une Fiat Panda 1993, cette voiture mesure seulement 50,20 cm de large, 3,40 mètres de long et 1,45 mètre de haut. Andrea Marazzi a fait inscrire son record au Livre Guinness.",
+      "image": "assets/lalerte/n180/articles/article-08.jpg",
+      "source": "Le Dauphiné Libéré"
+    }
   ],
   "pages": [
-    {"page":1,"image":"assets/lalerte/n180/pages/page-1.jpg"},{"page":2,"image":"assets/lalerte/n180/pages/page-2.jpg"},{"page":3,"image":"assets/lalerte/n180/pages/page-3.jpg"},{"page":4,"image":"assets/lalerte/n180/pages/page-4.jpg"},{"page":5,"image":"assets/lalerte/n180/pages/page-5.jpg"},{"page":6,"image":"assets/lalerte/n180/pages/page-6.jpg"},{"page":7,"image":"assets/lalerte/n180/pages/page-7.jpg"},{"page":8,"image":"assets/lalerte/n180/pages/page-8.jpg"}
+    {
+      "page": 1,
+      "image": "assets/lalerte/n180/pages/page-1.jpg"
+    },
+    {
+      "page": 2,
+      "image": "assets/lalerte/n180/pages/page-2.jpg"
+    },
+    {
+      "page": 3,
+      "image": "assets/lalerte/n180/pages/page-3.jpg"
+    },
+    {
+      "page": 4,
+      "image": "assets/lalerte/n180/pages/page-4.jpg"
+    },
+    {
+      "page": 5,
+      "image": "assets/lalerte/n180/pages/page-5.jpg"
+    },
+    {
+      "page": 6,
+      "image": "assets/lalerte/n180/pages/page-6.jpg"
+    },
+    {
+      "page": 7,
+      "image": "assets/lalerte/n180/pages/page-7.jpg"
+    },
+    {
+      "page": 8,
+      "image": "assets/lalerte/n180/pages/page-8.jpg"
+    }
   ]
 }
