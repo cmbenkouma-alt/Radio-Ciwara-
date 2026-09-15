@@ -1,0 +1,91 @@
+/* Radio Ciwara — Design/Performance layer 2026
+   Loaded by the Pages build only. The Caster.fm player markup is intentionally untouched. */
+:root{
+  --ci-green:#0b8f4d;
+  --ci-green-dark:#075f35;
+  --ci-red:#d71920;
+  --ci-yellow:#f7d51b;
+  --ci-ink:#111214;
+  --ci-soft:#f5f6f5;
+  --ci-line:#e5e7e5;
+  --ci-radius:12px;
+  --ci-shadow:0 10px 30px rgba(17,18,20,.08);
+}
+
+/* Global polish */
+body{background:#fff;color:var(--ci-ink)}
+.container{width:min(1180px,calc(100% - 32px))}
+a{-webkit-tap-highlight-color:transparent}
+img{content-visibility:auto}
+section{scroll-margin-top:88px}
+
+/* Header hierarchy */
+.portal-nav{box-shadow:0 2px 14px rgba(17,18,20,.05);position:relative;z-index:60}
+.portal-nav .container{gap:20px}
+.brand-pair{gap:12px}
+.portal-links a{transition:color .18s ease}
+.portal-cats{box-shadow:inset 0 -1px 0 rgba(0,0,0,.04)}
+.portal-cats .container{scrollbar-width:none}
+.portal-cats .container::-webkit-scrollbar{display:none}
+
+/* Homepage content: cleaner cards and stronger media hierarchy */
+.portal-main{background:linear-gradient(180deg,#fff 0,#fff 70%,#fafbfa 100%)}
+.portal-columns{align-items:start}
+.lead-card{box-shadow:var(--ci-shadow);transition:transform .2s ease,box-shadow .2s ease}
+.lead-card:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(17,18,20,.13)}
+.mini-card,.side-box{box-shadow:0 5px 18px rgba(17,18,20,.045);border-color:var(--ci-line)}
+.mini-card{transition:transform .18s ease,box-shadow .18s ease}
+.mini-card:hover{transform:translateY(-2px);box-shadow:0 9px 22px rgba(17,18,20,.08)}
+.side-title{letter-spacing:.2px}
+
+/* Radio and TV blocks: make the direct media area visually dominant without touching player internals */
+.media-duo{gap:18px}
+.media-box{border-radius:var(--ci-radius);box-shadow:var(--ci-shadow);min-height:205px;transition:transform .2s ease,box-shadow .2s ease}
+.media-box:hover{transform:translateY(-2px);box-shadow:0 15px 34px rgba(17,18,20,.14)}
+
+/* Advertising: preserve supplied artwork proportions */
+.portal-ad-grid{gap:10px!important}
+.portal-ad{border-radius:9px!important;box-shadow:0 4px 14px rgba(17,18,20,.06)}
+.portal-ad-djigue img{object-fit:contain!important}
+
+/* Section rhythm */
+.section-title{margin-top:8px}
+.section-title h2{letter-spacing:-.7px}
+
+/* Artist / premium feature cards */
+[class*="artist"],.artist-card,.artiste-card{border-radius:var(--ci-radius);overflow:hidden}
+
+/* Event artwork: never crop square supplied posters */
+.event-card img,.events-card img,.event-poster img,.events-grid img{object-fit:contain!important;object-position:center!important;background:#111!important}
+
+/* Images that already have an explicit aspect ratio keep it; avoid layout jumps */
+.news-image img,.portal-ad img,.ciwara-infos-brand img{display:block}
+
+/* Accessibility and motion */
+:focus-visible{outline:3px solid var(--ci-yellow);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+
+/* Mobile-first refinements */
+@media(max-width:900px){
+  .portal-main{padding-top:20px}
+  .portal-columns{gap:18px}
+  .lead-card{min-height:330px}
+  .side-box{border-radius:10px}
+}
+@media(max-width:650px){
+  .container{width:calc(100% - 24px)}
+  .portal-nav .container{min-height:72px}
+  .brand-pair{gap:7px}
+  .portal-main{padding-top:14px}
+  .lead-card{min-height:285px;border-radius:10px}
+  .lead-card .lead-copy{left:16px;right:16px;bottom:16px}
+  .lead-card h2{font-size:21px}
+  .section-title h2{font-size:21px}
+  .media-box{min-height:160px;padding:16px}
+  .portal-ad{border-radius:8px!important}
+}
+
+/* Keep the live player container stable: no dimensions, iframe, or widget rules are overridden here. */
+.caster-wrap{isolation:isolate}
