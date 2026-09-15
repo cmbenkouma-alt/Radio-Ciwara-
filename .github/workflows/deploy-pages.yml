@@ -74,7 +74,7 @@ jobs:
           from pathlib import Path
           tag='<script src="assets/js/ciwara-site-builder.js?v=20260915-2" defer></script>'
           for p in Path('.').rglob('*.html'):
-            if str(p).startswith('admin/'): continue
+            if str(p).startswith('admin/') or p.name == 'admin.html': continue
             s=p.read_text(encoding='utf-8',errors='ignore')
             if '</body>' in s:
               import re
@@ -100,12 +100,14 @@ jobs:
           PY
           grep -q "localStorage.getItem(K)" admin/index.html || { echo 'Pont de session admin absent'; exit 1; }
           grep -q "localStorage.setItem(K,v)" admin/index.html || { echo 'Persistance session admin absente'; exit 1; }
-      - name: Publish a stable root admin entry point
+      - name: Publish and validate the root admin entry point without overwriting it
         run: |
+          test -s admin.html || { echo 'admin.html absent'; exit 1; }
+          grep -q 'Administration Radio Ciwara' admin.html || { echo 'Entrée admin racine invalide'; exit 1; }
           test -s admin/index.html || { echo 'admin/index.html absent'; exit 1; }
-          cp admin/index.html admin.html
-          grep -q 'Administration Ciwara' admin.html || { echo 'Entrée admin racine invalide'; exit 1; }
+          grep -q 'Administration Ciwara' admin/index.html || { echo 'Panneau admin interne invalide'; exit 1; }
           test -s admin/site-builder.html || { echo 'admin/site-builder.html absent'; exit 1; }
+          echo 'Root admin preserved: admin.html is no longer overwritten by admin/index.html.'
       - name: Guard Caster.fm player markup
         run: |
           if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'; else echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'; fi
