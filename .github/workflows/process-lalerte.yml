@@ -1,5 +1,6 @@
 name: Process L'ALERTE edition
 
+# Force refresh: 2026-09-15T14:15Z
 on:
   push:
     branches: [main]
@@ -35,14 +36,9 @@ jobs:
           pdfinfo "$PDF_PATH" > /tmp/pdfinfo.txt
           pages=$(awk '/^Pages:/ {print $2}' /tmp/pdfinfo.txt)
           test -n "$pages"
-
-          # High-resolution page images remain the authoritative visual representation.
           pdftoppm -jpeg -r 150 -jpegopt quality=86 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
-
-          # Preserve embedded images for later article-level matching.
           mkdir -p assets/lalerte/n180/extracted
           pdfimages -all "$PDF_PATH" assets/lalerte/n180/extracted/img || true
-
           for f in assets/lalerte/n180/page-*.jpg; do
             [ -f "$f" ] || continue
             n=$(basename "$f" .jpg | sed 's/page-//')
@@ -59,63 +55,37 @@ jobs:
               fi
             fi
           done
-
           python3 - <<'PY'
           import json,re,glob
           from pathlib import Path
-
-          def clean(s):
-              return re.sub(r'\s+',' ',s).strip(' -|•·')
-
-          def choose_title(lines, page):
+          def clean(s): return re.sub(r'\s+',' ',s).strip(' -|•·')
+          def choose_title(lines,page):
               candidates=[]
               for line in lines:
                   x=clean(line)
-                  if not (8 <= len(x) <= 180): continue
-                  if re.fullmatch(r'[\d\W_]+', x): continue
-                  letters=sum(c.isalpha() for c in x)
-                  upper=sum(c.isupper() for c in x if c.isalpha())
-                  score=(upper/max(letters,1))*2 + min(len(x),100)/100
-                  if len(x.split()) >= 3: score += 1
+                  if not (8 <= len(x) <= 180) or re.fullmatch(r'[\d\W_]+',x): continue
+                  letters=sum(c.isalpha() for c in x); upper=sum(c.isupper() for c in x if c.isalpha())
+                  score=(upper/max(letters,1))*2+min(len(x),100)/100+(1 if len(x.split())>=3 else 0)
                   candidates.append((score,x))
-              if not candidates: return f"L’ALERTE N°180 — page {page}"
-              candidates.sort(reverse=True)
-              return candidates[0][1]
-
+              return max(candidates)[1] if candidates else f"L’ALERTE N°180 — page {page}"
           pages=[]
           for img in sorted(glob.glob('assets/lalerte/n180/page-*.jpg')):
-              path=Path(img)
-              num=int(path.stem.split('-')[-1])
-              txt=Path(f'/tmp/page-{num}.txt')
+              path=Path(img); num=int(path.stem.split('-')[-1]); txt=Path(f'/tmp/page-{num}.txt')
               raw=txt.read_text('utf-8',errors='ignore') if txt.exists() else ''
               lines=[clean(x) for x in raw.splitlines() if clean(x)]
-              title=choose_title(lines,num)
-              body=[x for x in lines if x != title]
-              excerpt=clean(' '.join(body))[:420]
-              if not excerpt:
-                  excerpt=f"Consultez la page {num} de L’ALERTE N°180 pour retrouver les articles et informations publiés dans cette édition."
-              # Use the real generated filename (page-1.jpg, page-2.jpg, ...),
-              # avoiding the previous broken page-01.jpg references.
+              title=choose_title(lines,num); excerpt=clean(' '.join(x for x in lines if x!=title))[:420]
+              if not excerpt: excerpt=f"Consultez la page {num} de L’ALERTE N°180 pour retrouver les articles et informations publiés dans cette édition."
               pages.append({'page':num,'title':title,'excerpt':excerpt,'image':path.as_posix()})
-
-          Path('data/lalerte-180.json').write_text(
-              json.dumps({
-                  'edition':"L'ALERTE N°180",
-                  'pdf':"media/lalerte/editions/L'ALERTE N°180.pdf",
-                  'generatedAt':__import__('datetime').datetime.utcnow().isoformat()+'Z',
-                  'imagePolicy':'Chaque carte utilise l’image complète de sa page PDF pour conserver la correspondance exacte page/contenu. Les images embarquées sont conservées dans assets/lalerte/n180/extracted pour une future association article-image plus fine.',
-                  'pages':pages
-              },ensure_ascii=False,indent=2),encoding='utf-8')
+          Path('data/lalerte-180.json').write_text(json.dumps({'edition':"L'ALERTE N°180",'pdf':"media/lalerte/editions/L'ALERTE N°180.pdf",'generatedAt':__import__('datetime').datetime.utcnow().isoformat()+'Z','imagePolicy':'Chaque carte utilise l’image complète de sa page PDF pour conserver la correspondance exacte page/contenu. Les images embarquées sont conservées dans assets/lalerte/n180/extracted pour une future association article-image plus fine.','pages':pages},ensure_ascii=False,indent=2),encoding='utf-8')
           PY
 
       - name: Install LALERTE homepage integration
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-4"></script>'
           import re
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-4"></script>'
           s=re.sub(r'<script defer src="assets/js/lalerte-home\.js\?v=[^"]+"></script>\n?','',s)
           if '</body>' not in s: raise SystemExit('index.html: closing body not found')
           p.write_text(s.replace('</body>',tag+'\n</body>',1),encoding='utf-8')
