@@ -2,10 +2,50 @@
   "enabled": true,
   "title": "Actualité du Mali et du monde",
   "items": [
-    {"title":"La Chine contre la fin de l’Histoire","category":"Monde","description":"La Chine monte en puissance et remet en question les anciens récits géopolitiques.","image":"https://www.maliweb.net/uploads/images/202609/image_870x580_6aa68c60415bd.jpg","link":"https://www.maliweb.net/international/la-chine-contre-la-fin-de-lhistoire-3119888.html","active":true,"order":1},
-    {"title":"Sénégal : Diomaye Faye reçoit la Flamme olympique des JOJ Dakar 2026","category":"Afrique","description":"La Flamme olympique des Jeux olympiques de la jeunesse Dakar 2026 est arrivée au Sénégal.","image":"https://malijet.com/files/01M2D8P9NHWT74F8AZXM9GCKT2.jpg","link":"https://malijet.com/actualite_sportive_au_mali/311801-senegal-diomaye-faye-recoit-la-flamme-olympique-des-joj-da.html","active":true,"order":2},
-    {"title":"Programme Tounkaranké : les 12 maires de Yélimané s’engagent","category":"Mali","description":"Les élus de Yélimané s’engagent pour six mois d’actions en faveur du développement local.","image":"https://malijet.com/files/01M2D87GVX260EETJM4ZZ1X2ES.jpg","link":"https://malijet.com/actualite_economique_du_mali/311800-programme-tounkaranke-les-12-maires-de-yelimane-sengagent.html","active":true,"order":3},
-    {"title":"Xi Jinping : les BRICS doivent jouer un rôle de pionniers","category":"Monde","description":"Les pays des BRICS sont appelés à contribuer davantage à l’amélioration de la gouvernance mondiale.","image":"https://malijet.com/files/01M2D7HPNJ6ZHWNES8JNC84MJM.jpg","link":"https://malijet.com/actualite_internationale/311799-xi-jinping-affirme-que-les-pays-des-brics-devraient-jouer-un.html","active":true,"order":4},
-    {"title":"Parution : « L’ennui des managers empêchés »","category":"Culture","description":"Le nouveau livre d’Alhassane Salif SISSOKO met en lumière le mal-être au travail.","image":"https://malijet.com/files/01M2D73HMCWDBZ7C54KF1D9Q33.jpg","link":"https://malijet.com/actualite_culturelle_au_mali/311798-parution-lennui-des-managers-empeches-le-nouveau-liv.html","active":true,"order":5}
+    {
+      "title": "Niger : Le Président Tiani procède à un remaniement ministériel avec quatre nouvelles nominations",
+      "category": "Afrique",
+      "description": "Le Président de la République du Niger, le Général d’Armée Abdourahamane Tiani, a signé ce mardi un décret portant réaménagement du gouvernement.",
+      "image": "https://malijet.com/files/01M2KE7ZNJ0YVBV7HVQXFSD1YJ.jpg",
+      "link": "https://malijet.com/a_la_une_du_mali/311855-niger-le-president-tiani-procede-a-un-remaniement-minister.html",
+      "active": true,
+      "order": 1
+    },
+    {
+      "title": "Les Administrateurs de la CMSS s’enquièrent des conditions de travail des agents de Koulikoro",
+      "category": "Mali",
+      "description": "Les administrateurs de la Caisse Malienne de Sécurité Sociale ont effectué une visite de terrain à la Direction régionale de la CMSS de Koulikoro.",
+      "image": "https://www.maliweb.net/uploads/images/202609/image_870x580_6aa9a1a458827.jpg",
+      "link": "https://www.maliweb.net/communique-391/les-administrateurs-de-la-cmss-senquierent-des-conditions-de-travail-des-agents-de-la-direction-regionale-de-koulikoro-les-difficultes-et-des-besoins-clairement-identifies-3119948.html",
+      "active": true,
+      "order": 2
+    },
+    {
+      "title": "Forces Spéciales : le Président Goïta inaugure le complexe ultramoderne du BAFS-CA",
+      "category": "Mali",
+      "description": "Le mardi 15 septembre 2026, le Président de la Transition a présidé la cérémonie d’inauguration des nouvelles infrastructures du BAFS-CA.",
+      "image": "https://malijet.com/files/01M2KC3ESSDXS2F5Y5Z3GNBXNQ.jpg",
+      "link": "https://malijet.com/a_la_une_du_mali/311854-forces-speciales-le-president-goita-inaugure-le-complexe-u.html",
+      "active": true,
+      "order": 3
+    },
+    {
+      "title": "Mali : lancement de la 5e édition de la Semaine Nationale de la Réconciliation",
+      "category": "Mali",
+      "description": "Le Premier ministre malien a lancé la 5e édition de la Semaine Nationale de la Réconciliation (SENARE).",
+      "image": "https://malijet.com/files/01M2K8AV7N4PRKTNEEX2BNKF27.jpg",
+      "link": "https://malijet.com/a_la_une_du_mali/311853-mali-lancement-de-la-5e-edition-de-la-semaine-nationale-de.html",
+      "active": true,
+      "order": 4
+    },
+    {
+      "title": "Sénégal-FMI : Bassirou Diomaye Faye et Kristalina Georgieva veulent accélérer le nouveau programme",
+      "category": "Afrique",
+      "description": "Le président sénégalais Bassirou Diomaye Faye s’est entretenu à Washington avec la directrice générale du FMI, Kristalina Georgieva.",
+      "image": "https://malijet.com/files/01M2K7JP38TRP3XTK1SJ2RPTSG.jpg",
+      "link": "https://malijet.com/actualite_economique_du_mali/311852-senegal-fmi-bassirou-diomaye-faye-et-kristalina-georgieva.html",
+      "active": true,
+      "order": 5
+    }
   ]
 }
