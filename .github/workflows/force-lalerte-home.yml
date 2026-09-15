@@ -22,7 +22,7 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           import re
-          tag='<script src="assets/js/lalerte-home.js?v=20260915-9"></script>'
+          tag='<script src="assets/js/lalerte-home.js?v=20260915-10"></script>'
           s=re.sub(r'<script src="assets/js/lalerte-home\.js\?v=[^"]+"></script>',tag,s,count=1)
           if tag not in s:
               s=s.replace('</body>',tag+'</body>',1)
@@ -33,4 +33,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || (git commit -m "fix: load refreshed mixed press runtime" && git push)
+          git diff --cached --quiet || (git commit -m "fix: load refreshed newspaper labels" && git push)
