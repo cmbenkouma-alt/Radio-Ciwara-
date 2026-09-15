@@ -105,6 +105,7 @@ jobs:
       - name: Guard Caster.fm player markup
         run: |
           if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'; else echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'; fi
+      # Force a fresh Pages deployment from the current main branch.
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site artifact
