@@ -36,7 +36,23 @@
 
   function newsItems(p){const a=Array.isArray(p)?p:(p?.news||p?.articles||p?.items||p?.data||[]);return Array.isArray(a)?a.map(n=>({title:clean(n.title||n.name||n.headline,120),description:clean(n.description||n.summary||n.excerpt,160),image:n.image||n.imageUrl||n.thumbnail||n.urlToImage||n.enclosure?.url||'',url:n.url||n.link||n.href||'ciwara-info.html',source:clean(n.source?.name||n.source||n.category||'Ciwara Infos',40)})).filter(n=>n.title):[];}
 
-  function newsStage(items){if(!items.length||document.querySelector('.ciwara-news-stage'))return;const hero=document.querySelector('.hero-grid,.hero-layout,.hero-shell');if(!hero)return;const s=document.createElement('section');s.className='ciwara-news-stage';s.setAttribute('aria-label','Actualités Ciwara Infos et flux RSS');s.innerHTML=`<div class="ciwara-news-stage-head"><div><span class="ciwara-rss-pill">● CIWARA INFOS • FLUX RSS</span><h2>L'actualité <span>en mouvement</span></h2><p>Les dernières informations et flux éditoriaux de Ciwara Infos.</p></div><a class="future-news-more" href="ciwara-info.html">TOUTES LES ACTUALITÉS →</a></div><div class="ciwara-news-track">${items.slice(0,12).map(n=>`<article class="ciwara-news-card"><a href="${esc(n.url)}" target="_blank" rel="noopener noreferrer">${n.image?`<img src="${esc(n.image)}" alt="" loading="lazy">`:'<div class="future-news-placeholder"></div>'}<div class="ciwara-news-card-body"><small>${esc(n.source)}</small><h3>${esc(n.title)}</h3>${n.description?`<p>${esc(n.description)}</p>`:''}</div></a></article>`).join('')}</div>`;hero.insertAdjacentElement('afterend',s);}
+  function newsStage(items){
+    if(!items.length||document.querySelector('.ciwara-news-stage'))return;
+    const hero=document.querySelector('.hero-grid,.hero-layout,.hero-shell');if(!hero)return;
+    const s=document.createElement('section');s.className='ciwara-news-stage';s.setAttribute('aria-label','Actualités Ciwara Infos et flux RSS');
+    s.innerHTML=`<div class="ciwara-news-stage-head"><div><span class="ciwara-rss-pill">● CIWARA INFOS • FLUX RSS</span><h2>L'actualité <span>en mouvement</span></h2><p>Les dernières informations et flux éditoriaux de Ciwara Infos.</p></div><a class="future-news-more" href="ciwara-info.html">TOUTES LES ACTUALITÉS →</a></div><div class="ciwara-news-track">${items.slice(0,12).map(n=>`<article class="ciwara-news-card"><a href="${esc(n.url)}" target="_blank" rel="noopener noreferrer">${n.image?`<img src="${esc(n.image)}" alt="" loading="lazy">`:'<div class="future-news-placeholder"></div>'}<div class="ciwara-news-card-body"><small>${esc(n.source)}</small><h3>${esc(n.title)}</h3>${n.description?`<p>${esc(n.description)}</p>`:''}</div></a></article>`).join('')}</div>`;
+    hero.insertAdjacentElement('afterend',s);
+    const track=s.querySelector('.ciwara-news-track');
+    if(!track||track.children.length<2||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    let timer=null, paused=false;
+    const step=()=>{if(paused)return;const card=track.querySelector('.ciwara-news-card');if(!card)return;const max=track.scrollWidth-track.clientWidth;const next=track.scrollLeft+card.getBoundingClientRect().width+18;track.scrollTo({left:next>=max-8?0:next,behavior:'smooth'});};
+    const start=()=>{clearInterval(timer);timer=setInterval(step,4500)};
+    track.addEventListener('mouseenter',()=>{paused=true;clearInterval(timer)});
+    track.addEventListener('mouseleave',()=>{paused=false;start()});
+    track.addEventListener('touchstart',()=>{paused=true;clearInterval(timer)},{passive:true});
+    track.addEventListener('touchend',()=>{paused=false;start()},{passive:true});
+    start();
+  }
 
   async function buildNews(){try{const r=await fetch('data/news.json',{cache:'no-store'});if(r.ok){const x=newsItems(await r.json());if(x.length){newsStage(x);return}}}catch(_){ }const x=[...document.querySelectorAll('.news-card,.article-card,.news-grid article')].map(c=>{const a=c.querySelector('a'),im=c.querySelector('img');return a?{title:clean(c.innerText,120),image:im?.src||'',url:a.href,source:'Ciwara Infos'}:null}).filter(Boolean);newsStage(x)}
   ready(async()=>{await new Promise(r=>setTimeout(r,220));await buildHero();await buildNews();});
