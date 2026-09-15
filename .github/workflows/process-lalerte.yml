@@ -1,0 +1,102 @@
+name: Process L'ALERTE edition
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "media/lalerte/editions/*.pdf"
+      - ".github/workflows/process-lalerte.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-fra
+
+      - name: Process latest LALERTE PDF
+        env:
+          PDF_PATH: "media/lalerte/editions/L'ALERTE N°180.pdf"
+        run: |
+          test -s "$PDF_PATH"
+          rm -rf assets/lalerte/n180
+          mkdir -p assets/lalerte/n180
+          pdfinfo "$PDF_PATH" > /tmp/pdfinfo.txt
+          pages=$(awk '/^Pages:/ {print $2}' /tmp/pdfinfo.txt)
+          test -n "$pages"
+
+          pdftoppm -jpeg -r 110 -jpegopt quality=78 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
+          for f in assets/lalerte/n180/page-*.jpg; do
+            [ -f "$f" ] || continue
+            n=$(basename "$f" .jpg | sed 's/page-//')
+            pdftotext -f "$n" -l "$n" -layout "$PDF_PATH" "/tmp/page-$n.txt" || true
+            if [ ! -s "/tmp/page-$n.txt" ] || [ "$(wc -c < "/tmp/page-$n.txt")" -lt 80 ]; then
+              tesseract "$f" "/tmp/page-$n" -l fra+eng --psm 6 2>/dev/null || true
+              [ -s "/tmp/page-$n.txt" ] || cp "/tmp/page-$n.txt" "/tmp/page-$n.txt" 2>/dev/null || true
+            fi
+          done
+
+          python3 - <<'PY'
+          import json, os, re, glob
+          from pathlib import Path
+          pdf = "media/lalerte/editions/L'ALERTE N°180.pdf"
+          pages = []
+          for img in sorted(glob.glob('assets/lalerte/n180/page-*.jpg')):
+              num = int(Path(img).stem.split('-')[-1])
+              txt = Path(f'/tmp/page-{num:02d}.txt')
+              raw = txt.read_text('utf-8', errors='ignore') if txt.exists() else ''
+              lines = [re.sub(r'\s+', ' ', x).strip() for x in raw.splitlines() if x.strip()]
+              title = next((x for x in lines if 4 <= len(x) <= 180), f"L'ALERTE N°180 — page {num}")
+              excerpt = ' '.join(lines[1:])[:420].strip()
+              if not excerpt:
+                  excerpt = 'Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.'
+              pages.append({
+                  'page': num,
+                  'title': title,
+                  'excerpt': excerpt,
+                  'image': f'assets/lalerte/n180/page-{num:02d}.jpg'
+              })
+          out = {
+              'edition': "L'ALERTE N°180",
+              'pdf': pdf,
+              'generatedAt': __import__('datetime').datetime.utcnow().isoformat() + 'Z',
+              'pages': pages
+          }
+          Path('data/lalerte-180.json').write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding='utf-8')
+          PY
+
+      - name: Install LALERTE homepage integration
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script defer src="assets/js/lalerte-home.js?v=20260915-1"></script>'
+          if tag not in s:
+              marker = '</body>'
+              if marker not in s:
+                  raise SystemExit('index.html: closing body not found')
+              s = s.replace(marker, tag + '\n' + marker, 1)
+              p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit generated LALERTE integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/lalerte-180.json assets/lalerte/n180 index.html assets/js/lalerte-home.js lalerte.html assets/css/lalerte.css
+          if git diff --cached --quiet; then
+            echo "No LALERTE changes to commit."
+          else
+            git commit -m "feat: integrate LALERTE N180 into site [skip ci]"
+            git push
+          fi
