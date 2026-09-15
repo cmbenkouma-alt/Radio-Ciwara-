@@ -24,19 +24,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Validate JavaScript
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Check script syntax
         run: node --check script.js
-
       - name: Validate JSON data
         run: |
           node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/home-layout.json','data/site-builder.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
-
       - name: Verify essential site files and Astan Kida asset
         run: |
           for f in index.html style.css script.js mali-radios.js mali-radios.css; do
@@ -44,116 +40,77 @@ jobs:
           done
           test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
           test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
-          echo "Fichiers essentiels et assets Astan Kida OK"
-
       - name: Normalize Astan Kida image URL for GitHub Pages and custom domain
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-          replacements = {
-              '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3': 'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4',
-              '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4': 'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4',
-          }
-          changed = False
-          for old, new in replacements.items():
-              if old in s:
-                  s = s.replace(old, new)
-                  changed = True
-          p.write_text(s, encoding='utf-8')
-          print('Chemin Astan Kida vérifié: assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4', 'modifié' if changed else 'déjà conforme')
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          replacements={'/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3':'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4','/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4':'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4'}
+          for old,new in replacements.items(): s=s.replace(old,new)
+          p.write_text(s,encoding='utf-8')
           PY
           grep -q 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4"' index.html || { echo 'Référence Astan Kida introuvable'; exit 1; }
-
       - name: Inject Radio Ciwara 2026 design layer
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-          href = 'assets/css/ciwara-2026-audit.css?v=20260915'
-          tag = f'<link rel="stylesheet" href="{href}">'
+          p=Path('index.html'); s=p.read_text(encoding='utf-8'); href='assets/css/ciwara-2026-audit.css?v=20260915'; tag=f'<link rel="stylesheet" href="{href}">'; marker='<link href="style.css?v=20260902" rel="stylesheet"/>'
           if tag not in s:
-              marker = '<link href="style.css?v=20260902" rel="stylesheet"/>'
-              if marker not in s:
-                  raise SystemExit('Balise style.css introuvable')
-              s = s.replace(marker, marker + tag, 1)
-          print('Couche design 2026 active:', href)
+            if marker not in s: raise SystemExit('Balise style.css introuvable')
+            s=s.replace(marker,marker+tag,1)
+          p.write_text(s,encoding='utf-8')
           PY
           grep -q 'assets/css/ciwara-2026-audit.css?v=20260915' index.html || { echo 'Couche design non injectée'; exit 1; }
-
       - name: Inject visual homepage layout runtime
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
-          tag = '<script src="assets/js/ciwara-visual-layout.js?v=20260915" defer></script>'
-          if tag not in s:
-              marker = '</body>'
-              if marker not in s:
-                  raise SystemExit('Balise </body> introuvable')
-              s = s.replace(marker, tag + marker, 1)
-          print('Bureau visuel actif')
+          p=Path('index.html'); s=p.read_text(encoding='utf-8'); tag='<script src="assets/js/ciwara-visual-layout.js?v=20260915" defer></script>'
+          if tag not in s: s=s.replace('</body>',tag+'</body>',1)
+          p.write_text(s,encoding='utf-8')
           PY
           grep -q 'assets/js/ciwara-visual-layout.js?v=20260915' index.html || { echo 'Runtime bureau visuel non injecté'; exit 1; }
-
       - name: Inject universal site builder runtime
         run: |
           python - <<'PY'
           from pathlib import Path
-          tag = '<script src="assets/js/ciwara-site-builder.js?v=20260915-1" defer></script>'
+          tag='<script src="assets/js/ciwara-site-builder.js?v=20260915-2" defer></script>'
           for p in Path('.').rglob('*.html'):
-              if str(p).startswith('admin/'):
-                  continue
-              s = p.read_text(encoding='utf-8', errors='ignore')
-              if tag not in s and '</body>' in s:
-                  p.write_text(s.replace('</body>', tag+'</body>', 1), encoding='utf-8')
-          p = Path('admin/index.html')
-          if p.exists():
-              s=p.read_text(encoding='utf-8', errors='ignore')
-              tag2='<a href="site-builder.html" style="display:block;margin:10px 14px;padding:11px 12px;border-radius:8px;background:#111827;color:#fff;text-decoration:none;font-weight:900">🛠 Bureau universel · Pages & blocs</a>'
-              if 'site-builder.html' not in s and '</aside>' in s:
-                  s=s.replace('</aside>',tag2+'</aside>',1)
+            if str(p).startswith('admin/'): continue
+            s=p.read_text(encoding='utf-8',errors='ignore')
+            if '</body>' in s:
+              import re
+              s=re.sub(r'<script src="assets/js/ciwara-site-builder\.js\?v=[^"]+" defer></script>','',s)
+              s=s.replace('</body>',tag+'</body>',1)
               p.write_text(s,encoding='utf-8')
+          p=Path('admin/index.html')
+          if p.exists():
+            s=p.read_text(encoding='utf-8',errors='ignore'); tag2='<a href="site-builder.html" style="display:block;margin:10px 14px;padding:11px 12px;border-radius:8px;background:#111827;color:#fff;text-decoration:none;font-weight:900">🛠 Bureau universel · Pages & blocs</a>'
+            if 'site-builder.html' not in s and '</aside>' in s: s=s.replace('</aside>',tag2+'</aside>',1)
+            p.write_text(s,encoding='utf-8')
           PY
-          grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-1' index.html || { echo 'Runtime site builder non injecté'; exit 1; }
+          grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-2' index.html || { echo 'Runtime site builder non injecté'; exit 1; }
           grep -q 'site-builder.html' admin/index.html || { echo 'Lien Bureau universel non injecté'; exit 1; }
-
       - name: Persist the existing admin session across pages and tabs
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('admin/index.html')
-          s = p.read_text(encoding='utf-8', errors='ignore')
-          bridge = '''<script>(function(){const K='ciwara_admin_token';try{const t=localStorage.getItem(K);if(t)sessionStorage.setItem(K,t);const S=sessionStorage.setItem;sessionStorage.setItem=function(k,v){S.call(this,k,v);if(k===K)localStorage.setItem(K,v)};const R=sessionStorage.removeItem;sessionStorage.removeItem=function(k){R.call(this,k);if(k===K)localStorage.removeItem(K)};}catch(e){}})();</script>'''
-          if bridge not in s:
-              marker='<script>'
-              if marker not in s:
-                  raise SystemExit('Script admin introuvable')
-              s=s.replace(marker,bridge+marker,1)
+          p=Path('admin/index.html'); s=p.read_text(encoding='utf-8',errors='ignore')
+          bridge='''<script>(function(){const K='ciwara_admin_token';try{const t=localStorage.getItem(K);if(t)sessionStorage.setItem(K,t);const S=sessionStorage.setItem;sessionStorage.setItem=function(k,v){S.call(this,k,v);if(k===K)localStorage.setItem(K,v)};const R=sessionStorage.removeItem;sessionStorage.removeItem=function(k){R.call(this,k);if(k===K)localStorage.removeItem(K)};}catch(e){}})();</script>'''
+          if bridge not in s: s=s.replace('<script>',bridge+'<script>',1)
           p.write_text(s,encoding='utf-8')
           PY
           grep -q "localStorage.getItem(K)" admin/index.html || { echo 'Pont de session admin absent'; exit 1; }
           grep -q "localStorage.setItem(K,v)" admin/index.html || { echo 'Persistance session admin absente'; exit 1; }
-
       - name: Guard Caster.fm player markup
         run: |
-          if grep -qiE 'caster\.fm|casterfm' index.html; then
-            echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'
-          else
-            echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'
-          fi
-
+          if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'; else echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'; fi
       - name: Setup Pages
         uses: actions/configure-pages@v5
-
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
