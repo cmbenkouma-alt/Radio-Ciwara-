@@ -1,0 +1,91 @@
+name: Artist premium patch
+
+on:
+  push:
+    paths:
+      - '.github/workflows/artist-premium-patch.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - name: Apply premium artist box styles
+        shell: bash
+        run: |
+          cat >> style.css <<'EOF'
+
+/* ARTISTE À L'HONNEUR — PREMIUM SIDEBAR */
+.ciwara-astan-kida-static{
+  position:relative!important;
+  border:0!important;
+  border-radius:14px!important;
+  overflow:hidden!important;
+  background:#111214!important;
+  box-shadow:0 14px 34px rgba(0,0,0,.18)!important;
+  transition:transform .25s ease,box-shadow .25s ease!important;
+}
+.ciwara-astan-kida-static:hover{
+  transform:translateY(-3px)!important;
+  box-shadow:0 18px 40px rgba(0,0,0,.25)!important;
+}
+.ciwara-astan-kida-static .title{
+  border-top:0!important;
+  border-bottom:3px solid #f7d51b!important;
+  background:linear-gradient(90deg,#d71920,#a90f15 55%,#111214)!important;
+  color:#fff!important;
+  font:900 12px/1.1 Montserrat,sans-serif!important;
+  letter-spacing:.4px!important;
+  padding:13px 15px!important;
+}
+.ciwara-astan-kida-static img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:100%!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#08090b!important;
+  transition:transform .45s ease!important;
+}
+.ciwara-astan-kida-static:hover img{transform:scale(1.02)!important;}
+.ciwara-astan-kida-static .caption{
+  padding:14px 14px 15px!important;
+  border-top:2px solid #f7d51b!important;
+  background:linear-gradient(180deg,#18191b,#0b0c0d)!important;
+  color:#fff!important;
+  text-align:left!important;
+  font:900 15px/1.15 Montserrat,sans-serif!important;
+  letter-spacing:.3px!important;
+}
+.ciwara-astan-kida-static .caption small{
+  display:block!important;
+  margin-top:5px!important;
+  color:#f7d51b!important;
+  font:700 9px/1.2 Roboto,sans-serif!important;
+  text-transform:uppercase!important;
+  letter-spacing:.8px!important;
+}
+@media(max-width:900px){
+  .ciwara-astan-kida-static{max-width:620px;margin:0 auto!important;}
+}
+@media(max-width:650px){
+  .ciwara-astan-kida-static{border-radius:12px!important;}
+  .ciwara-astan-kida-static .title{font-size:11px!important;padding:11px 13px!important;}
+  .ciwara-astan-kida-static .caption{padding:12px 13px!important;font-size:14px!important;}
+}
+EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add style.css
+          git diff --cached --quiet && exit 0
+          git commit -m "feat: premium artist of the month box"
+          git push origin main
