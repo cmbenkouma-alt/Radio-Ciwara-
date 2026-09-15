@@ -1,0 +1,55 @@
+{
+  "edition": "L'ALERTE N°180",
+  "pdf": "media/lalerte/editions/L'ALERTE N°180.pdf",
+  "generatedAt": "2026-09-15T14:00:31.312242Z",
+  "pages": [
+    {
+      "page": 1,
+      "title": "L'ALERTE N°180 — page 1",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-01.jpg"
+    },
+    {
+      "page": 2,
+      "title": "L'ALERTE N°180 — page 2",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-02.jpg"
+    },
+    {
+      "page": 3,
+      "title": "L'ALERTE N°180 — page 3",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-03.jpg"
+    },
+    {
+      "page": 4,
+      "title": "L'ALERTE N°180 — page 4",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-04.jpg"
+    },
+    {
+      "page": 5,
+      "title": "L'ALERTE N°180 — page 5",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-05.jpg"
+    },
+    {
+      "page": 6,
+      "title": "L'ALERTE N°180 — page 6",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-06.jpg"
+    },
+    {
+      "page": 7,
+      "title": "L'ALERTE N°180 — page 7",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-07.jpg"
+    },
+    {
+      "page": 8,
+      "title": "L'ALERTE N°180 — page 8",
+      "excerpt": "Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.",
+      "image": "assets/lalerte/n180/page-08.jpg"
+    }
+  ]
+}
