@@ -7,10 +7,10 @@
 <meta name="description" content="Découvrez l’édition L’ALERTE N°180, ses pages et ses articles sur Radio Ciwara.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://ciwara-medias.ml/lalerte.html">
-<meta property="og:type" content="article"><meta property="og:title" content="L’ALERTE N°180 — Radio Ciwara"><meta property="og:description" content="La nouvelle édition de L’ALERTE à découvrir sur Radio Ciwara."><meta property="og:url" content="https://ciwara-medias.ml/lalerte.html"><meta property="og:image" content="https://ciwara-medias.ml/assets/lalerte/n180/page-01.jpg">
+<meta property="og:type" content="article"><meta property="og:title" content="L’ALERTE N°180 — Radio Ciwara"><meta property="og:description" content="La nouvelle édition de L’ALERTE à découvrir sur Radio Ciwara."><meta property="og:url" content="https://ciwara-medias.ml/lalerte.html"><meta property="og:image" content="https://ciwara-medias.ml/assets/lalerte/n180/page-1.jpg">
 <link rel="icon" href="favicon-ciwara.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css?v=20260902">
-<link rel="stylesheet" href="assets/css/lalerte.css?v=20260915-1">
+<link rel="stylesheet" href="assets/css/lalerte.css?v=20260915-4">
 </head>
 <body>
 <header class="portal-nav"><div class="container nav-row"><a class="brand" href="index.html"><img alt="Radio Ciwara 105.5 FM" src="logo.jpg"><span>RADIO<br><b>CIWARA</b><small>105.5 <i>FM</i></small></span></a><nav class="portal-links"><a href="index.html">ACCUEIL</a><a href="ciwara-info.html">CIWARA INFOS</a><a href="lalerte.html" class="active">L’ALERTE</a></nav></div></header>
@@ -23,9 +23,10 @@
 (function(){
 'use strict';
 function esc(v){return String(v??'').replace(/[&<>\"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'})[c]})}
-fetch('data/lalerte-180.json?v=20260915-1',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
+function imagePath(p){var s=String(p||'');if(/^assets\/lalerte\/n180\/page-0(\d)\.jpg$/i.test(s))s=s.replace(/page-0(\d)\.jpg$/i,'page-$1.jpg');return s;}
+fetch('data/lalerte-180.json?v=20260915-4',{cache:'no-store'}).then(function(r){return r.json()}).then(function(d){
  var box=document.getElementById('editionPages');
- box.innerHTML=d.pages.map(function(p){return '<article class="lalerte-page-card" id="page-'+p.page+'"><img loading="lazy" decoding="async" src="'+esc(p.image)+'" alt="L’ALERTE N°180 — page '+esc(p.page)+'"><div class="lalerte-page-copy"><div class="page-number">PAGE '+esc(p.page)+'</div><h2>'+esc(p.title)+'</h2><p>'+esc(p.excerpt)+'</p></div></article>'}).join('');
+ box.innerHTML=d.pages.map(function(p){return '<article class="lalerte-page-card" id="page-'+p.page+'"><img loading="lazy" decoding="async" src="'+esc(imagePath(p.image))+'" alt="L’ALERTE N°180 — page '+esc(p.page)+'"><div class="lalerte-page-copy"><div class="page-number">PAGE '+esc(p.page)+'</div><h2>'+esc(p.title)+'</h2><p>'+esc(p.excerpt)+'</p></div></article>'}).join('');
 }).catch(function(){document.getElementById('editionPages').innerHTML='<p>Les pages sont disponibles directement dans le PDF de l’édition.</p>'});
 })();
 </script>
