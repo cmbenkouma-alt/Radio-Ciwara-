@@ -15,14 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update LALERTE homepage runtime version
+      - name: Inject mixed LALERTE homepage runtime
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          s=s.replace('assets/js/lalerte-home.js?v=20260915-5','assets/js/lalerte-home.js?v=20260915-7')
-          s=s.replace('assets/js/lalerte-home.js?v=20260915-6','assets/js/lalerte-home.js?v=20260915-7')
+          s=re.sub(r'<script[^>]+src=["\']assets/js/lalerte-home\.js\?v=[^"\']+["\'][^>]*></script>', '', s)
+          tag='<script src="assets/js/lalerte-home.js?v=20260915-7"></script>'
+          if tag not in s:
+              s=s.replace('</body>',tag+'</body>',1)
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit homepage runtime reference
