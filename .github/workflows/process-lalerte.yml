@@ -36,22 +36,17 @@ jobs:
           pages=$(awk '/^Pages:/ {print $2}' /tmp/pdfinfo.txt)
           test -n "$pages"
 
-          # High-resolution page images: these remain the authoritative visual
-          # representation of each newspaper page and are never stretched/cropped.
+          # High-resolution page images remain the authoritative visual representation.
           pdftoppm -jpeg -r 150 -jpegopt quality=86 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
 
-          # Also extract embedded PDF images when available. They are kept as
-          # source material for later article-level image matching.
+          # Preserve embedded images for later article-level matching.
           mkdir -p assets/lalerte/n180/extracted
           pdfimages -all "$PDF_PATH" assets/lalerte/n180/extracted/img || true
 
           for f in assets/lalerte/n180/page-*.jpg; do
             [ -f "$f" ] || continue
             n=$(basename "$f" .jpg | sed 's/page-//')
-            # First try the PDF's text layer.
             pdftotext -f "$n" -l "$n" -layout "$PDF_PATH" "/tmp/page-$n.txt" || true
-            # If the text layer is empty/too short, use several OCR layouts and
-            # select the richest result. Preprocessing improves scanned pages.
             if [ ! -s "/tmp/page-$n.txt" ] || [ "$(wc -c < "/tmp/page-$n.txt")" -lt 120 ]; then
               magick "$f" -colorspace Gray -auto-level -sharpen 0x1 /tmp/page-$n-prep.jpg
               for psm in 3 6 11; do
@@ -76,24 +71,22 @@ jobs:
               candidates=[]
               for line in lines:
                   x=clean(line)
-                  if not (8 <= len(x) <= 180):
-                      continue
-                  if re.fullmatch(r'[\d\W_]+', x):
-                      continue
+                  if not (8 <= len(x) <= 180): continue
+                  if re.fullmatch(r'[\d\W_]+', x): continue
                   letters=sum(c.isalpha() for c in x)
                   upper=sum(c.isupper() for c in x if c.isalpha())
                   score=(upper/max(letters,1))*2 + min(len(x),100)/100
                   if len(x.split()) >= 3: score += 1
                   candidates.append((score,x))
-              if not candidates:
-                  return f"L’ALERTE N°180 — page {page}"
+              if not candidates: return f"L’ALERTE N°180 — page {page}"
               candidates.sort(reverse=True)
               return candidates[0][1]
 
           pages=[]
           for img in sorted(glob.glob('assets/lalerte/n180/page-*.jpg')):
-              num=int(Path(img).stem.split('-')[-1])
-              txt=Path(f'/tmp/page-{num:02d}.txt')
+              path=Path(img)
+              num=int(path.stem.split('-')[-1])
+              txt=Path(f'/tmp/page-{num}.txt')
               raw=txt.read_text('utf-8',errors='ignore') if txt.exists() else ''
               lines=[clean(x) for x in raw.splitlines() if clean(x)]
               title=choose_title(lines,num)
@@ -101,7 +94,9 @@ jobs:
               excerpt=clean(' '.join(body))[:420]
               if not excerpt:
                   excerpt=f"Consultez la page {num} de L’ALERTE N°180 pour retrouver les articles et informations publiés dans cette édition."
-              pages.append({'page':num,'title':title,'excerpt':excerpt,'image':f'assets/lalerte/n180/page-{num:02d}.jpg'})
+              # Use the real generated filename (page-1.jpg, page-2.jpg, ...),
+              # avoiding the previous broken page-01.jpg references.
+              pages.append({'page':num,'title':title,'excerpt':excerpt,'image':path.as_posix()})
 
           Path('data/lalerte-180.json').write_text(
               json.dumps({
@@ -119,7 +114,7 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-3"></script>'
+          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-4"></script>'
           import re
           s=re.sub(r'<script defer src="assets/js/lalerte-home\.js\?v=[^"]+"></script>\n?','',s)
           if '</body>' not in s: raise SystemExit('index.html: closing body not found')
