@@ -34,7 +34,7 @@ jobs:
           pdfinfo "$PDF_PATH" > /tmp/pdfinfo.txt
           pages=$(awk '/^Pages:/ {print $2}' /tmp/pdfinfo.txt)
           test -n "$pages"
-          pdftoppm -jpeg -r 110 -jpegopt quality=78 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
+          pdftoppm -jpeg -r 130 -jpegopt quality=82 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
           for f in assets/lalerte/n180/page-*.jpg; do
             [ -f "$f" ] || continue
             n=$(basename "$f" .jpg | sed 's/page-//')
@@ -64,10 +64,11 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-1"></script>'
-          if tag not in s:
-              if '</body>' not in s: raise SystemExit('index.html: closing body not found')
-              p.write_text(s.replace('</body>',tag+'\n</body>',1),encoding='utf-8')
+          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-2"></script>'
+          import re
+          s=re.sub(r'<script defer src="assets/js/lalerte-home\.js\?v=[^"]+"></script>\n?','',s)
+          if '</body>' not in s: raise SystemExit('index.html: closing body not found')
+          p.write_text(s.replace('</body>',tag+'\n</body>',1),encoding='utf-8')
           PY
 
       - name: Commit generated LALERTE integration
