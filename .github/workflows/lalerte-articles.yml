@@ -61,7 +61,7 @@ jobs:
           }
           JSON
       - name: Update homepage script version
-        run: sed -i -E 's/lalerte-home\.js\?v=[0-9-]+/lalerte-home.js?v=20260915-5/g' index.html
+        run: sed -i -E 's/lalerte-home\.js\?v=[0-9-]+/lalerte-home.js?v=20260915-7/g' index.html
       - name: Commit generated edition
         run: |
           git config user.name "github-actions[bot]"
