@@ -1,5 +1,6 @@
 name: Build LALERTE articles
 
+# Force corrected article-image rebuild: 2026-09-15T19:30Z
 on:
   push:
     branches: [main]
@@ -35,7 +36,8 @@ jobs:
           crop article-05 4 403 119 780 469
           crop article-06 4 14 641 390 942
           crop article-07 7 596 67 781 276
-          crop article-08 7 657 344 778 395
+          # Exact photograph for the miniature-car article on page 7.
+          magick "assets/lalerte/n180/pages/page-7.jpg" -crop "345x140+1620+850" +repage -strip -quality 90 "assets/lalerte/n180/articles/article-08.jpg"
       - name: Write structured LALERTE data
         run: |
           cat > data/lalerte-180.json <<'JSON'
@@ -43,7 +45,7 @@ jobs:
             "edition":"L'ALERTE N°180",
             "date":"15 septembre 2026",
             "pdf":"media/lalerte/editions/L'ALERTE N°180.pdf",
-            "generatedAt":"2026-09-15T21:00:00Z",
+            "generatedAt":"2026-09-15T21:30:00Z",
             "imagePolicy":"Chaque image d’article est un recadrage de la photographie ou illustration réellement placée avec cet article dans le PDF source. Les pages complètes restent disponibles séparément.",
             "articles":[
               {"id":"article-01","page":1,"category":"À LA UNE","title":"L’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP","excerpt":"Le Cadre de concertation des faîtières de la presse écrite privée conteste la méthode engagée par la Maison de la Presse autour de l’organe d’autorégulation et de la relecture de la Convention collective.","image":"assets/lalerte/n180/articles/article-01.jpg"},
