@@ -15,16 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inject mixed LALERTE homepage runtime
+      - name: Ensure mixed LALERTE homepage runtime is loaded
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          s=re.sub(r'<script[^>]+src=["\']assets/js/lalerte-home\.js\?v=[^"\']+["\'][^>]*></script>', '', s)
           tag='<script src="assets/js/lalerte-home.js?v=20260915-7"></script>'
-          if tag not in s:
+          if 'assets/js/lalerte-home.js?v=20260915-7' not in s:
               s=s.replace('</body>',tag+'</body>',1)
           p.write_text(s,encoding='utf-8')
           PY
