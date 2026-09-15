@@ -1,5 +1,6 @@
 name: Process L'ALERTE N180
 
+# Force article-image rebuild: 2026-09-15T19:25Z
 on:
   push:
     branches: [main]
@@ -48,7 +49,6 @@ jobs:
             ('article-05',4,403,119,780,469),
             ('article-06',4,14,641,390,942),
             ('article-07',7,596,67,781,276),
-            ('article-08',7,657,344,778,395),
           ]
           for aid,page,x0,y0,x1,y1 in crops:
               src=Path(f'assets/lalerte/n180/pages/page-{page}.jpg')
@@ -56,6 +56,9 @@ jobs:
               box=tuple(round(v*scale) for v in (x0,y0,x1,y1))
               box=(max(0,box[0]),max(0,box[1]),min(im.width,box[2]),min(im.height,box[3]))
               im.crop(box).save(f'assets/lalerte/n180/articles/{aid}.jpg',quality=90,optimize=True)
+          # Article 08: exact photograph of the miniature car on page 7.
+          im=Image.open('assets/lalerte/n180/pages/page-7.jpg')
+          im.crop((1620,850,1965,990)).save('assets/lalerte/n180/articles/article-08.jpg',quality=90,optimize=True)
           PY
           python3 - <<'PY'
           import json
