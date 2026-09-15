@@ -35,7 +35,7 @@ jobs:
 
       - name: Validate JSON data
         run: |
-          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
+          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/home-layout.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
 
       - name: Verify essential site files and Astan Kida asset
         run: |
@@ -79,10 +79,25 @@ jobs:
               if marker not in s:
                   raise SystemExit('Balise style.css introuvable')
               s = s.replace(marker, marker + tag, 1)
-              p.write_text(s, encoding='utf-8')
           print('Couche design 2026 active:', href)
           PY
           grep -q 'assets/css/ciwara-2026-audit.css?v=20260915' index.html || { echo 'Couche design non injectée'; exit 1; }
+
+      - name: Inject visual homepage layout runtime
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script src="assets/js/ciwara-visual-layout.js?v=20260915" defer></script>'
+          if tag not in s:
+              marker = '</body>'
+              if marker not in s:
+                  raise SystemExit('Balise </body> introuvable')
+              s = s.replace(marker, tag + marker, 1)
+          print('Bureau visuel actif')
+          PY
+          grep -q 'assets/js/ciwara-visual-layout.js?v=20260915' index.html || { echo 'Runtime bureau visuel non injecté'; exit 1; }
 
       - name: Guard Caster.fm player markup
         run: |
