@@ -22,6 +22,7 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           s=s.replace('assets/js/lalerte-home.js?v=20260915-5','assets/js/lalerte-home.js?v=20260915-7')
+          s=s.replace('assets/js/lalerte-home.js?v=20260915-6','assets/js/lalerte-home.js?v=20260915-7')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit homepage runtime reference
