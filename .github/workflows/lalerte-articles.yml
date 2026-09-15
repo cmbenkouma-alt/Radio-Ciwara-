@@ -1,0 +1,68 @@
+name: Build LALERTE articles
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "media/lalerte/editions/*.pdf"
+      - ".github/workflows/lalerte-articles.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install PDF tools
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils imagemagick
+      - name: Render and crop article images
+        env:
+          PDF: "media/lalerte/editions/L'ALERTE N°180.pdf"
+        run: |
+          set -e
+          test -s "$PDF"
+          rm -rf assets/lalerte/n180
+          mkdir -p assets/lalerte/n180/pages assets/lalerte/n180/articles
+          pdftoppm -jpeg -r 180 -jpegopt quality=88 -f 1 -l 8 "$PDF" assets/lalerte/n180/pages/page
+          crop(){ id="$1"; page="$2"; x0="$3"; y0="$4"; x1="$5"; y1="$6"; W=$(( (x1-x0)*180/72 )); H=$(( (y1-y0)*180/72 )); X=$(( x0*180/72 )); Y=$(( y0*180/72 )); magick "assets/lalerte/n180/pages/page-${page}.jpg" -crop "${W}x${H}+${X}+${Y}" +repage -strip -quality 90 "assets/lalerte/n180/articles/${id}.jpg"; }
+          crop article-01 1 14 505 614 698
+          crop article-02 2 13 198 392 442
+          crop article-03 2 597 564 780 780
+          crop article-04 3 13 115 775 478
+          crop article-05 4 403 119 780 469
+          crop article-06 4 14 641 390 942
+          crop article-07 7 596 67 781 276
+          crop article-08 7 657 344 778 395
+      - name: Write structured LALERTE data
+        run: |
+          cat > data/lalerte-180.json <<'JSON'
+          {
+            "edition":"L'ALERTE N°180",
+            "date":"15 septembre 2026",
+            "pdf":"media/lalerte/editions/L'ALERTE N°180.pdf",
+            "generatedAt":"2026-09-15T21:00:00Z",
+            "imagePolicy":"Chaque image d’article est un recadrage de la photographie ou illustration réellement placée avec cet article dans le PDF source. Les pages complètes restent disponibles séparément.",
+            "articles":[
+              {"id":"article-01","page":1,"category":"À LA UNE","title":"L’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP","excerpt":"Le Cadre de concertation des faîtières de la presse écrite privée conteste la méthode engagée par la Maison de la Presse autour de l’organe d’autorégulation et de la relecture de la Convention collective.","image":"assets/lalerte/n180/articles/article-01.jpg"},
+              {"id":"article-02","page":2,"category":"INTERVIEW","title":"« Samaké Voyage et Fret, c’est l’acheminement des colis et passeports en toute confiance et en toute sécurité »","excerpt":"Sékou Samaké présente une société logistique qui facilite l’acheminement des colis et passeports. Elle est opérationnelle au Mali, au Sénégal, en Guinée, en Italie et en France.","image":"assets/lalerte/n180/articles/article-02.jpg"},
+              {"id":"article-03","page":2,"category":"ÉCONOMIE · PRESSE","title":"ASSEP-APEX : Vers la concrétisation d’un partenariat stratégique","excerpt":"Une délégation de l’ASSEP conduite par Boubacar Yalkoué a rencontré le directeur général de l’APEX Massoudou Cissé. Les deux parties envisagent un cadre formel de collaboration.","image":"assets/lalerte/n180/articles/article-03.jpg"},
+              {"id":"article-04","page":3,"category":"À LA UNE","title":"Organe d’autorégulation et relecture de la Convention collective : l’Assep, le Groupe et l’Unajep désapprouvent la démarche de la MP","excerpt":"Les organisations réaffirment leur attachement au dialogue, à la concertation et à l’autorégulation et demandent une réforme inclusive avec les organisations représentatives.","image":"assets/lalerte/n180/articles/article-04.jpg"},
+              {"id":"article-05","page":4,"category":"NATION","title":"Ancien DG des Douanes Amadou Konaté : Un modèle de l’excellence et de rigueur !","excerpt":"L’édition revient sur le bilan d’Amadou Konaté à la tête des Douanes maliennes, les résultats de mobilisation des recettes et les 36 réformes structurelles mentionnées dans l’article.","image":"assets/lalerte/n180/articles/article-05.jpg"},
+              {"id":"article-06","page":4,"category":"NATION","title":"Présidence malienne de l’OMD-AOC : Le bilan jugé exceptionnel","excerpt":"Le Mali a transmis le flambeau de la Vice-Présidence de la Région Afrique Occidentale et Centrale de l’OMD-AOC après un mandat marqué par la modernisation et la lutte contre la fraude.","image":"assets/lalerte/n180/articles/article-06.jpg"},
+              {"id":"article-07","page":7,"category":"VIE DES STARS","title":"Elton John donne un concert de plus de deux heures à Rio","excerpt":"Elton John s’est produit au festival Rock in Rio avec un concert de plus de deux heures et vingt-quatre chansons devant 100.000 spectateurs.","image":"assets/lalerte/n180/articles/article-07.jpg","source":"20 Minutes"},
+              {"id":"article-08","page":7,"category":"INSOLITE","title":"La plus petite voiture au monde","excerpt":"Réalisée à partir d’une Fiat Panda 1993, cette voiture mesure 50,20 cm de large, 3,40 mètres de long et 1,45 mètre de haut. Andrea Marazzi a établi ce record.","image":"assets/lalerte/n180/articles/article-08.jpg","source":"Le Dauphiné Libéré"}
+            ],
+            "pages":[1,2,3,4,5,6,7,8]
+          }
+          JSON
+      - name: Update homepage script version
+        run: sed -i -E 's/lalerte-home\.js\?v=[0-9-]+/lalerte-home.js?v=20260915-5/g' index.html
+      - name: Commit generated edition
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/lalerte-180.json assets/lalerte/n180 index.html
+          git diff --cached --quiet || (git commit -m "feat: publish LALERTE articles and matching images" && git push)
