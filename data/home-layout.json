@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "blocks": [
+    {"id":"B01","name":"Barre alerte","selector":".portal-top","group":"body","order":1,"visible":true,"locked":false,"style":{"background":"#111214","color":"#ffffff","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B02","name":"En-tête / navigation","selector":".portal-nav","group":"body","order":2,"visible":true,"locked":false,"style":{"background":"#ffffff","color":"#111214","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B03","name":"Catégories","selector":".portal-cats","group":"body","order":3,"visible":true,"locked":false,"style":{"background":"#ffffff","color":"#111214","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B04","name":"Publicités / bandeaux","selector":".portal-ads","group":"body","order":4,"visible":true,"locked":false,"style":{"background":"#f1f1ef","color":"#111214","accent":"#d71920","radius":0,"padding":"10px 0","shadow":"none"}},
+    {"id":"B05","name":"Zone actualités principale","selector":".portal-main","group":"body","order":5,"visible":true,"locked":false,"style":{"background":"transparent","color":"#111214","accent":"#d71920","radius":0,"padding":"28px 0 18px","shadow":"none"}},
+    {"id":"B06","name":"Actualités / Hero","selector":".lead-news","group":"portal-main","order":1,"visible":true,"locked":false,"style":{"background":"transparent","color":"#111214","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B07","name":"Colonne de droite","selector":".portal-sidebar","group":"portal-columns","order":2,"visible":true,"locked":false,"style":{"background":"transparent","color":"#111214","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B08","name":"Lecteur Caster.fm — PROTÉGÉ","selector":".caster-wrap","group":"protected","order":1,"visible":true,"locked":true,"style":{"background":"transparent","color":"inherit","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B09","name":"TV + Radio / médias","selector":".media-duo","group":"body","order":6,"visible":true,"locked":false,"style":{"background":"transparent","color":"#111214","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B10","name":"Canal+ / partenaire","selector":".canal-plus-block","group":"body","order":7,"visible":true,"locked":false,"style":{"background":"#0b0b0c","color":"#ffffff","accent":"#d71920","radius":0,"padding":"24px 0","shadow":"none"}},
+    {"id":"B11","name":"Section radio Mali","selector":".mali-radio-section","group":"body","order":8,"visible":true,"locked":false,"style":{"background":"transparent","color":"#111214","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}},
+    {"id":"B12","name":"Pied de page","selector":"footer","group":"body","order":99,"visible":true,"locked":false,"style":{"background":"#111214","color":"#ffffff","accent":"#d71920","radius":0,"padding":"0","shadow":"none"}}
+  ]
+}
