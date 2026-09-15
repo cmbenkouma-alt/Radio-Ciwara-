@@ -1,13 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "pages": [
-    {"path":"index.html","label":"Accueil","editable":true,"description":"Page d'accueil Radio Ciwara","overrides":[],"blocks":[]},
-    {"path":"programmes.html","label":"Programmes","editable":true,"description":"Programmes et grille","overrides":[],"blocks":[]},
+    {"path":"index.html","label":"Accueil","editable":true,"description":"Page d'accueil Radio Ciwara 105.5 FM","overrides":[],"blocks":[]},
+    {"path":"programmes.html","label":"Programmes","editable":true,"description":"Programmes et grille officielle Radio Ciwara","overrides":[],"blocks":[]},
     {"path":"events.html","label":"Événements","editable":true,"description":"Événements Radio Ciwara","overrides":[],"blocks":[]},
-    {"path":"artiste-du-mois.html","label":"Artiste du mois","editable":true,"description":"Portrait artiste","overrides":[],"blocks":[]},
-    {"path":"ciwara-info.html","label":"Ciwara Infos","editable":true,"description":"Actualités Ciwara Infos","overrides":[],"blocks":[]},
-    {"path":"ciwara-tv.html","label":"Ciwara TV","editable":true,"description":"Télévision Ciwara","overrides":[],"blocks":[]},
-    {"path":"download-app.html","label":"Application mobile","editable":true,"description":"Téléchargement de l'application","overrides":[],"blocks":[]},
-    {"path":"lecteur-ciwara.html","label":"Lecteur","editable":false,"description":"Page lecteur radio","protected":true,"overrides":[],"blocks":[]}
+    {"path":"artiste-du-mois.html","label":"Artiste du mois","editable":true,"description":"Portrait de l'artiste du mois Radio Ciwara","overrides":[],"blocks":[]},
+    {"path":"ciwara-info.html","label":"Ciwara Infos","editable":true,"description":"Actualités et informations de Ciwara Infos","overrides":[],"blocks":[]},
+    {"path":"ciwara-info-513.html","label":"Ciwara Infos 513","editable":true,"description":"Parution Ciwara Infos 513","overrides":[],"blocks":[]},
+    {"path":"ciwara-tv.html","label":"Ciwara TV","editable":true,"description":"Ciwara TV","overrides":[],"blocks":[]},
+    {"path":"download-app.html","label":"Application mobile","editable":true,"description":"Téléchargement de l'application Radio Ciwara","overrides":[],"blocks":[]},
+    {"path":"facebook-live-embed.html","label":"Facebook Live","editable":true,"description":"Lecteur Facebook Live","overrides":[],"blocks":[]},
+    {"path":"player-onlineradiobox.html","label":"Player OnlineRadioBox","editable":true,"description":"Page de lecteur externe","overrides":[],"blocks":[]},
+    {"path":"player-test.html","label":"Player test","editable":true,"description":"Page technique de test du lecteur","overrides":[],"blocks":[]},
+    {"path":"lecteur-ciwara.html","label":"Lecteur Ciwara","editable":false,"description":"Lecteur radio principal","protected":true,"overrides":[],"blocks":[]}
   ]
 }
