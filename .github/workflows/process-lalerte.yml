@@ -19,43 +19,98 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install PDF tools
+      - name: Install PDF and OCR tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-fra
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-fra imagemagick
 
       - name: Process latest LALERTE PDF
         env:
           PDF_PATH: "media/lalerte/editions/L'ALERTE N°180.pdf"
         run: |
+          set -e
           test -s "$PDF_PATH"
           rm -rf assets/lalerte/n180
           mkdir -p assets/lalerte/n180
           pdfinfo "$PDF_PATH" > /tmp/pdfinfo.txt
           pages=$(awk '/^Pages:/ {print $2}' /tmp/pdfinfo.txt)
           test -n "$pages"
-          pdftoppm -jpeg -r 130 -jpegopt quality=82 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
+
+          # High-resolution page images: these remain the authoritative visual
+          # representation of each newspaper page and are never stretched/cropped.
+          pdftoppm -jpeg -r 150 -jpegopt quality=86 -f 1 -l "$pages" "$PDF_PATH" assets/lalerte/n180/page
+
+          # Also extract embedded PDF images when available. They are kept as
+          # source material for later article-level image matching.
+          mkdir -p assets/lalerte/n180/extracted
+          pdfimages -all "$PDF_PATH" assets/lalerte/n180/extracted/img || true
+
           for f in assets/lalerte/n180/page-*.jpg; do
             [ -f "$f" ] || continue
             n=$(basename "$f" .jpg | sed 's/page-//')
+            # First try the PDF's text layer.
             pdftotext -f "$n" -l "$n" -layout "$PDF_PATH" "/tmp/page-$n.txt" || true
-            if [ ! -s "/tmp/page-$n.txt" ] || [ "$(wc -c < "/tmp/page-$n.txt")" -lt 80 ]; then
-              tesseract "$f" "/tmp/page-$n" -l fra+eng --psm 6 2>/dev/null || true
+            # If the text layer is empty/too short, use several OCR layouts and
+            # select the richest result. Preprocessing improves scanned pages.
+            if [ ! -s "/tmp/page-$n.txt" ] || [ "$(wc -c < "/tmp/page-$n.txt")" -lt 120 ]; then
+              magick "$f" -colorspace Gray -auto-level -sharpen 0x1 /tmp/page-$n-prep.jpg
+              for psm in 3 6 11; do
+                tesseract /tmp/page-$n-prep.jpg "/tmp/page-$n-$psm" -l fra+eng --psm "$psm" 2>/dev/null || true
+              done
+              best=$(for x in /tmp/page-$n-*.txt; do [ -s "$x" ] && wc -c < "$x" | tr -d ' '; done | sort -nr | head -1)
+              if [ -n "$best" ]; then
+                chosen=$(for x in /tmp/page-$n-*.txt; do [ -s "$x" ] || continue; [ "$(wc -c < "$x")" -eq "$best" ] && echo "$x" && break; done)
+                cp "$chosen" "/tmp/page-$n.txt"
+              fi
             fi
           done
+
           python3 - <<'PY'
           import json,re,glob
           from pathlib import Path
+
+          def clean(s):
+              return re.sub(r'\s+',' ',s).strip(' -|•·')
+
+          def choose_title(lines, page):
+              candidates=[]
+              for line in lines:
+                  x=clean(line)
+                  if not (8 <= len(x) <= 180):
+                      continue
+                  if re.fullmatch(r'[\d\W_]+', x):
+                      continue
+                  letters=sum(c.isalpha() for c in x)
+                  upper=sum(c.isupper() for c in x if c.isalpha())
+                  score=(upper/max(letters,1))*2 + min(len(x),100)/100
+                  if len(x.split()) >= 3: score += 1
+                  candidates.append((score,x))
+              if not candidates:
+                  return f"L’ALERTE N°180 — page {page}"
+              candidates.sort(reverse=True)
+              return candidates[0][1]
+
           pages=[]
           for img in sorted(glob.glob('assets/lalerte/n180/page-*.jpg')):
               num=int(Path(img).stem.split('-')[-1])
               txt=Path(f'/tmp/page-{num:02d}.txt')
               raw=txt.read_text('utf-8',errors='ignore') if txt.exists() else ''
-              lines=[re.sub(r'\s+',' ',x).strip() for x in raw.splitlines() if x.strip()]
-              title=next((x for x in lines if 4<=len(x)<=180),f"L'ALERTE N°180 — page {num}")
-              excerpt=' '.join(lines[1:])[:420].strip() or 'Consultez cette page de l’édition pour découvrir les informations et articles publiés par L’ALERTE.'
+              lines=[clean(x) for x in raw.splitlines() if clean(x)]
+              title=choose_title(lines,num)
+              body=[x for x in lines if x != title]
+              excerpt=clean(' '.join(body))[:420]
+              if not excerpt:
+                  excerpt=f"Consultez la page {num} de L’ALERTE N°180 pour retrouver les articles et informations publiés dans cette édition."
               pages.append({'page':num,'title':title,'excerpt':excerpt,'image':f'assets/lalerte/n180/page-{num:02d}.jpg'})
-          Path('data/lalerte-180.json').write_text(json.dumps({'edition':"L'ALERTE N°180",'pdf':"media/lalerte/editions/L'ALERTE N°180.pdf",'generatedAt':__import__('datetime').datetime.utcnow().isoformat()+'Z','pages':pages},ensure_ascii=False,indent=2),encoding='utf-8')
+
+          Path('data/lalerte-180.json').write_text(
+              json.dumps({
+                  'edition':"L'ALERTE N°180",
+                  'pdf':"media/lalerte/editions/L'ALERTE N°180.pdf",
+                  'generatedAt':__import__('datetime').datetime.utcnow().isoformat()+'Z',
+                  'imagePolicy':'Chaque carte utilise l’image complète de sa page PDF pour conserver la correspondance exacte page/contenu. Les images embarquées sont conservées dans assets/lalerte/n180/extracted pour une future association article-image plus fine.',
+                  'pages':pages
+              },ensure_ascii=False,indent=2),encoding='utf-8')
           PY
 
       - name: Install LALERTE homepage integration
@@ -64,7 +119,7 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-2"></script>'
+          tag='<script defer src="assets/js/lalerte-home.js?v=20260915-3"></script>'
           import re
           s=re.sub(r'<script defer src="assets/js/lalerte-home\.js\?v=[^"]+"></script>\n?','',s)
           if '</body>' not in s: raise SystemExit('index.html: closing body not found')
@@ -76,4 +131,4 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/lalerte-180.json assets/lalerte/n180 index.html assets/js/lalerte-home.js lalerte.html assets/css/lalerte.css
-          if git diff --cached --quiet; then echo "No LALERTE changes to commit."; else git commit -m "feat: integrate LALERTE N180 into site [skip ci]"; git push; fi
+          if git diff --cached --quiet; then echo "No LALERTE changes to commit."; else git commit -m "feat: refresh LALERTE N180 integration"; git push; fi
