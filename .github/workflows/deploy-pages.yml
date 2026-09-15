@@ -52,14 +52,19 @@ jobs:
           from pathlib import Path
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
-          old = '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3'
-          new = 'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4'
-          if old not in s:
-              raise SystemExit('Référence Astan Kida attendue introuvable dans index.html')
-          p.write_text(s.replace(old, new), encoding='utf-8')
-          print('Chemin Astan Kida normalisé:', new)
+          replacements = {
+              '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3': 'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4',
+              '/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4': 'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4',
+          }
+          changed = False
+          for old, new in replacements.items():
+              if old in s:
+                  s = s.replace(old, new)
+                  changed = True
+          p.write_text(s, encoding='utf-8')
+          print('Chemin Astan Kida vérifié: assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4', 'modifié' if changed else 'déjà conforme')
           PY
-          grep -q 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4"' index.html || { echo 'Correction Astan Kida non appliquée'; exit 1; }
+          grep -q 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4"' index.html || { echo 'Référence Astan Kida introuvable'; exit 1; }
 
       - name: Inject Radio Ciwara 2026 design layer
         run: |
