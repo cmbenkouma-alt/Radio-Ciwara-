@@ -1,0 +1,52 @@
+name: Apply futuristic home UI
+
+on:
+  push:
+    branches: [refonte-maquette-2026]
+    paths:
+      - 'refonte-futuriste.css'
+      - 'refonte-futuriste.js'
+      - '.github/workflows/refonte-futur-ui.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: refonte-maquette-2026
+          fetch-depth: 0
+
+      - name: Inject futuristic UI assets into homepage
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          css = '<link rel="stylesheet" href="refonte-futuriste.css?v=20260915">'
+          js = '<script src="refonte-futuriste.js?v=20260915" defer></script>'
+          if css not in text:
+              marker = '</head>'
+              text = text.replace(marker, f'  {css}\n{marker}', 1)
+          if js not in text:
+              marker = '</body>'
+              text = text.replace(marker, f'  {js}\n{marker}', 1)
+          p.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit homepage wiring
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No homepage changes needed."
+          else
+            git commit -m "ui: wire futuristic homepage assets"
+            git push origin refonte-maquette-2026
+          fi
