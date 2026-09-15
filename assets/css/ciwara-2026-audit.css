@@ -68,6 +68,9 @@ section{scroll-margin-top:88px}
 }
 .event-card,.events-card{min-height:320px}
 
+/* Remove the two redundant right-column boxes below the event area. */
+.portal-sidebar > .side-box:not(.ciwara-events-box){display:none!important}
+
 /* Images that already have an explicit aspect ratio keep it; avoid layout jumps */
 .news-image img,.portal-ad img,.ciwara-infos-brand img{display:block}
 
