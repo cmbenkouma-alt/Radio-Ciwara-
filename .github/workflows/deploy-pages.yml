@@ -110,7 +110,6 @@ jobs:
               s = p.read_text(encoding='utf-8', errors='ignore')
               if tag not in s and '</body>' in s:
                   p.write_text(s.replace('</body>', tag+'</body>', 1), encoding='utf-8')
-          # The admin entry point is kept part of the same control room by adding a direct navigation item.
           p = Path('admin/index.html')
           if p.exists():
               s=p.read_text(encoding='utf-8', errors='ignore')
@@ -121,6 +120,23 @@ jobs:
           PY
           grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-1' index.html || { echo 'Runtime site builder non injecté'; exit 1; }
           grep -q 'site-builder.html' admin/index.html || { echo 'Lien Bureau universel non injecté'; exit 1; }
+
+      - name: Persist the existing admin session across pages and tabs
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('admin/index.html')
+          s = p.read_text(encoding='utf-8', errors='ignore')
+          bridge = '''<script>(function(){const K='ciwara_admin_token';try{const t=localStorage.getItem(K);if(t)sessionStorage.setItem(K,t);const S=sessionStorage.setItem;sessionStorage.setItem=function(k,v){S.call(this,k,v);if(k===K)localStorage.setItem(K,v)};const R=sessionStorage.removeItem;sessionStorage.removeItem=function(k){R.call(this,k);if(k===K)localStorage.removeItem(K)};}catch(e){}})();</script>'''
+          if bridge not in s:
+              marker='<script>'
+              if marker not in s:
+                  raise SystemExit('Script admin introuvable')
+              s=s.replace(marker,bridge+marker,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          grep -q "localStorage.getItem(K)" admin/index.html || { echo 'Pont de session admin absent'; exit 1; }
+          grep -q "localStorage.setItem(K,v)" admin/index.html || { echo 'Persistance session admin absente'; exit 1; }
 
       - name: Guard Caster.fm player markup
         run: |
