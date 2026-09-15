@@ -61,6 +61,32 @@ jobs:
           PY
           grep -q 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4"' index.html || { echo 'Correction Astan Kida non appliquée'; exit 1; }
 
+      - name: Inject Radio Ciwara 2026 design layer
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          href = 'assets/css/ciwara-2026-audit.css?v=20260915'
+          tag = f'<link rel="stylesheet" href="{href}">'
+          if tag not in s:
+              marker = '<link href="style.css?v=20260902" rel="stylesheet"/>'
+              if marker not in s:
+                  raise SystemExit('Balise style.css introuvable')
+              s = s.replace(marker, marker + tag, 1)
+              p.write_text(s, encoding='utf-8')
+          print('Couche design 2026 active:', href)
+          PY
+          grep -q 'assets/css/ciwara-2026-audit.css?v=20260915' index.html || { echo 'Couche design non injectée'; exit 1; }
+
+      - name: Guard Caster.fm player markup
+        run: |
+          if grep -qiE 'caster\.fm|casterfm' index.html; then
+            echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'
+          else
+            echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'
+          fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
