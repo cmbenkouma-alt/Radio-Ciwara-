@@ -35,9 +35,7 @@ jobs:
           node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/home-layout.json','data/site-builder.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
       - name: Verify essential site files and Astan Kida asset
         run: |
-          for f in index.html style.css script.js mali-radios.js mali-radios.css; do
-            test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }
-          done
+          for f in index.html style.css script.js mali-radios.js mali-radios.css; do test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }; done
           test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
           test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
       - name: Normalize Astan Kida image URL for GitHub Pages and custom domain
@@ -102,10 +100,15 @@ jobs:
           PY
           grep -q "localStorage.getItem(K)" admin/index.html || { echo 'Pont de session admin absent'; exit 1; }
           grep -q "localStorage.setItem(K,v)" admin/index.html || { echo 'Persistance session admin absente'; exit 1; }
+      - name: Publish a stable root admin entry point
+        run: |
+          test -s admin/index.html || { echo 'admin/index.html absent'; exit 1; }
+          cp admin/index.html admin.html
+          grep -q 'Administration Ciwara' admin.html || { echo 'Entrée admin racine invalide'; exit 1; }
+          test -s admin/site-builder.html || { echo 'admin/site-builder.html absent'; exit 1; }
       - name: Guard Caster.fm player markup
         run: |
           if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'; else echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'; fi
-      # Force a fresh Pages deployment from the current main branch.
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site artifact
