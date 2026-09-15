@@ -23,7 +23,20 @@ function renderPrograms(items){const box=document.querySelector('#programmes .sc
 function renderPodcasts(items){const box=document.querySelector('#podcasts .podcast-list');if(box&&items.length)box.innerHTML=items.filter(x=>x.active!==false).map((x,i)=>`<article><span>${String(i+1).padStart(2,'0')}</span><div>${x.image?`<img class="cms-thumb" src="${esc(x.image)}" alt="" loading="lazy">`:''}<small>Podcast Ciwara</small><b>${esc(x.title||'Podcast')}</b><em>${esc(x.description||'Réécouter')}</em>${x.audio?`<audio controls preload="none" src="${esc(x.audio)}" style="width:100%;margin-top:7px"></audio>`:''}</div></article>`).join('')}
 function renderAds(items){const grid=document.querySelector('.portal-ad-grid');if(!grid)return;const a=items.filter(x=>x.active!==false&&x.image).slice(0,3);if(a.length)grid.innerHTML=a.map(x=>`<a class="portal-ad cms-ad" href="${esc(x.link||'#contact')}"><img src="${esc(x.image)}" alt="${esc(x.title||'Publicité')}" loading="lazy"></a>`).join('')}
 function renderPartners(items){const footer=[...document.querySelectorAll('footer .footer-grid>div')].find(x=>/PARTENAIRES/i.test(x.textContent||''));if(!footer||!items.length)return;let box=footer.querySelector('.cms-partners');if(!box){box=document.createElement('div');box.className='cms-partners';footer.appendChild(box)}box.innerHTML=items.filter(x=>x.active!==false).map(x=>`<a class="cms-partner" href="${esc(x.link||'#')}" target="_blank" rel="noopener"><img src="${esc(img(x.logo))}" alt="${esc(x.name||'Partenaire')}"><span>${esc(x.name||'Partenaire')}</span></a>`).join('')}
+async function renderContinuousHomepageNews(){
+  try{
+    const d=await get('data/actualites-slider.json');
+    const items=(d.items||[]).filter(x=>x.active!==false).sort((a,b)=>(Number(a.order)||9999)-(Number(b.order)||9999));
+    if(!items.length)return;
+    const lead=document.querySelector('#actualites .lead-card');
+    const mini=[...document.querySelectorAll('#actualites .mini-card')];
+    const apply=(el,x,label)=>{if(!el||!x)return;el.href=x.link||'ciwara-info.html';const tag=el.querySelector('.tag,.lead-copy .tag,.mini-card span');if(tag)tag.textContent=label||x.category||'CIWARA INFOS';const title=el.querySelector('h2,h3');if(title)title.textContent=x.title||'Actualité';const p=el.querySelector('p');if(p)p.textContent=x.description||'';const small=el.querySelector('small');if(small)small.textContent='Lire l’article →'};
+    apply(lead,items[0],'À LA UNE');
+    mini.forEach((el,i)=>apply(el,items[i+1],items[i+1]?.category||'CIWARA INFOS'));
+    renderNews(items);
+  }catch(e){console.warn('Actualités continues indisponibles',e)}
+}
 async function loadCms(){try{const [settings,accueil,seo,programmes,podcasts,ads,partners,hero,world,side,fb]=await Promise.all([get('data/site-settings.json'),get('data/accueil.json'),get('data/seo.json'),get('data/programmes.json'),get('data/podcasts.json'),get('data/publicites.json'),get('data/partenaires.json'),get('data/hero.json'),get('data/actualites-slider.json'),get('data/sidebar.json'),get('data/facebook-live.json')]);ensureStyle();updateBase(settings,seo);renderHero(hero);renderWorldSlider(world);renderSidebar(side,fb);renderPrograms(programmes.items||[]);renderPodcasts(podcasts.items||[]);renderAds(ads.items||[]);renderPartners(partners.items||[]);if(accueil.alert&&ticker)ticker.innerHTML='<span>'+esc(accueil.alert)+'</span>'}catch(e){console.warn('CMS data non disponible',e);renderUpcomingPrograms()}}
 function registerPWA(){if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{})}
-const y=$('year');if(y)y.textContent=new Date().getFullYear();setSource();sync();ensureCaster();loadNews();loadCms();setTimeout(renderUpcomingPrograms,100);setInterval(renderUpcomingPrograms,60000);registerPWA();
+const y=$('year');if(y)y.textContent=new Date().getFullYear();setSource();sync();ensureCaster();loadNews();loadCms();renderContinuousHomepageNews();setTimeout(renderUpcomingPrograms,100);setInterval(renderUpcomingPrograms,60000);registerPWA();
 })();
