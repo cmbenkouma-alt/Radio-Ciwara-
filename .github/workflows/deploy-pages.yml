@@ -96,6 +96,20 @@ jobs:
           PY
           grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-2' index.html || { echo 'Runtime site builder non injecté'; exit 1; }
           grep -q 'site-builder.html' admin/index.html || { echo 'Lien Bureau universel non injecté'; exit 1; }
+      - name: Inject HERO émissions + Caster.fm runtime
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          tag='<script src="hero-preserve.js?v=20260917-1" defer></script>'
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s=re.sub(r'<script src="hero-preserve\.js\?v=[^"]+" defer></script>','',s)
+          if '</body>' not in s: raise SystemExit('Balise </body> introuvable')
+          s=s.replace('</body>',tag+'</body>',1)
+          p.write_text(s,encoding='utf-8')
+          PY
+          grep -q 'hero-preserve.js?v=20260917-1' index.html || { echo 'Runtime HERO émissions non injecté'; exit 1; }
       - name: Persist the existing admin session across pages and tabs
         run: |
           python - <<'PY'
