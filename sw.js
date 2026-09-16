@@ -1,5 +1,5 @@
-const CACHE='ciwara-v20260912';
-const CORE=['./','./index.html','./style.css?v=20260902','./script.js?v=20260902','./manifest.webmanifest','./favicon-ciwara.svg','./logo.jpg','./logo%20hitradio.png','./data/news.json','./data/ciwara-info.json','./ciwara-info.html','./ciwara-tv.html','./download-app.html'];
+const CACHE='ciwara-v20260916';
+const CORE=['./','./index.html','./style.css?v=20260902','./script.js?v=20260902','./manifest.webmanifest','./favicon-ciwara.svg','./logo.jpg','./logo%20hitradio.png','./data/news.json','./data/ciwara-info.json','./data/actualites-slider.json','./ciwara-info.html','./ciwara-tv.html','./download-app.html'];
 const DATA_PREFIX='/data/';
 
 self.addEventListener('install',event=>{
