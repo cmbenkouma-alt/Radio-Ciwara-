@@ -38,7 +38,6 @@ jobs:
           for f in index.html style.css script.js mali-radios.js mali-radios.css; do test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }; done
           test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
           test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
-          echo 'Assets Astan Kida présents et non vides.'
       - name: Validate Astan Kida references without rewriting the homepage
         run: |
           python - <<'PY'
@@ -47,25 +46,25 @@ jobs:
           s=Path('index.html').read_text(encoding='utf-8')
           refs=re.findall(r'(?:src|data-src)=["\']([^"\']*astan-kida[^"\']*)["\']',s,re.I)
           if refs:
-              print('Références Astan Kida statiques trouvées:', refs)
               valid=('assets/artistes/astan-kida-artiste-du-mois.png','assets/artistes/astan-kida.jpg')
               bad=[r for r in refs if not any(v in r for v in valid)]
-              if bad:
-                  raise SystemExit('Référence Astan Kida non conforme aux assets présents: '+repr(bad))
-          else:
-              print('Aucune référence Astan Kida statique trouvée dans index.html; validation limitée aux assets existants pour ne pas bloquer un rendu dynamique.')
+              if bad: raise SystemExit('Référence Astan Kida non conforme: '+repr(bad))
           PY
       - name: Inject Radio Ciwara 2026 design layer
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path('index.html'); s=p.read_text(encoding='utf-8'); href='assets/css/ciwara-2026-audit.css?v=20260915'; tag=f'<link rel="stylesheet" href="{href}">'; marker='<link href="style.css?v=20260902" rel="stylesheet"/>'
+          import re
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          href='assets/css/ciwara-2026-audit.css?v=20260915'
+          tag=f'<link rel="stylesheet" href="{href}">'
           if tag not in s:
-            if marker not in s: raise SystemExit('Balise style.css introuvable')
-            s=s.replace(marker,marker+tag,1)
+              m=re.search(r'<link\s+[^>]*href=["\']style\.css(?:\?[^"\']*)?["\'][^>]*>',s,re.I)
+              if not m: raise SystemExit('Balise style.css introuvable')
+              s=s[:m.end()]+tag+s[m.end():]
           p.write_text(s,encoding='utf-8')
           PY
-          grep -q 'assets/css/ciwara-2026-audit.css?v=20260915' index.html || { echo 'Couche design non injectée'; exit 1; }
+          grep -q 'assets/css/ciwara-2026-audit.css?v=20260915' index.html
       - name: Inject visual homepage layout runtime
         run: |
           python - <<'PY'
@@ -74,28 +73,29 @@ jobs:
           if tag not in s: s=s.replace('</body>',tag+'</body>',1)
           p.write_text(s,encoding='utf-8')
           PY
-          grep -q 'assets/js/ciwara-visual-layout.js?v=20260915' index.html || { echo 'Runtime bureau visuel non injecté'; exit 1; }
+          grep -q 'assets/js/ciwara-visual-layout.js?v=20260915' index.html
       - name: Inject universal site builder runtime
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           tag='<script src="assets/js/ciwara-site-builder.js?v=20260915-2" defer></script>'
           for p in Path('.').rglob('*.html'):
             if str(p).startswith('admin/') or p.name == 'admin.html': continue
             s=p.read_text(encoding='utf-8',errors='ignore')
             if '</body>' in s:
-              import re
               s=re.sub(r'<script src="assets/js/ciwara-site-builder\.js\?v=[^"]+" defer></script>','',s)
               s=s.replace('</body>',tag+'</body>',1)
               p.write_text(s,encoding='utf-8')
           p=Path('admin/index.html')
           if p.exists():
-            s=p.read_text(encoding='utf-8',errors='ignore'); tag2='<a href="site-builder.html" style="display:block;margin:10px 14px;padding:11px 12px;border-radius:8px;background:#111827;color:#fff;text-decoration:none;font-weight:900">🛠 Bureau universel · Pages & blocs</a>'
+            s=p.read_text(encoding='utf-8',errors='ignore')
+            tag2='<a href="site-builder.html" style="display:block;margin:10px 14px;padding:11px 12px;border-radius:8px;background:#111827;color:#fff;text-decoration:none;font-weight:900">🛠 Bureau universel · Pages & blocs</a>'
             if 'site-builder.html' not in s and '</aside>' in s: s=s.replace('</aside>',tag2+'</aside>',1)
             p.write_text(s,encoding='utf-8')
           PY
-          grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-2' index.html || { echo 'Runtime site builder non injecté'; exit 1; }
-          grep -q 'site-builder.html' admin/index.html || { echo 'Lien Bureau universel non injecté'; exit 1; }
+          grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-2' index.html
+          grep -q 'site-builder.html' admin/index.html
       - name: Persist the existing admin session across pages and tabs
         run: |
           python - <<'PY'
@@ -105,19 +105,18 @@ jobs:
           if bridge not in s: s=s.replace('<script>',bridge+'<script>',1)
           p.write_text(s,encoding='utf-8')
           PY
-          grep -q "localStorage.getItem(K)" admin/index.html || { echo 'Pont de session admin absent'; exit 1; }
-          grep -q "localStorage.setItem(K,v)" admin/index.html || { echo 'Persistance session admin absente'; exit 1; }
+          grep -q "localStorage.getItem(K)" admin/index.html
+          grep -q "localStorage.setItem(K,v)" admin/index.html
       - name: Publish and validate the root admin entry point without overwriting it
         run: |
-          test -s admin.html || { echo 'admin.html absent'; exit 1; }
-          grep -q 'Administration Radio Ciwara' admin.html || { echo 'Entrée admin racine invalide'; exit 1; }
-          test -s admin/index.html || { echo 'admin/index.html absent'; exit 1; }
-          grep -q 'Administration Ciwara' admin/index.html || { echo 'Panneau admin interne invalide'; exit 1; }
-          test -s admin/site-builder.html || { echo 'admin/site-builder.html absent'; exit 1; }
-          echo 'Root admin preserved: admin.html is no longer overwritten by admin/index.html.'
+          test -s admin.html
+          grep -q 'Administration Radio Ciwara' admin.html
+          test -s admin/index.html
+          grep -q 'Administration Ciwara' admin/index.html
+          test -s admin/site-builder.html
       - name: Guard Caster.fm player markup
         run: |
-          if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player par le build.'; else echo 'Aucune chaîne Caster.fm visible dans index.html; poursuite sans modification du player.'; fi
+          if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player.'; else echo 'Aucune chaîne Caster.fm visible; poursuite sans modification du player.'; fi
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload site artifact
