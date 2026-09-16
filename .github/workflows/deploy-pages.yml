@@ -38,16 +38,20 @@ jobs:
           for f in index.html style.css script.js mali-radios.js mali-radios.css; do test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }; done
           test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
           test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
-      - name: Normalize Astan Kida image URL for GitHub Pages and custom domain
+      - name: Validate Astan Kida image reference without rewriting the homepage
         run: |
           python - <<'PY'
           from pathlib import Path
-          p=Path('index.html'); s=p.read_text(encoding='utf-8')
-          replacements={'/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-3':'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4','/assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4':'assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4'}
-          for old,new in replacements.items(): s=s.replace(old,new)
-          p.write_text(s,encoding='utf-8')
+          import re
+          s=Path('index.html').read_text(encoding='utf-8')
+          refs=re.findall(r'(?:src|data-src)=["\']([^"\']*astan-kida[^"\']*)["\']',s,re.I)
+          print('Références Astan Kida trouvées:', refs)
+          if not refs:
+              raise SystemExit('Référence Astan Kida absente de index.html')
+          valid=('assets/artistes/astan-kida-artiste-du-mois.png','assets/artistes/astan-kida.jpg')
+          if not any(any(v in r for v in valid) for r in refs):
+              raise SystemExit('Référence Astan Kida non conforme aux assets présents')
           PY
-          grep -q 'src="assets/artistes/astan-kida-artiste-du-mois.png?v=20260914-4"' index.html || { echo 'Référence Astan Kida introuvable'; exit 1; }
       - name: Inject Radio Ciwara 2026 design layer
         run: |
           python - <<'PY'
