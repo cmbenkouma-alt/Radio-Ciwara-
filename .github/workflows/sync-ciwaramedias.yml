@@ -1,0 +1,43 @@
+name: Synchroniser Ciwara Medias premium
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-ciwaramedias.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dépôt officiel
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Récupérer la version premium
+        run: |
+          set -e
+          base='https://raw.githubusercontent.com/cmbenkouma-alt/Ciwaramedias/main'
+          curl -fL "$base/index.html" -o index.html
+          curl -fL "$base/style.css" -o style.css
+          curl -fL "$base/script.js" -o script.js
+          curl -fL "$base/programme.html" -o programme.html
+          curl -fL "$base/programme-premium.css" -o programme-premium.css
+          printf 'Synchronisation depuis Ciwaramedias effectuée le %s\n' "$(date -u +%FT%TZ)" > .ciwara-sync
+
+      - name: Commit et publication
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html style.css script.js programme.html programme-premium.css .ciwara-sync
+          if git diff --cached --quiet; then
+            echo 'Aucun changement à publier.'
+            exit 0
+          fi
+          git commit -m 'sync: publier la version premium de Ciwaramedias'
+          git push
