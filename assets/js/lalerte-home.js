@@ -6,6 +6,19 @@ function lalerteCard(x){const a=document.createElement('article');a.className='n
 function mixIntoNewsGrid(data){const grid=document.getElementById('newsGrid');if(!grid||grid.dataset.lalerteMixed==='1')return false;const cards=[...grid.querySelectorAll('.news-card:not(.skeleton)')];if(cards.length<2)return false;const articles=(data.articles||[]).slice(0,4);if(!articles.length)return false;grid.dataset.lalerteMixed='1';articles.forEach((article,i)=>{const current=[...grid.children].filter(el=>el.classList.contains('news-card'));const ref=current[Math.min(i*2+1,current.length-1)];grid.insertBefore(lalerteCard(article),ref||null)});return true}
 function waitAndMix(data){let tries=0;const tick=()=>{if(mixIntoNewsGrid(data))return;if(++tries<60)setTimeout(tick,100)};tick()}
 function renderCover(data){const sidebar=document.querySelector('.portal-sidebar');if(!sidebar||sidebar.querySelector('[data-ciwara-cover-box]'))return;const box=document.createElement('section');box.className='side-box ciwara-cover-box';box.setAttribute('data-ciwara-cover-box','');box.innerHTML='<div class="side-title">UNE — '+esc(data.source||'CIWARA INFOS')+' '+esc(data.issue||'N° 514')+'</div><a class="ciwara-cover-link" href="ciwara-info.html"><img loading="lazy" decoding="async" src="'+esc(data.cover||'assets/ciwara-info-514-cover.jpg')+'" alt="Une de '+esc(data.source||'Ciwara Infos')+' '+esc(data.issue||'N° 514')+'"><span>Lire les articles →</span></a>';sidebar.insertBefore(box,sidebar.firstElementChild||null)}
-function init(){addStyles();json('data/lalerte-180.json?v=20260915-10').then(data=>{waitAndMix(data);}).catch(err=>console.error('[Radio Ciwara] L’ALERTE:',err));json('data/ciwara-info.json?v=20260915-10').then(renderCover).catch(err=>console.error('[Radio Ciwara] Une Ciwara Infos:',err))}
+function renderContinuousNews(data){
+  const items=(data.items||[]).filter(x=>x.active!==false).sort((a,b)=>(Number(a.order)||9999)-(Number(b.order)||9999));
+  if(!items.length)return;
+  const section=document.getElementById('actualites');
+  if(!section)return;
+  const lead=section.querySelector('.lead-card');
+  const mini=[...section.querySelectorAll('.mini-card')];
+  const apply=(el,x,label)=>{if(!el||!x)return;el.href=x.link||'ciwara-info.html';const tag=el.querySelector('.tag,.mini-card span');if(tag)tag.textContent=label||x.category||'CIWARA INFOS';const title=el.querySelector('h2,h3');if(title)title.textContent=x.title||'Actualité';const p=el.querySelector('p');if(p)p.textContent=x.description||'';const small=el.querySelector('small');if(small)small.textContent='Lire l’article →'};
+  apply(lead,items[0],'À LA UNE');
+  mini.forEach((el,i)=>apply(el,items[i+1],items[i+1]?.category||'CIWARA INFOS'));
+  const grid=document.getElementById('newsGrid');
+  if(grid){grid.dataset.lalerteMixed='0';grid.innerHTML=items.slice(0,8).map(x=>'<article class="news-card"><div class="news-image"><img src="'+esc(x.image||'logo.jpg')+'" alt="'+esc(x.title||'Actualité')+'" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'logo.jpg\'"></div><div class="news-content"><span class="news-source">'+esc(x.category||'CIWARA INFOS')+'</span><h3>'+esc(x.title||'Actualité')+'</h3><p>'+esc(x.description||'')+'</p><div class="news-meta">'+esc(x.date||'')+' · '+esc(x.source||'Ciwara Infos')+'</div><p style="margin-top:10px"><a href="'+esc(x.link||'ciwara-info.html')+'">Lire l’article →</a></p></div></article>').join('');}
+}
+function init(){addStyles();json('data/actualites-slider.json?v='+Date.now()).then(renderContinuousNews).catch(err=>console.error('[Radio Ciwara] Actualités continues:',err));json('data/lalerte-180.json?v=20260915-10').then(data=>{waitAndMix(data);}).catch(err=>console.error('[Radio Ciwara] L’ALERTE:',err));json('data/ciwara-info.json?v=20260915-10').then(renderCover).catch(err=>console.error('[Radio Ciwara] Une Ciwara Infos:',err))}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
