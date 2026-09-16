@@ -35,11 +35,11 @@ jobs:
 
       - name: Validate JSON data
         run: |
-          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/home-layout.json','data/site-builder.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
+          node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/home-layout.json','data/site-builder.json','data/ciwara-info.json','data/artiste-du-mois.json','data/lalerte-180.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
 
       - name: Verify essential site files
         run: |
-          for f in index.html style.css script.js mali-radios.js mali-radios.css; do test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }; done
+          for f in index.html style.css script.js mali-radios.js mali-radios.css assets/js/ciwara-content.js; do test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }; done
           test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
           test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
 
@@ -63,6 +63,19 @@ jobs:
           test -s admin/index.html
           grep -q 'Administration Ciwara' admin/index.html
           test -s admin/site-builder.html
+
+      - name: Integrate preserved Ciwara content on homepage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          tag='assets/js/ciwara-content.js'
+          if tag not in s:
+              s=s.replace('</body>', '<script src="assets/js/ciwara-content.js?v=20260916"></script></body>', 1)
+              p.write_text(s,encoding='utf-8')
+          print('Homepage content integration:', tag in s)
+          PY
 
       - name: Guard radio player markup
         run: |
