@@ -24,21 +24,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Validate JavaScript
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Check script syntax
         run: node --check script.js
+
       - name: Validate JSON data
         run: |
           node -e "const fs=require('fs'); const files=['data/news.json','data/mali-radios.json','data/news-sources.json','data/home-layout.json','data/site-builder.json']; for(const f of files){if(!fs.existsSync(f)) throw new Error('Fichier manquant: '+f); JSON.parse(fs.readFileSync(f,'utf8'));} console.log('JSON OK')"
-      - name: Verify essential site files and Astan Kida asset
+
+      - name: Verify essential site files
         run: |
           for f in index.html style.css script.js mali-radios.js mali-radios.css; do test -f "$f" || { echo "Fichier essentiel manquant: $f"; exit 1; }; done
           test -s assets/artistes/astan-kida.jpg || { echo 'Image Astan Kida JPG absente'; exit 1; }
           test -s assets/artistes/astan-kida-artiste-du-mois.png || { echo 'Image Astan Kida PNG absente'; exit 1; }
-      - name: Validate Astan Kida references without rewriting the homepage
+
+      - name: Validate Astan Kida references
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -50,79 +55,27 @@ jobs:
               bad=[r for r in refs if not any(v in r for v in valid)]
               if bad: raise SystemExit('Référence Astan Kida non conforme: '+repr(bad))
           PY
-      - name: Inject Radio Ciwara 2026 design layer
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('index.html'); s=p.read_text(encoding='utf-8')
-          href='assets/css/ciwara-2026-audit.css?v=20260915'
-          tag=f'<link rel="stylesheet" href="{href}">'
-          if tag not in s:
-              m=re.search(r'<link\s+[^>]*href=["\']style\.css(?:\?[^"\']*)?["\'][^>]*>',s,re.I)
-              if not m: raise SystemExit('Balise style.css introuvable')
-              s=s[:m.end()]+tag+s[m.end():]
-          p.write_text(s,encoding='utf-8')
-          PY
-          grep -q 'assets/css/ciwara-2026-audit.css?v=20260915' index.html
-      - name: Inject visual homepage layout runtime
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('index.html'); s=p.read_text(encoding='utf-8'); tag='<script src="assets/js/ciwara-visual-layout.js?v=20260915" defer></script>'
-          if tag not in s: s=s.replace('</body>',tag+'</body>',1)
-          p.write_text(s,encoding='utf-8')
-          PY
-          grep -q 'assets/js/ciwara-visual-layout.js?v=20260915' index.html
-      - name: Inject universal site builder runtime
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          tag='<script src="assets/js/ciwara-site-builder.js?v=20260915-2" defer></script>'
-          for p in Path('.').rglob('*.html'):
-            if str(p).startswith('admin/') or p.name == 'admin.html': continue
-            s=p.read_text(encoding='utf-8',errors='ignore')
-            if '</body>' in s:
-              s=re.sub(r'<script src="assets/js/ciwara-site-builder\.js\?v=[^"]+" defer></script>','',s)
-              s=s.replace('</body>',tag+'</body>',1)
-              p.write_text(s,encoding='utf-8')
-          p=Path('admin/index.html')
-          if p.exists():
-            s=p.read_text(encoding='utf-8',errors='ignore')
-            tag2='<a href="site-builder.html" style="display:block;margin:10px 14px;padding:11px 12px;border-radius:8px;background:#111827;color:#fff;text-decoration:none;font-weight:900">🛠 Bureau universel · Pages & blocs</a>'
-            if 'site-builder.html' not in s and '</aside>' in s: s=s.replace('</aside>',tag2+'</aside>',1)
-            p.write_text(s,encoding='utf-8')
-          PY
-          grep -R -q 'assets/js/ciwara-site-builder.js?v=20260915-2' index.html
-          grep -q 'site-builder.html' admin/index.html
-      - name: Persist the existing admin session across pages and tabs
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('admin/index.html'); s=p.read_text(encoding='utf-8',errors='ignore')
-          bridge='''<script>(function(){const K='ciwara_admin_token';try{const t=localStorage.getItem(K);if(t)sessionStorage.setItem(K,t);const S=sessionStorage.setItem;sessionStorage.setItem=function(k,v){S.call(this,k,v);if(k===K)localStorage.setItem(K,v)};const R=sessionStorage.removeItem;sessionStorage.removeItem=function(k){R.call(this,k);if(k===K)localStorage.removeItem(K)};}catch(e){}})();</script>'''
-          if bridge not in s: s=s.replace('<script>',bridge+'<script>',1)
-          p.write_text(s,encoding='utf-8')
-          PY
-          grep -q "localStorage.getItem(K)" admin/index.html
-          grep -q "localStorage.setItem(K,v)" admin/index.html
-      - name: Publish and validate the root admin entry point without overwriting it
+
+      - name: Verify admin files
         run: |
           test -s admin.html
           grep -q 'Administration Radio Ciwara' admin.html
           test -s admin/index.html
           grep -q 'Administration Ciwara' admin/index.html
           test -s admin/site-builder.html
-      - name: Guard Caster.fm player markup
+
+      - name: Guard radio player markup
         run: |
-          if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du bloc player.'; else echo 'Aucune chaîne Caster.fm visible; poursuite sans modification du player.'; fi
+          if grep -qiE 'caster\.fm|casterfm' index.html; then echo 'Références Caster.fm détectées: aucune modification du player.'; else echo 'Aucune chaîne Caster.fm visible; poursuite sans modification du player.'; fi
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
