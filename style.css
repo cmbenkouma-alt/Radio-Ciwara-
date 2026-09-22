@@ -75,3 +75,54 @@ body{padding-bottom:0!important}
 @media(max-width:900px){.portal-nav .container{min-height:70px}.portal-links{display:flex!important;justify-content:flex-start;flex:1}.portal-links a{min-width:max-content}.portal-cats{display:none!important}}
 @media(max-width:650px){.portal-nav .container{min-height:68px;gap:8px}.brand-pair{flex:0 0 auto;max-width:205px}.brand-pair .brand{min-width:0}.ciwara-infos-brand{width:88px;min-width:88px;height:40px}.portal-links{gap:2px}.portal-links a{min-height:44px;padding:7px 9px;border-radius:10px;font-size:0}.portal-links a:before{font-size:23px}.portal-links a.active{padding-left:11px;padding-right:11px}.portal-links a.active:after{display:none}}
 @media(prefers-reduced-motion:reduce){.portal-links a,.portal-links a:before{transition:none}}
+
+
+/* CIWARA 2026 — DESIGN MALI PREMIUM */
+:root{--mali-green:#14a800;--mali-yellow:#fcd116;--mali-red:#ce1126;--ci-green:var(--mali-green);--ci-yellow:var(--mali-yellow);--ci-red:var(--mali-red)}
+body{background:#f7f8f7;color:#151719}
+.portal-top{background:#111214;border-bottom:3px solid var(--mali-yellow)}
+.portal-top b{background:var(--mali-red)}
+.portal-nav{border-bottom:1px solid rgba(20,168,0,.18)}
+.portal-nav .container{min-height:82px}
+.portal-links a.active{background:linear-gradient(135deg,var(--mali-green),#087b00);box-shadow:0 6px 18px rgba(20,168,0,.2)}
+.portal-links a.active:before{color:var(--mali-yellow)}
+.portal-links a:hover{background:rgba(20,168,0,.07);color:var(--mali-green)}
+.portal-cats{border-bottom:3px solid var(--mali-yellow)}
+.portal-main,.section{background:transparent}
+.section.light{background:#f0f3f1}
+.section-title{border-bottom-color:rgba(20,168,0,.25)}
+.section-title .eyebrow,.section-label{color:var(--mali-green)}
+.more,.btn-red,.news-source{background:var(--mali-red)}
+.more:hover,.btn-red:hover{background:#b70f20}
+.news-card,.article-card,.schedule,.partner-card,.contact-box,.side-box{border-color:#dfe5e1;box-shadow:0 8px 24px rgba(17,18,20,.055)}
+.news-card:hover,.partner-card:hover{box-shadow:0 14px 34px rgba(17,18,20,.1)}
+.schedule time{color:var(--mali-green)}
+.schedule b{border-left-color:var(--mali-red)}
+.podcast-list article{border-color:#dfe5e1}
+.podcast-list article>span{color:var(--mali-green)}
+.podcast-list small,.podcast-list em{color:var(--mali-red)}
+.podcast-list button{background:var(--mali-red)}
+.ciwara-hero{border-top-color:var(--mali-green)!important;border-bottom-color:var(--mali-red)!important}
+.ciwara-caster-card{border-color:var(--mali-yellow)!important}
+.ciwara-caster-card .player-title{background:linear-gradient(90deg,#111214,var(--mali-green));border-bottom-color:var(--mali-yellow)}
+.ciwara-caster-card .player-title span{color:var(--mali-yellow)}
+.contact-box{border-top-color:var(--mali-red)}
+.contact-box a{color:var(--mali-red)}
+footer{border-top:4px solid var(--mali-green)}
+.footer-bottom{border-top-color:rgba(252,209,22,.35)}
+@media(max-width:760px){
+ .portal-nav .container{min-height:66px}
+ .portal-links{overscroll-behavior-x:contain}
+ .portal-links a{flex:0 0 auto}
+ .section{padding:34px 0}
+ .section-title h2{font-size:22px}
+ .portal-main{padding-top:18px}
+}
+@media(max-width:480px){
+ .portal-nav .container{width:calc(100% - 14px)}
+ .brand-pair{max-width:190px}
+ .ciwara-infos-brand{width:78px;min-width:78px}
+ .portal-links a{padding:7px 8px}
+ .portal-links a:before{font-size:21px}
+ .section-title h2{font-size:20px}
+}
