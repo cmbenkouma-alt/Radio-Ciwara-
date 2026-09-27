@@ -1,6 +1,7 @@
 (()=>{'use strict';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const image=v=>v||'logo.jpg';
+const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
+const image=v=>{const s=clean(v);return s||'logo.jpg';};
 const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
 const key=x=>clean(x.link||'').toLowerCase()||clean(x.title||'').toLowerCase().replace(/[^a-z0-9à-ÿ]+/gi,' ');
 const unique=items=>{const seen=new Set();return (items||[]).filter(x=>{const k=key(x);if(!k||seen.has(k))return false;seen.add(k);return true})};
