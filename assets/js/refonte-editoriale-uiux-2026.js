@@ -1,7 +1,7 @@
 (()=>{'use strict';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
-const image=v=>{const s=clean(v);return s||'assets/ciwara-info-514-cover.jpg';};
+const image=v=>{const s=clean(v);if(!s)return '/assets/ciwara-info-514-cover.jpg';return s.startsWith('/')?s:'/'+s.replace(/^\.\//,'');};
 const key=x=>clean(x.link||'').toLowerCase()||clean(x.title||'').toLowerCase().replace(/[^a-z0-9à-ÿ]+/gi,' ');
 const unique=items=>{const seen=new Set();return (items||[]).filter(x=>{const k=key(x);if(!k||seen.has(k))return false;seen.add(k);return true})};
 async function json(path){const r=await fetch(path+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error(path);return r.json()}
