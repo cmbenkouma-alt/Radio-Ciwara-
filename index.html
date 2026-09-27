@@ -50,13 +50,18 @@ body{background:#fff}
 .side-box .side-title{border-top-color:#0b8f4d}
 .mini-card{border-left-color:#0b8f4d}
 .ciwara-hero{border-top-color:#0b8f4d;border-bottom-color:#d71920}
-</style></head>
+</style>
+<style id="ciwara-horoscope-visibility-fix">.ciwara-horoscope-banner{display:block!important;visibility:visible!important;opacity:1!important;position:relative!important;width:100%!important;min-height:1px!important;z-index:5!important}.ciwara-horoscope-inner{visibility:visible!important;opacity:1!important}</style></head>
 <body>
 <a class="skip-link" href="#contenu">Aller au contenu</a>
 <div class="portal-top"><div class="container"><b>ALERTE INFO</b><span id="breakingItems">Radio Ciwara 105.5 FM — La radio qui vous écoute !</span><button aria-label="Pause" class="ticker-control" id="tickerToggle">Ⅱ</button></div></div>
 <header class="portal-nav"><div class="container nav-row"><div class="brand-pair"><a class="brand" href="index.html"><img alt="Radio Ciwara 105.5 FM" src="logo.jpg"/><span>RADIO<br/><b>CIWARA</b><small>105.5 <i>FM</i></small></span></a><a aria-label="Ciwara Infos — Journal" class="ciwara-infos-brand" href="ciwara-info.html"><img alt="Ciwara Infos — Journal" src="assets/ciwara-infos-logo.jpg"/></a></div><nav class="portal-links" id="mainNav"><a class="active" href="index.html">ACCUEIL</a><a href="#actualites">ACTUALITÉS</a><a href="#direct">DIRECT</a><a href="ciwara-info.html">CIWARA INFOS</a><a href="#programmes">PROGRAMMES</a><a href="#podcasts">PODCASTS</a><a href="ciwara-tv.html">CIWARA TV</a><a href="download-app.html">APPLICATION</a></nav><button aria-label="Menu" class="menu-toggle" id="menuToggle">☰</button></div></header>
 <div class="portal-cats"><div class="container"><a href="#actualites">MALI</a><a href="#actualites">INSÉCURITÉ</a><a href="#actualites">POLITIQUE</a><a href="#actualites">ÉCONOMIE</a><a href="#actualites">SOCIÉTÉ</a><a href="#actualites">CULTURE</a><a href="#actualites">SPORTS</a><a href="#actualites">INTERNATIONAL</a><a href="#programmes">PROGRAMMES</a><a href="#podcasts">AUDIO</a></div></div>
 <section class="portal-ads">
+
+
+<div class="container portal-ad-grid"><a aria-label="Groupe Djigué — espace publicitaire" class="portal-ad portal-ad-djigue" href="#contact"><img alt="Groupe Djigué — publicité Ciwara" src="assets/banner-djigue.png?v=20260904"/></a><a class="portal-ad moov" href="#contact"><div><strong>MOOV AFRICA</strong><small>Espace publicitaire</small></div><b>PUBLICITÉ</b></a><a class="portal-ad local" href="#contact"><div><strong>CIWARA</strong><small>Espace publicitaire</small></div><b>ANNONCEZ</b></a></div>
+
 <style id="ciwara-horoscope-2026">
 .ciwara-horoscope-banner{position:relative;isolation:isolate;overflow:hidden;margin:0;color:#fff;background:#11131d;border-top:3px solid #f4bd45;border-bottom:3px solid #f4bd45;box-shadow:0 10px 24px rgba(0,0,0,.18)}
 .ciwara-horoscope-banner:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(circle at 12% 50%,rgba(103,57,151,.34),transparent 32%),radial-gradient(circle at 88% 30%,rgba(10,143,77,.18),transparent 32%),linear-gradient(110deg,#11131d,#1b1728 55%,#10191d)}
@@ -122,8 +127,6 @@ body{background:#fff}
 {sign:"♒ VERSEAU",intro:"Une idée originale peut enrichir la journée. Échangez avec des personnes ouvertes à de nouvelles approches.",love:"Laissez de la place à la différence et aux conversations inattendues.",work:"Votre créativité est utile si vous expliquez clairement votre proposition."},
 {sign:"♓ POISSONS",intro:"Votre imagination et votre intuition peuvent vous inspirer. Gardez toutefois des repères concrets pour avancer sereinement.",love:"La tendresse passe aussi par une écoute attentive et des mots simples.",work:"Découpez un grand objectif en petites étapes réalisables."}
 ];const now=new Date(),start=new Date(now.getFullYear(),0,0),day=Math.floor((now-start)/86400000),item=data[(day-1)%data.length];const date=new Intl.DateTimeFormat("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(now);const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};put("ciwaraHoroscopeDate",date);put("ciwaraHoroscopeSign",item.sign);put("ciwaraHoroscopeIntro",item.intro);put("ciwaraHoroscopeLove",item.love);put("ciwaraHoroscopeWork",item.work)})();</script>
-
-<div class="container portal-ad-grid"><a aria-label="Groupe Djigué — espace publicitaire" class="portal-ad portal-ad-djigue" href="#contact"><img alt="Groupe Djigué — publicité Ciwara" src="assets/banner-djigue.png?v=20260904"/></a><a class="portal-ad moov" href="#contact"><div><strong>MOOV AFRICA</strong><small>Espace publicitaire</small></div><b>PUBLICITÉ</b></a><a class="portal-ad local" href="#contact"><div><strong>CIWARA</strong><small>Espace publicitaire</small></div><b>ANNONCEZ</b></a></div>
 </section>
 <main id="contenu">
 <section class="hero ciwara-hero" id="direct"><div class="hero-bg"></div><div class="container hero-grid"><div class="hero-copy ciwara-hero-video-col"><p class="kicker">RADIO CIWARA 105.5 FM</p></div><div class="hero-player ciwara-caster-card"><div class="player-title"><b>ÉCOUTER RADIO CIWARA 105.5 FM</b><span>● LIVE</span></div><div class="direct-player caster-main-player"><div data-type="newStreamPlayer" data-publicToken="236f6884-9ad2-465f-a29e-5f349a8dac8e" data-theme="light" data-color="e81e4d" data-channelId="a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47" data-rendered="false" class="cstrEmbed"><a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a></div></div></div></div></section>
