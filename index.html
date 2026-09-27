@@ -219,4 +219,9 @@ body{background:#fff}
 <script src="assets/events-widget.js" defer></script>
 <script src="hero-preserve.js?v=20260912"></script>
 <script src="hero-layout.js?v=20260913"></script>
-<script src="assets/js/lalerte-home.js?v=20260915-10"></script><script src="assets/js/lalerte-home.js?v=20260915-8"></script></body></html>
+<script src="assets/js/lalerte-home.js?v=20260915-10"></script><script src="assets/js/lalerte-home.js?v=20260915-8"></script><script id="ciwara-header-menu">
+(()=>{const b=document.getElementById("menuToggle"),n=document.getElementById("mainNav");if(!b||!n)return;
+b.addEventListener("click",()=>{const open=n.classList.toggle("open");b.setAttribute("aria-expanded",open?"true":"false");b.setAttribute("aria-label",open?"Fermer le menu":"Ouvrir le menu");b.textContent=open?"✕":"☰"});
+n.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{n.classList.remove("open");b.setAttribute("aria-expanded","false");b.setAttribute("aria-label","Ouvrir le menu");b.textContent="☰"}));
+})();
+</script></body></html>
