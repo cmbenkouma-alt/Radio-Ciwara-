@@ -1,8 +1,7 @@
 (()=>{'use strict';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
-const image=v=>{const s=clean(v);return s||'logo.jpg';};
-const clean=v=>String(v||'').replace(/\s+/g,' ').trim();
+const image=v=>{const s=clean(v);return s||'assets/ciwara-info-514-cover.jpg';};
 const key=x=>clean(x.link||'').toLowerCase()||clean(x.title||'').toLowerCase().replace(/[^a-z0-9à-ÿ]+/gi,' ');
 const unique=items=>{const seen=new Set();return (items||[]).filter(x=>{const k=key(x);if(!k||seen.has(k))return false;seen.add(k);return true})};
 async function json(path){const r=await fetch(path+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error(path);return r.json()}
@@ -10,8 +9,8 @@ function itemDate(x){return clean(x.date||x.publishedAt||'')}
 function card(x,small=false){
  const href=esc(x.link||'ciwara-info.html'), title=esc(x.title||'Actualité'), im=esc(image(x.image));
  const source=esc(x.source||x.category||'CIWARA INFOS'), date=esc(itemDate(x));
- if(small)return '<a class="rc-thumb" href="'+href+'"><img src="'+im+'" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'logo.jpg\'"><div class="rc-thumb-copy"><span class="rc-tag">'+source+'</span><h4>'+title+'</h4><small>'+date+'</small></div></a>';
- return '<a class="rc-feature" href="'+href+'"><img src="'+im+'" alt="'+title+'" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'logo.jpg\'"><div class="rc-feature-copy"><span class="rc-tag">'+source+'</span><h3>'+title+'</h3><p>'+esc(x.description||x.excerpt||'')+'</p><div class="rc-feature-meta">'+date+(x.author?' · '+esc(x.author):'')+'</div></div></a>';
+ if(small)return '<a class="rc-thumb" href="'+href+'"><img src="'+im+'" alt="" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'assets/ciwara-info-514-cover.jpg\'"><div class="rc-thumb-copy"><span class="rc-tag">'+source+'</span><h4>'+title+'</h4><small>'+date+'</small></div></a>';
+ return '<a class="rc-feature" href="'+href+'"><img src="'+im+'" alt="'+title+'" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'assets/ciwara-info-514-cover.jpg\'"><div class="rc-feature-copy"><span class="rc-tag">'+source+'</span><h3>'+title+'</h3><p>'+esc(x.description||x.excerpt||'')+'</p><div class="rc-feature-meta">'+date+(x.author?' · '+esc(x.author):'')+'</div></div></a>';
 }
 function makeSlider(kind,title,subtitle,items){
  const section=document.createElement('section');section.className='rc-editorial-section '+kind;
