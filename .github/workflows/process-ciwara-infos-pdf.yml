@@ -17,7 +17,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Extract article images and text
+      - name: Render PDF and extract available images
         shell: bash
         run: |
           python -m pip install --upgrade pip
@@ -25,68 +25,72 @@ jobs:
           mkdir -p assets/ciwara-info/latest
           python <<'PY'
           import fitz, json, os, re, hashlib
+
           pdf='uuy6fa.PDF'
           out='assets/ciwara-info/latest'
           doc=fitz.open(pdf)
           items=[]
-          seen=set()
+
           for pno,page in enumerate(doc,1):
-              blocks=page.get_text('dict').get('blocks',[])
-              texts=[]
-              for b in blocks:
-                  if b.get('type')==0:
-                      txt=' '.join(''.join(s.get('text','') for s in line.get('spans',[])) for line in b.get('lines',[])).strip()
-                      if txt:
-                          x0,y0,x1,y1=b.get('bbox',[0,0,0,0])
-                          texts.append({'text':re.sub(r'\\s+',' ',txt),'bbox':[x0,y0,x1,y1]})
-              images=page.get_images(full=True)
-              page_imgs=[]
-              for idx,img in enumerate(images,1):
-                  xref=img[0]
+              # Always render the full page. This handles scanned/image-only PDFs.
+              pix=page.get_pixmap(matrix=fitz.Matrix(1.5,1.5), alpha=False)
+              page_name=f'page-{pno:02d}.jpg'
+              pix.save(os.path.join(out,page_name))
+
+              text=re.sub(r'\s+',' ',page.get_text() or '').strip()
+              title=''
+              for block in page.get_text('blocks'):
+                  if len(block)>=5 and block[4].strip():
+                      t=re.sub(r'\s+',' ',block[4]).strip()
+                      if len(t)>=25:
+                          title=t[:180]
+                          break
+
+              items.append({
+                  'page':pno,
+                  'image':f'assets/ciwara-info/latest/{page_name}',
+                  'title':title or f'Ciwara Infos — page {pno}'
+              })
+
+              # Also extract true embedded images when present.
+              for idx,img in enumerate(page.get_images(full=True),1):
                   try:
-                      pix=fitz.Pixmap(doc,xref)
-                      if pix.width<120 or pix.height<80:
+                      xref=img[0]
+                      pix2=fitz.Pixmap(doc,xref)
+                      if pix2.width<120 or pix2.height<80:
                           continue
-                      if pix.alpha or pix.n>4:
-                          pix=fitz.Pixmap(fitz.csRGB,pix)
-                      data=pix.tobytes('jpg',quality=88)
+                      if pix2.alpha or pix2.n>4:
+                          pix2=fitz.Pixmap(fitz.csRGB,pix2)
+                      data=pix2.tobytes('jpg',quality=88)
                       name=f'p{pno:02d}-img{idx:02d}-{hashlib.sha1(data).hexdigest()[:8]}.jpg'
-                      path=os.path.join(out,name)
-                      open(path,'wb').write(data)
-                      page_imgs.append((name,pix.width,pix.height))
+                      open(os.path.join(out,name),'wb').write(data)
                   except Exception:
-                      continue
-              for name,w,h in page_imgs:
-                  # Associate each image with the nearest substantial text block on the same page.
-                  title=''
-                  if texts:
-                      candidates=[t for t in texts if len(t['text'])>=20]
-                      if candidates:
-                          title=max(candidates,key=lambda t:(len(t['text'])<=180, -abs(t['bbox'][1]-0))).get('text','')
-                          title=title[:180].strip()
-                  items.append({'page':pno,'image':f'assets/ciwara-info/latest/{name}','width':w,'height':h,'title':title})
-          meta={'pdf':pdf,'pages':len(doc),'items':items}
-          json.dump(meta,open('assets/ciwara-info/latest/manifest.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
-          # Always generate page text for editorial review/fallback.
-          with open('assets/ciwara-info/latest/pages.txt','w',encoding='utf-8') as f:
+                      pass
+
+          json.dump({'pdf':pdf,'pages':len(doc),'items':items},
+                    open(os.path.join(out,'manifest.json'),'w',encoding='utf-8'),
+                    ensure_ascii=False,indent=2)
+
+          with open(os.path.join(out,'pages.txt'),'w',encoding='utf-8') as f:
               for pno,page in enumerate(doc,1):
-                  f.write(f'\\n===== PAGE {pno} =====\\n')
+                  f.write(f'\n===== PAGE {pno} =====\n')
                   f.write(page.get_text() or '')
-          print(f'Processed {len(doc)} pages; extracted {len(items)} images.')
+
+          print(f'Rendered {len(doc)} PDF pages.')
           PY
 
       - name: Build latest Ciwara Infos page
         shell: bash
         run: |
           python <<'PY'
-          import json, html, re, os
+          import json, html
           m=json.load(open('assets/ciwara-info/latest/manifest.json',encoding='utf-8'))
           cards=[]
           for it in m['items']:
-              title=it.get('title') or f'Article — page {it["page"]}'
-              cards.append(f'''<article class="card"><img src="{html.escape(it["image"])}" alt="{html.escape(title)}" loading="lazy"><div class="body"><span class="tag">CIWARA INFOS</span><h2>{html.escape(title)}</h2><p>Illustration extraite du numéro en cours, page {it["page"]}.</p><div class="date">Nouveau numéro · page {it["page"]}</div></div></article>''')
-          body=''.join(cards) or '<p>Aucune image intégrée n’a été détectée dans ce PDF.</p>'
-          page=f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ciwara Infos — nouveau numéro</title><meta name="description" content="Dernier numéro de Ciwara Infos, avec les illustrations extraites automatiquement du PDF."><style>body{{margin:0;background:#f5f6f8;color:#111;font-family:Arial,Helvetica,sans-serif}}.wrap{{max-width:1180px;margin:auto;padding:30px 18px 60px}}.hero{{background:#111;color:#fff;border-top:5px solid #e81e4d;padding:28px;border-radius:14px;margin-bottom:26px}}.hero h1{{margin:0 0 8px;font-size:38px}}.hero p{{margin:0;color:#ddd}}.grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}.card{{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px #00000012}}.card img{{width:100%;height:190px;object-fit:cover;display:block}}.body{{padding:17px}}.tag{{display:inline-block;color:#e81e4d;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:7px}}.card h2{{font-size:20px;line-height:1.2;margin:0 0 10px}}.card p{{color:#555;line-height:1.55;margin:0 0 14px}}.date{{font-size:12px;color:#888;border-top:1px solid #eee;padding-top:10px}}@media(max-width:900px){{.grid{{grid-template-columns:repeat(2,1fr)}}}}@media(max-width:600px){{.grid{{grid-template-columns:1fr}}.hero h1{{font-size:30px}}}}</style></head><body><main class="wrap"><section class="hero"><h1>CIWARA INFOS</h1><p>Dernier numéro · illustrations extraites automatiquement du PDF</p></section><section class="grid">{body}</section></main></body></html>'''
+              title=it.get('title') or f'Ciwara Infos — page {it["page"]}'
+              cards.append(f'''<article class="card"><a href="{html.escape(it["image"])}" target="_blank"><img src="{html.escape(it["image"])}" alt="{html.escape(title)}" loading="lazy"></a><div class="body"><span class="tag">CIWARA INFOS</span><h2>{html.escape(title)}</h2><p>Numéro actuel · page {it["page"]}</p><div class="date">Ciwara Infos · nouveau numéro</div></div></article>''')
+          body=''.join(cards) or '<p>Le nouveau numéro est en cours de traitement.</p>'
+          page=f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ciwara Infos — nouveau numéro</title><meta name="description" content="Nouveau numéro de Ciwara Infos — Radio Ciwara 105.5 FM."><style>body{{margin:0;background:#f5f6f8;color:#111;font-family:Arial,Helvetica,sans-serif}}.wrap{{max-width:1180px;margin:auto;padding:30px 18px 60px}}.hero{{background:#111;color:#fff;border-top:5px solid #e81e4d;padding:28px;border-radius:14px;margin-bottom:26px}}.hero h1{{margin:0 0 8px;font-size:38px}}.hero p{{margin:0;color:#ddd}}.grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}.card{{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px #00000012}}.card img{{width:100%;height:260px;object-fit:contain;background:#eee;display:block}}.card a{{display:block}}.body{{padding:17px}}.tag{{display:inline-block;color:#e81e4d;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:7px}}.card h2{{font-size:18px;line-height:1.2;margin:0 0 10px}}.card p{{color:#555;line-height:1.55;margin:0 0 14px}}.date{{font-size:12px;color:#888;border-top:1px solid #eee;padding-top:10px}}@media(max-width:900px){{.grid{{grid-template-columns:repeat(2,1fr)}}}}@media(max-width:600px){{.grid{{grid-template-columns:1fr}}.hero h1{{font-size:30px}}}}</style></head><body><main class="wrap"><section class="hero"><h1>CIWARA INFOS</h1><p>Nouveau numéro · édition complète</p></section><section class="grid">{body}</section></main></body></html>'''
           open('ciwara-infos-latest.html','w',encoding='utf-8').write(page)
           PY
 
@@ -95,5 +99,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/ciwara-info/latest ciwara-infos-latest.html
-          git diff --cached --quiet || git commit -m "Ciwara Infos: extract images from latest PDF"
+          git diff --cached --quiet || git commit -m "Fix Ciwara Infos: render scanned PDF pages"
           git push
