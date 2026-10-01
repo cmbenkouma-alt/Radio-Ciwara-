@@ -1,20 +1,143 @@
 {
-  "issue": "N° 513",
-  "date": "Vendredi 14 août 2026",
+  "issue": "N° 518",
+  "date": "Vendredi 02 octobre 2026",
   "source": "Ciwara Infos",
-  "cover": "assets/ciwara-info-514-cover.jpg",
+  "cover": "assets/ciwara-info/current/p01-article-01-fd4fee2c55.jpg",
   "items": [
-    {"title":"À Morila, le saccage d’un champ soulève une grave question de justice","subtitle":"Une affaire foncière à Morila soulève des interrogations sur le respect du droit et de l’autorité coutumière.","category":"SOCIÉTÉ","author":"La rédaction","date":"14 août 2026","image":"assets/ciwara-info/morila.jpg","link":"ciwara-info-513.html"},
-    {"title":"La CANAM adopte le Plan stratégique 2026-2030","subtitle":"La 32e session du Conseil d’administration a adopté la nouvelle feuille de route de la CANAM.","category":"SANTÉ","author":"La rédaction","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"EDM-SA : même les dates de signature des marchés sont délestées","subtitle":"Le dossier examine un marché de près de 179 millions de FCFA et les questions soulevées par sa procédure de passation.","category":"ÉNERGIE","author":"Iba Diallo","date":"14 août 2026","image":"assets/ciwara-info/edm-sa.jpg","link":"ciwara-info-513.html"},
-    {"title":"Crise du carburant à Gao : le Gouverneur met en garde les spéculateurs","subtitle":"Le Gouverneur Moussa Moriba Traoré appelle à la vigilance face à la spéculation et à la désinformation.","category":"GOUVERNANCE","author":"Ibrahim Coulibaly","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Dr Abdelaye Kéita : un chercheur à la tête de la Pharmacie Populaire du Mali","subtitle":"Portrait du nouveau PDG de la Pharmacie Populaire du Mali et de son parcours en santé publique et recherche.","category":"SANTÉ","author":"Correspondance particulière","date":"14 août 2026","image":"assets/ciwara-info/abdelaye-keita.jpg","link":"ciwara-info-513.html"},
-    {"title":"L’ASSEP outille la presse face aux défis du secteur","subtitle":"Une journée d’appropriation sur la tarification des télécommunications a réuni professionnels des médias et acteurs du secteur.","category":"MÉDIAS","author":"Issa Santara","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Dr Oumar Cissé : l’âme et le souffle de la jeunesse de Sangarebougou","subtitle":"Un portrait consacré à l’engagement du promoteur de clinique auprès de la jeunesse de Sangarebougou.","category":"PORTRAIT","author":"Wilibali 24","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Nouveau drame de l’orpaillage à Kéniéba","subtitle":"Le journal revient sur le drame de Nétékoto et les questions de suivi de la suspension de l’orpaillage artisanal.","category":"FAITS DIVERS","author":"Wilibali 24","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Gestion de l’OCLEI : des irrégularités financières de plus de 352 millions FCFA","subtitle":"Le dossier présente les constats du Bureau du Vérificateur Général sur la gestion de l’OCLEI.","category":"CONTRÔLE PUBLIC","author":"BVG","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Gestion de l’Hôpital du Mali : des irrégularités financières de plus de 100 millions FCFA","subtitle":"Le journal présente les constats du Bureau du Vérificateur Général concernant l’Hôpital du Mali.","category":"SANTÉ","author":"BVG","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Ras Bath et Rose rejettent les accusations d’association de malfaiteurs","subtitle":"Les deux accusés ont contesté les faits qui leur sont reprochés devant la Chambre criminelle de la Cour d’Appel de Bamako.","category":"JUSTICE","author":"La rédaction","date":"14 août 2026","image":"","link":"ciwara-info-513.html"},
-    {"title":"Moov Africa Malitel : communiqué de presse","subtitle":"Le numéro 513 publie également un communiqué de presse destiné aux clients de l’opérateur.","category":"COMMUNIQUÉ","author":"Moov Africa Malitel","date":"14 août 2026","image":"","link":"ciwara-info-513.html"}
+    {
+      "title": "La presse malienne se retrouve autour du football",
+      "subtitle": "La Coupe ASSEP rassemble les professionnels de la presse autour du football et renforce les liens entre acteurs des médias.",
+      "category": "MÉDIAS / SPORT",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p01-article-01-fd4fee2c55.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Un programme innovant pour le développement de l’hippisme et des sports équestres au Mali",
+      "subtitle": "Sékou Djigué présente une vision structurée pour la formation, les infrastructures, les compétitions et le bien-être des chevaux.",
+      "category": "SPORT",
+      "author": "Issa Santara",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Le ministre Abdoulaye Diop acte le grand basculement et accuse l’Ukraine",
+      "subtitle": "À la 81e Assemblée générale de l’ONU, le chef de la diplomatie malienne défend un multilatéralisme réformé et la diversification des partenariats.",
+      "category": "INTERNATIONAL",
+      "author": "Issa Santara",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Rapport 2025 du Médiateur de la République : au cœur de la discorde",
+      "subtitle": "La remise du rapport annuel 2025 ouvre un débat sur la lenteur administrative, l’exécution des décisions et le traitement des requêtes des citoyens.",
+      "category": "SOCIÉTÉ",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p02-article-01-1d877dc288.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Renforcement de la souveraineté industrielle : la création de l’École des Mines et du Pétrole",
+      "subtitle": "Le Conseil des ministres adopte le cadre juridique d’un nouvel établissement destiné à renforcer les compétences nationales dans les secteurs minier et pétrolier.",
+      "category": "NATION",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p02-article-02-1d877dc288.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Rentrée scolaire dans les écoles catholiques : les familles des enseignants licenciés interpellent les autorités",
+      "subtitle": "À l’approche de la rentrée du 1er octobre, le Collectif demande un dialogue et des mesures d’insertion ou de reclassement pour les enseignants licenciés.",
+      "category": "SOCIÉTÉ",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p03-article-01-1314555af5.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Assistance aux veuves et orphelins des agents des Eaux et Forêts",
+      "subtitle": "Une action de solidarité a réuni responsables publics, services des Eaux et Forêts et familles bénéficiaires autour d’un appui aux veuves et orphelins.",
+      "category": "SOCIÉTÉ",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "81e Assemblée générale de l’ONU : le ministre Abdoulaye Diop acte le grand basculement et accuse l’Ukraine",
+      "subtitle": "Le Mali dénonce l’ingérence, le terrorisme téléguidé et la sélectivité du système multilatéral, tout en réaffirmant sa ligne diplomatique.",
+      "category": "ACTUALITÉS",
+      "author": "Issa Santara",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p04-article-01-40332c9f42.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Transition administrative et développement rural",
+      "subtitle": "Le Conseil des ministres réajuste le transfert de compétences aux collectivités territoriales dans l’agriculture, l’aménagement et les équipements ruraux.",
+      "category": "NATION",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p04-article-02-32891e9d2b.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Éthique journalistique et respect des données personnelles : 120 journalistes sensibilisés sur les exigences de la loi",
+      "subtitle": "L’APDP et l’ASSEP ont réuni des responsables de médias pour renforcer les pratiques professionnelles et la protection des données personnelles.",
+      "category": "MÉDIAS",
+      "author": "Siriki Koné",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p05-article-01-ca56f5bef0.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Ambassade du Mali au Caire : le BVG relève un manquement de plus de 625 millions de FCFA",
+      "subtitle": "Le Bureau du Vérificateur Général relève des irrégularités financières et formule des recommandations de gestion et de tenue des documents comptables.",
+      "category": "CONTRÔLE PUBLIC",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Hommage à un serviteur de la patrie et un frère de cœur : le Général Sirakoro Sangaré s’en est allé",
+      "subtitle": "La rédaction rend hommage au Général de brigade à la retraite Sirakoro Sangaré, figure militaire et acteur engagé de la prévention des conflits.",
+      "category": "HOMMAGE",
+      "author": "Wilibali 24",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Ressources minérales : le Mali se dote d’une Agence de recherche et de développement",
+      "subtitle": "Le Conseil des ministres poursuit les réformes institutionnelles destinées à mieux organiser la recherche et le développement dans le secteur des ressources minérales.",
+      "category": "ÉCONOMIE",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Sékou Djigué candidat à la présidence de la FMHSE : un programme innovant pour l’hippisme et les sports équestres",
+      "subtitle": "Sa candidature met l’accent sur la formation, les infrastructures, les compétitions, l’appui aux éleveurs et le bien-être animal.",
+      "category": "SPORT",
+      "author": "Issa Santara",
+      "date": "02 octobre 2026",
+      "image": "assets/ciwara-info/current/p07-article-01-6b739cbce8.jpg",
+      "link": "ciwara-info.html"
+    },
+    {
+      "title": "Oumar Baba Traoré, enfin candidat à sa propre succession",
+      "subtitle": "À l’approche du congrès électif de l’AJSM, Oumar Baba Traoré présente la continuité de son projet de modernisation et de rayonnement de la presse sportive.",
+      "category": "SPORT / MÉDIAS",
+      "author": "Ciwara Infos",
+      "date": "02 octobre 2026",
+      "image": "",
+      "link": "ciwara-info.html"
+    }
   ]
 }
