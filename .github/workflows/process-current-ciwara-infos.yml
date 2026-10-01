@@ -1,0 +1,185 @@
+name: Process current Ciwara Infos
+
+on:
+  push:
+    paths:
+      - 'uuy6fa.PDF'
+      - '.github/workflows/process-current-ciwara-infos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PDF/OCR tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-fra
+          python -m pip install --upgrade pip
+          pip install pymupdf opencv-python-headless numpy pytesseract
+
+      - name: Analyse PDF and extract article photos
+        shell: python
+        run: |
+          from pathlib import Path
+          import fitz, cv2, numpy as np, pytesseract, json, re, hashlib
+
+          pdf=Path("uuy6fa.PDF")
+          out=Path("assets/ciwara-info/current")
+          out.mkdir(parents=True, exist_ok=True)
+          doc=fitz.open(pdf)
+
+          def clean(s):
+              return re.sub(r"\s+"," ",s or "").strip()
+
+          def heading_score(text, conf):
+              t=clean(text)
+              if len(t)<12 or len(t)>140: return -1
+              letters=[c for c in t if c.isalpha()]
+              upper=sum(c.isupper() for c in letters)
+              words=t.split()
+              score=0
+              if letters and upper/max(1,len(letters))>.62: score+=4
+              if len(words)>=4: score+=1
+              if conf>=55: score+=2
+              if t.endswith((".",":",";")): score-=1
+              return score
+
+          pages=[]
+          all_articles=[]
+          for pno,page in enumerate(doc,1):
+              pix=page.get_pixmap(matrix=fitz.Matrix(2.0,2.0),alpha=False)
+              img=np.frombuffer(pix.samples,np.uint8).reshape(pix.height,pix.width,3)
+              gray=cv2.cvtColor(img,cv2.COLOR_RGB2GRAY)
+
+              data=pytesseract.image_to_data(img,lang="fra",config="--psm 3",output_type=pytesseract.Output.DICT)
+              lines={}
+              for i,txt in enumerate(data["text"]):
+                  txt=clean(txt)
+                  if not txt: continue
+                  key=(data["block_num"][i],data["par_num"][i],data["line_num"][i])
+                  lines.setdefault(key,{"words":[],"conf":[],"x":[],"y":[],"w":[],"h":[]})
+                  lines[key]["words"].append(txt)
+                  try: lines[key]["conf"].append(float(data["conf"][i]))
+                  except: pass
+                  lines[key]["x"].append(data["left"][i]); lines[key]["y"].append(data["top"][i])
+                  lines[key]["w"].append(data["width"][i]); lines[key]["h"].append(data["height"][i])
+
+              heads=[]
+              for v in lines.values():
+                  text=clean(" ".join(v["words"]))
+                  conf=np.mean(v["conf"]) if v["conf"] else 0
+                  sc=heading_score(text,conf)
+                  if sc>=5:
+                      heads.append({"text":text,"x":min(v["x"]),"y":min(v["y"]),"w":max(v["x"])+max(v["w"])-min(v["x"]),"h":max(v["y"])+max(v["h"])-min(v["y"]),"score":sc})
+
+              # Detect likely photographic rectangles in the rendered page.
+              edges=cv2.Canny(gray,60,160)
+              contours,_=cv2.findContours(edges,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+              cands=[]
+              H,W=gray.shape
+              for c in contours:
+                  x,y,w,h=cv2.boundingRect(c)
+                  area=w*h
+                  if area < W*H*0.025 or w<220 or h<120: continue
+                  ar=w/h
+                  if ar<0.45 or ar>2.8: continue
+                  roi=img[y:y+h,x:x+w]
+                  hsv=cv2.cvtColor(roi,cv2.COLOR_RGB2HSV)
+                  sat=float(np.mean(hsv[:,:,1]))
+                  ed=float(np.mean(cv2.Canny(cv2.cvtColor(roi,cv2.COLOR_RGB2GRAY),80,180)>0))
+                  # Photos tend to have texture/colour but less perfectly repeated text edges.
+                  score=(area/(W*H))*5 + min(sat/80,2) + min(max(0.30-ed,0)*3,1.5)
+                  cands.append((score,x,y,w,h,sat,ed))
+
+              cands=sorted(cands,reverse=True)
+              chosen=[]
+              for cand in cands:
+                  _,x,y,w,h,sat,ed=cand
+                  overlap=False
+                  for q in chosen:
+                      _,qx,qy,qw,qh,*_=q
+                      ix=max(0,min(x+w,qx+qw)-max(x,qx))
+                      iy=max(0,min(y+h,qy+qh)-max(y,qy))
+                      inter=ix*iy
+                      if inter/max(1,min(w*h,qw*qh))>.55:
+                          overlap=True; break
+                  if not overlap:
+                      chosen.append(cand)
+                  if len(chosen)>=8: break
+
+              page_articles=[]
+              for hi,head in enumerate(heads[:12],1):
+                  # nearest photo by vertical distance, with a mild column penalty
+                  best=None
+                  for ci,c in enumerate(chosen):
+                      _,x,y,w,h,sat,ed=c
+                      dx=abs((x+w/2)-(head["x"]+head["w"]/2))/W
+                      dy=abs((y+h/2)-(head["y"]+head["h"]/2))/H
+                      s=dy+dx*.35
+                      if y>head["y"] and s<1.0 and (best is None or s<best[0]):
+                          best=(s,ci,c)
+                  photo=None
+                  if best:
+                      _,ci,c=best
+                      _,x,y,w,h,*_=c
+                      pad=8
+                      crop=img[max(0,y-pad):min(H,y+h+pad),max(0,x-pad):min(W,x+w+pad)]
+                      digest=hashlib.sha1(crop.tobytes()).hexdigest()[:10]
+                      name=f"p{pno:02d}-article-{hi:02d}-{digest}.jpg"
+                      cv2.imwrite(str(out/name),cv2.cvtColor(crop,cv2.COLOR_RGB2BGR),[int(cv2.IMWRITE_JPEG_QUALITY),90])
+                      photo={"src":f"assets/ciwara-info/current/{name}","x":x,"y":y,"w":w,"h":h}
+                  article={"page":pno,"title":head["text"],"heading":head,"photo":photo}
+                  page_articles.append(article)
+                  all_articles.append(article)
+
+              pages.append({
+                  "page":pno,
+                  "ocr":clean(pytesseract.image_to_string(img,lang="fra",config="--psm 3")),
+                  "headings":heads[:20],
+                  "photo_candidates":[{"x":c[1],"y":c[2],"w":c[3],"h":c[4],"score":c[0],"saturation":c[5],"edge_density":c[6]} for c in chosen],
+                  "articles":page_articles
+              })
+
+          # Keep only distinct article titles and write machine-readable analysis.
+          seen=set(); unique=[]
+          for a in all_articles:
+              k=re.sub(r"[^a-z0-9]+","",a["title"].lower())
+              if len(k)>8 and k not in seen:
+                  seen.add(k); unique.append(a)
+
+          meta={"pdf":"uuy6fa.PDF","pages":len(doc),"articles":unique,"pages_analysis":pages}
+          (out/"analysis.json").write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding="utf-8")
+          print("pages:",len(doc),"articles:",len(unique))
+
+      - name: Build Ciwara Infos article page
+        shell: python
+        run: |
+          from pathlib import Path
+          import json,html,re
+          d=json.loads(Path("assets/ciwara-info/current/analysis.json").read_text(encoding="utf-8"))
+          issue="Nouveau numéro"
+          texts=" ".join(x.get("ocr","") for x in d["pages_analysis"])
+          m=re.search(r"Parution\s+N[°º]\s*(\d+).*?(\d{1,2}\s+[A-Za-zÀ-ÿ]+\s+202\d)",texts,re.I|re.S)
+          if m: issue=f"n°{m.group(1)} · {m.group(2)}"
+          cards=[]
+          for a in d["articles"]:
+              title=a["title"].strip()
+              if len(title)<12: continue
+              src=a.get("photo",{}).get("src") if a.get("photo") else None
+              media=f'<img src="{html.escape(src)}" alt="{html.escape(title)}" loading="lazy">' if src else '<div class="placeholder">CIWARA<br>INFOS</div>'
+              cards.append(f'<article class="card">{media}<div class="body"><span class="tag">CIWARA INFOS</span><h2>{html.escape(title)}</h2><p>Article du nouveau numéro de Ciwara Infos.</p><div class="date">{html.escape(issue)}</div></div></article>')
+          page=f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ciwara Infos {html.escape(issue)} — Radio Ciwara 105.5 FM</title><meta name="description" content="Ciwara Infos {html.escape(issue)} — actualités du Mali."><link rel="canonical" href="https://ciwara-medias.ml/ciwara-infos-current.html"><style>body{{margin:0;background:#f5f6f8;color:#111;font-family:Arial,Helvetica,sans-serif}}.wrap{{max-width:1180px;margin:auto;padding:30px 18px 60px}}.hero{{background:#111;color:#fff;border-top:5px solid #e81e4d;padding:28px;border-radius:14px;margin-bottom:26px}}.hero h1{{margin:0 0 8px;font-size:38px}}.hero p{{margin:0;color:#ddd}}.grid{{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}.card{{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px #00000012}}.card img,.placeholder{{width:100%;height:190px;object-fit:cover;display:block}}.placeholder{{display:grid;place-items:center;background:linear-gradient(135deg,#161616,#e81e4d);color:#fff;font-weight:800;font-size:24px;text-align:center}}.body{{padding:17px}}.tag{{display:inline-block;color:#e81e4d;font-size:12px;font-weight:800;letter-spacing:.5px;margin-bottom:7px}}.card h2{{font-size:20px;line-height:1.2;margin:0 0 10px}}.card p{{color:#555;line-height:1.55;margin:0 0 14px}}.date{{font-size:12px;color:#888;border-top:1px solid #eee;padding-top:10px}}@media(max-width:900px){{.grid{{grid-template-columns:repeat(2,1fr)}}}}@media(max-width:600px){{.grid{{grid-template-columns:1fr}}.hero h1{{font-size:30px}}}}</style></head><body><main class="wrap"><section class="hero"><h1>CIWARA INFO</h1><p>Édition {html.escape(issue)} · Articles de la rédaction Ciwara Infos.</p></section><section class="grid">{''.join(cards)}</section></main></body></html>'''
+          Path("ciwara-infos-current.html").write_text(page,encoding="utf-8")
+
+      - name: Publish generated journal assets
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/ciwara-info/current ciwara-infos-current.html
+          git diff --cached --quiet || (git commit -m "Process current Ciwara Infos into article cards" && git push)
