@@ -30,8 +30,8 @@ footer{padding:30px 0;border-top:1px solid var(--line);color:#8e97a6;font-size:1
 <main>
 <section class="hero" id="direct"><div class="wrap hero-grid"><div><div class="eyebrow"><i class="live-dot"></i> La radio en direct · Bamako, Mali</div><h1>La voix du Mali.<br><em>En direct.</em></h1><p class="intro">Information, culture, musique et vie de nos communautés. Retrouvez Radio Ciwara 105.5 FM, votre radio, partout où vous êtes.</p><div class="hero-actions"><a class="btn" href="#lecteur">▶ ÉCOUTER EN DIRECT</a><a class="btn alt" href="#emissions">DÉCOUVRIR LES ÉMISSIONS ↓</a></div><div class="frequency"><b>105.5 FM</b><span></span>Votre voix, votre radio</div></div>
 <div class="player-card" id="lecteur"><div class="player-top"><b>RADIO CIWARA · PLAYER LIVE</b><span class="live-pill"><i class="live-dot"></i> EN DIRECT</span></div><div class="caster"><div data-type="streamPlayer" data-publicToken="236f6884-9ad2-465f-a29e-5f349a8dac8e" data-theme="light" data-color="e81e4d" data-channelId="a27e1e52-bcc3-4ee8-9b8d-8bce0f345b47" data-rendered="false" class="cstrEmbed"><a href="https://www.caster.fm">Écouter Radio Ciwara</a></div></div><div class="wave" aria-hidden="true"><i style="--h:12px"></i><i style="--h:24px"></i><i style="--h:17px"></i><i style="--h:35px"></i><i style="--h:20px"></i><i style="--h:42px"></i><i style="--h:26px"></i><i style="--h:15px"></i><i style="--h:33px"></i><i style="--h:22px"></i><i style="--h:39px"></i><i style="--h:13px"></i><i style="--h:29px"></i><i style="--h:18px"></i><i style="--h:37px"></i><i style="--h:23px"></i><i style="--h:12px"></i><i style="--h:31px"></i><i style="--h:19px"></i></div><div class="player-bottom"><span><strong>Radio Ciwara 105.5 FM</strong><br>Bamako · Mali</span><span>Votre voix,<br>votre radio</span></div></div></div></section>
-<div class="ticker"><div class="wrap ticker-inner"><span class="ticker-label">À L’ANTENNE</span><div class="ticker-text">Actualités · Débats · Culture · Sport · Musique · Société · Sensibilisation</div></div></div>
-<section class="section"><div class="wrap"><div class="section-head"><div><div class="kicker">Le rendez-vous des voix</div><h2>À découvrir sur Ciwara</h2></div><p>Un aperçu des émissions qui rythment l’antenne. Sélectionnez une émission pour consulter sa fiche et ses horaires.</p></div>
+<div class="ticker" id="ticker"><div class="wrap ticker-inner"><span class="ticker-label">À L’ANTENNE</span><div class="ticker-text">Actualités · Débats · Culture · Sport · Musique · Société · Sensibilisation</div></div></div>
+<section class="section" id="featured"><div class="wrap"><div class="section-head"><div><div class="kicker">Le rendez-vous des voix</div><h2>À découvrir sur Ciwara</h2></div><p>Un aperçu des émissions qui rythment l’antenne. Sélectionnez une émission pour consulter sa fiche et ses horaires.</p></div>
 <div class="slider" aria-label="Émissions à la une">
 <article class="slide active" data-show="tour-horizon"><div class="slide-copy"><span class="tag">INFORMATION · RENDEZ-VOUS MATINAL</span><h3>Tour d’Horizon</h3><p>Commencez la journée avec les nouvelles, les grands sujets d’actualité et les informations qui comptent.</p><a class="btn" href="emission.html?id=tour-horizon">DÉCOUVRIR L’ÉMISSION ↗</a></div><div class="slide-art"><img src="logo.jpg" alt="Radio Ciwara" onerror="this.style.display='none'"></div></article>
 <article class="slide" data-show="ciwara-matin"><div class="slide-copy"><span class="tag">MATINALE · PROXIMITÉ</span><h3>Ciwara Matin</h3><p>Votre rendez-vous du matin : échanges, informations pratiques et sujets proches de la vie quotidienne.</p><a class="btn" href="emission.html?id=ciwara-matin">DÉCOUVRIR L’ÉMISSION ↗</a></div><div class="slide-art"><img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=700&q=80" alt="Illustration provisoire de studio radio"></div></article>
@@ -41,7 +41,7 @@ footer{padding:30px 0;border-top:1px solid var(--line);color:#8e97a6;font-size:1
 <div class="slider-controls"><button type="button" id="prev" aria-label="Émission précédente">‹</button><button type="button" id="next" aria-label="Émission suivante">›</button></div></div><div class="dots" id="dots" aria-label="Choisir une émission"></div></div></section>
 <section class="section" id="emissions" style="background:linear-gradient(180deg,#0b0d12,#0e121a);border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div class="wrap"><div class="section-head"><div><div class="kicker">Les voix de l’antenne</div><h2>Nos émissions</h2></div><p>Chaque pastille ouvre la fiche de l’émission avec son descriptif et ses repères de programmation.</p></div><div class="grid" id="show-grid"></div></div></section>
 <section class="section" id="grille"><div class="wrap"><div class="section-head"><div><div class="kicker">Grille officielle 2026</div><h2>Les rendez-vous à l’antenne</h2></div><p>Les émissions et créneaux sont repris du programme officiel 2026. La pastille « en cours » suit l’heure locale du Mali ; les horaires sont affichés par jour.</p></div><div class="schedule" id="live-schedule"></div><div style="margin-top:22px"><a class="btn alt" href="programmes.html">CONSULTER LA GRILLE COMPLÈTE ↗</a></div></div></section>
-<section class="section" style="padding-top:0"><div class="wrap cta"><div><h2>Une émission, une voix, une histoire.</h2><p>Retrouvez la programmation de Radio Ciwara 105.5 FM et restez à l’écoute de votre radio.</p></div><a class="btn" href="#direct">▶ RETOUR AU DIRECT</a></div></section>
+<section class="section" id="cta" style="padding-top:0"><div class="wrap cta"><div><h2>Une émission, une voix, une histoire.</h2><p>Retrouvez la programmation de Radio Ciwara 105.5 FM et restez à l’écoute de votre radio.</p></div><a class="btn" href="#direct">▶ RETOUR AU DIRECT</a></div></section>
 </main>
 <footer><div class="wrap foot"><div><strong>RADIO CIWARA 105.5 FM</strong><br>Votre voix, votre radio · Bamako, Mali</div><div><a href="index.html">Ciwara Infos</a> · <a href="programmes.html">Grille officielle</a> · <a href="#direct">Écouter en direct</a></div></div></footer>
 <script src="https://cdn.cloud.caster.fm/widgets/embed.js"></script>
@@ -96,4 +96,74 @@ schedule.forEach(item=>{const times=mins(item.time);const isCurrent=times.length
 if(!currentFound){const div=document.createElement("div");div.className="slot";div.innerHTML='<time>MAINTENANT</time><div><b>Musique / antenne en continu</b><small>Le créneau exact en cours dépend de la grille du jour. Ouvrez la grille officielle pour le détail par jour.</small></div>';scheduleEl.prepend(div)}
 })();
 </script>
+
+<script>
+(function(){
+'use strict';
+var key='ciwaraRadioAdminConfigV1';
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function text(el,value){if(el&&value!=null)el.textContent=value}
+function parseTime(s){var m=String(s||'').match(/(\d{2})h(\d{2})\s*[–-]\s*(\d{2})h(\d{2})/);if(!m)return null;return [Number(m[1])*60+Number(m[2]),Number(m[3])*60+Number(m[4])]}
+function nowMali(){var p=new Intl.DateTimeFormat('fr-FR',{timeZone:'Africa/Bamako',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());return Number(p.find(function(x){return x.type==='hour'}).value)*60+Number(p.find(function(x){return x.type==='minute'}).value)}
+function initials(s){return String(s||'RC').split(/\s+/).filter(Boolean).slice(0,2).map(function(x){return x[0]}).join('').toUpperCase()}
+function render(cfg){
+if(!cfg||cfg.version!==1)return;
+var root=document.documentElement,co=cfg.colors||{};
+if(co.red)root.style.setProperty('--red',co.red);if(co.gold)root.style.setProperty('--gold',co.gold);if(co.green)root.style.setProperty('--green',co.green);if(co.background)root.style.setProperty('--ink',co.background);if(co.panel)root.style.setProperty('--panel',co.panel);
+var identity=cfg.identity||{};
+var brand=document.querySelector('.brand strong');text(brand,identity.name);
+var brandSmall=document.querySelector('.brand small');if(brandSmall)brandSmall.textContent=(identity.frequency||'105.5 FM')+' · '+(identity.slogan||'Votre voix, votre radio').toUpperCase();
+var foot=document.querySelector('footer .foot strong');text(foot,(identity.name||'RADIO CIWARA')+' '+(identity.frequency||'105.5 FM'));
+var nodes={hero:document.querySelector('.hero'),ticker:document.querySelector('#ticker'),featured:document.querySelector('#featured'),emissions:document.querySelector('#emissions'),schedule:document.querySelector('#grille'),cta:document.querySelector('#cta')};
+var main=document.querySelector('main');
+(cfg.sections||[]).forEach(function(s){
+var el=nodes[s.id];
+if(!el&&s.type==='custom')return;
+if(!el)return;
+el.style.display=s.visible===false?'none':'';
+if(s.id==='ticker'){text(el.querySelector('.ticker-text'),s.description)}
+if(s.id==='featured'||s.id==='emissions'||s.id==='schedule'){
+text(el.querySelector('h2'),s.title);
+var p=el.querySelector('.section-head p');text(p,s.description);
+}
+if(s.id==='cta'){text(el.querySelector('h2'),s.title);text(el.querySelector('p'),s.description)}
+if(s.id==='hero'){text(el.querySelector('.intro'),s.description)}
+});
+if(main&&Array.isArray(cfg.sections)){
+cfg.sections.forEach(function(s){if(nodes[s.id]&&nodes[s.id].parentNode===main)main.appendChild(nodes[s.id])});
+}
+(cfg.customBlocks||[]).forEach(function(s){
+var id='custom-'+String(s.id||'bloc').replace(/[^a-z0-9_-]/gi,'');
+var old=document.getElementById(id);if(old)old.remove();
+var section=document.createElement('section');section.id=id;section.className='section custom-admin-block';section.style.display=s.visible===false?'none':'';
+var wrap=document.createElement('div');wrap.className='wrap';
+var head=document.createElement('div');head.className='section-head';
+var col=document.createElement('div');var kicker=document.createElement('div');kicker.className='kicker';kicker.textContent='RADIO CIWARA';var h=document.createElement('h2');h.textContent=s.title||'Bloc personnalisé';col.appendChild(kicker);col.appendChild(h);head.appendChild(col);wrap.appendChild(head);
+var p=document.createElement('p');p.style.cssText='color:#c3c9d4;line-height:1.8;white-space:pre-wrap;max-width:900px';p.textContent=s.content||s.description||'';wrap.appendChild(p);section.appendChild(wrap);
+var cta=nodes.cta;if(cta&&cta.parentNode===main)main.insertBefore(section,cta);else main.appendChild(section);
+});
+if(Array.isArray(cfg.shows)){
+var grid=document.getElementById('show-grid');
+if(grid){grid.innerHTML='';cfg.shows.filter(function(s){return s.visible!==false}).forEach(function(s){
+var a=document.createElement('a');a.className='show-card';a.href=s.href||('emission.html?id='+encodeURIComponent(s.id||''));var img=document.createElement('img');img.className='show-photo';img.loading='lazy';img.src=s.image||'';img.alt='Illustration : '+(s.title||'émission');img.onerror=function(){this.style.opacity='.15'};var icon=document.createElement('div');icon.className='show-icon';icon.textContent=initials(s.title);var h=document.createElement('h3');h.textContent=s.title||'Émission';var p=document.createElement('p');p.textContent=s.description||'';var meta=document.createElement('div');meta.className='show-meta';var t=document.createElement('span');t.textContent=s.time||'Selon la grille';var link=document.createElement('span');link.textContent='FICHE ↗';meta.appendChild(t);meta.appendChild(link);a.appendChild(img);a.appendChild(icon);a.appendChild(h);a.appendChild(p);a.appendChild(meta);grid.appendChild(a);
+})}
+}
+if(Array.isArray(cfg.schedule)){
+var list=document.getElementById('live-schedule');
+if(list){list.innerHTML='';var now=nowMali(),found=false;
+cfg.schedule.forEach(function(s){var range=parseTime(s.time),current=!!(range&&range[0]<=range[1]&&now>=range[0]&&now<range[1]);if(current)found=true;var a=document.createElement('a');a.className='slot';a.href='emission.html?id='+encodeURIComponent(s.id||'');var time=document.createElement('time');time.textContent=s.time||'';var body=document.createElement('div');var b=document.createElement('b');b.textContent=(s.title||'Programme')+(current?'  ● EN COURS':'');if(current)b.style.color='#ff5073';var small=document.createElement('small');small.textContent=(s.days||'')+' · '+(s.description||'');body.appendChild(b);body.appendChild(small);a.appendChild(time);a.appendChild(body);list.appendChild(a)});
+if(!found){var fallback=document.createElement('div');fallback.className='slot';fallback.innerHTML='<time>MAINTENANT</time><div><b>Musique / antenne en continu</b><small>Le créneau exact en cours dépend de la grille du jour.</small></div>';list.prepend(fallback)}
+}
+}
+}
+async function start(){
+var cfg=null;
+try{if(new URLSearchParams(location.search).get('preview')==='admin'){var local=localStorage.getItem(key);if(local)cfg=JSON.parse(local)}}catch(e){}
+if(!cfg){try{var r=await fetch('data/radio-page-config.json',{cache:'no-store'});if(r.ok)cfg=await r.json()}catch(e){}}
+if(cfg)render(cfg);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
+})();
+</script>
+
 </body></html>
