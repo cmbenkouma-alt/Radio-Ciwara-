@@ -161,7 +161,7 @@ $('#save-settings').onclick=function(){persist()};
 $('#import-file').onchange=function(){if(this.files&&this.files[0])importConfig(this.files[0]);this.value=''};
 $('#reset-btn').onclick=function(){if(confirm('Effacer la configuration locale et revenir aux valeurs de départ ?')){localStorage.removeItem(STORAGE);config=clone(defaults);dirty=false;renderDashboard();renderLayout();renderShows();renderSlots();renderSettings();$('#save-state').textContent='Configuration de départ';toast('Configuration locale réinitialisée.')}};
 window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue='';}});
-loadSaved();$('#show-form-panel').style.display='none';$('#slot-form-panel').style.display='none';renderDashboard();renderLayout();renderShows();renderSlots();renderSettings();
+var hasLocalConfig=!!localStorage.getItem(STORAGE);loadSaved();$('#show-form-panel').style.display='none';$('#slot-form-panel').style.display='none';renderDashboard();renderLayout();renderShows();renderSlots();renderSettings();if(!hasLocalConfig){fetch('data/radio-page-config.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('Configuration distante indisponible');return r.json()}).then(function(data){if(data&&data.version===1&&!localStorage.getItem(STORAGE)){config=mergeDefaults(data);renderDashboard();renderLayout();renderShows();renderSlots();renderSettings();$('#save-state').textContent='Configuration actuelle du site chargée';$('#stat-save').textContent='Site';}}).catch(function(){console.warn('La configuration du site n’a pas pu être chargée ; vérifiez avant de publier.')})}
 })();
 </script>
 </body>
