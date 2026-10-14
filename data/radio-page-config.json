@@ -1,0 +1,319 @@
+{
+  "version": 1,
+  "updatedAt": null,
+  "identity": {
+    "name": "RADIO CIWARA",
+    "frequency": "105.5 FM",
+    "slogan": "Votre voix, votre radio",
+    "city": "Bamako, Mali"
+  },
+  "colors": {
+    "red": "#e81e4d",
+    "gold": "#f7d51b",
+    "green": "#0b8f4d",
+    "background": "#090b10",
+    "panel": "#11151d"
+  },
+  "sections": [
+    {
+      "id": "hero",
+      "type": "standard",
+      "title": "La voix du Mali. En direct.",
+      "description": "Information, culture, musique et vie de nos communautés. Retrouvez Radio Ciwara 105.5 FM, votre radio, partout où vous êtes.",
+      "visible": true
+    },
+    {
+      "id": "ticker",
+      "type": "standard",
+      "title": "À L’ANTENNE",
+      "description": "Actualités · Débats · Culture · Sport · Musique · Société · Sensibilisation",
+      "visible": true
+    },
+    {
+      "id": "featured",
+      "type": "standard",
+      "title": "À découvrir sur Ciwara",
+      "description": "Un aperçu des émissions qui rythment l’antenne. Sélectionnez une émission pour consulter sa fiche et ses horaires.",
+      "visible": true
+    },
+    {
+      "id": "emissions",
+      "type": "standard",
+      "title": "Nos émissions",
+      "description": "Chaque pastille ouvre la fiche de l’émission avec son descriptif et ses repères de programmation.",
+      "visible": true
+    },
+    {
+      "id": "schedule",
+      "type": "standard",
+      "title": "Les rendez-vous à l’antenne",
+      "description": "Les émissions et créneaux sont repris du programme officiel 2026. La pastille « en cours » suit l’heure locale du Mali ; les horaires sont affichés par jour.",
+      "visible": true
+    },
+    {
+      "id": "cta",
+      "type": "standard",
+      "title": "Une émission, une voix, une histoire.",
+      "description": "Retrouvez la programmation de Radio Ciwara 105.5 FM et restez à l’écoute de votre radio.",
+      "visible": true
+    }
+  ],
+  "customBlocks": [],
+  "shows": [
+    {
+      "id": "tour-horizon",
+      "title": "Tour d’Horizon",
+      "category": "INFORMATION",
+      "description": "Le rendez-vous d’information du matin.",
+      "time": "07h00–08h00",
+      "image": "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=tour-horizon",
+      "visible": true
+    },
+    {
+      "id": "ciwara-matin",
+      "title": "Ciwara Matin",
+      "category": "MATINALE",
+      "description": "Actualité, échanges et vie quotidienne.",
+      "time": "08h00–09h00",
+      "image": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=ciwara-matin",
+      "visible": true
+    },
+    {
+      "id": "gaffe",
+      "title": "Gaffé — Revue de presse",
+      "category": "PRESSE",
+      "description": "Lecture et commentaire des articles de presse.",
+      "time": "10h00–11h30",
+      "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=gaffe",
+      "visible": true
+    },
+    {
+      "id": "baroni-sensibilisation",
+      "title": "Baroni Sensibilisation",
+      "category": "SOCIÉTÉ",
+      "description": "Des échanges autour des enjeux de société.",
+      "time": "11h30–13h00",
+      "image": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=baroni-sensibilisation",
+      "visible": true
+    },
+    {
+      "id": "mon-environnement",
+      "title": "Mon Environnement",
+      "category": "ENVIRONNEMENT",
+      "description": "Écocitoyenneté et initiatives locales.",
+      "time": "Samedi · 15h00–16h00",
+      "image": "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=mon-environnement",
+      "visible": true
+    },
+    {
+      "id": "ciwara-sports",
+      "title": "Ciwara Sports",
+      "category": "SPORT",
+      "description": "Résultats, analyses et débats sportifs.",
+      "time": "Selon le jour",
+      "image": "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=ciwara-sports",
+      "visible": true
+    },
+    {
+      "id": "yeelen",
+      "title": "Yéelen",
+      "category": "SAVOIR & TRADITIONS",
+      "description": "Échanges autour des savoirs et traditions.",
+      "time": "Selon la grille",
+      "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=yeelen",
+      "visible": true
+    },
+    {
+      "id": "ciwara-love",
+      "title": "Ciwara Love",
+      "category": "MUSIQUE",
+      "description": "Musique et ambiance en fin de journée.",
+      "time": "17h00–18h00",
+      "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=ciwara-love",
+      "visible": true
+    },
+    {
+      "id": "retro-mali",
+      "title": "Rétro Mali",
+      "category": "MUSIQUE",
+      "description": "Les titres qui traversent les générations.",
+      "time": "Selon la grille",
+      "image": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=retro-mali",
+      "visible": true
+    },
+    {
+      "id": "tieben-kene",
+      "title": "Tièben Kènè",
+      "category": "CULTURE",
+      "description": "Un rendez-vous de parole et de partage.",
+      "time": "Selon la grille",
+      "image": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=tieben-kene",
+      "visible": true
+    },
+    {
+      "id": "hit-du-mali",
+      "title": "Hit du Mali",
+      "category": "MUSIQUE",
+      "description": "Les sons et artistes du Mali à l’honneur.",
+      "time": "Selon la grille",
+      "image": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=hit-du-mali",
+      "visible": true
+    },
+    {
+      "id": "ciwara-contes",
+      "title": "Ciwara Contes, Humour et Rire",
+      "category": "DIVERTISSEMENT",
+      "description": "Contes, humour et moments de détente.",
+      "time": "Dimanche · selon la grille",
+      "image": "https://images.unsplash.com/photo-1503095396549-807759245b35?auto=format&fit=crop&w=600&q=75",
+      "href": "emission.html?id=ciwara-contes",
+      "visible": true
+    }
+  ],
+  "schedule": [
+    {
+      "time": "06h45",
+      "title": "Ouverture d’antenne",
+      "days": "Tous les jours",
+      "id": "ouverture-antenne",
+      "description": "Lancement de la journée sur Radio Ciwara."
+    },
+    {
+      "time": "07h00–08h00",
+      "title": "Tour d’Horizon",
+      "days": "Tous les jours",
+      "id": "tour-horizon",
+      "description": "Le rendez-vous d’information du matin."
+    },
+    {
+      "time": "08h00–09h00",
+      "title": "Ciwara Matin",
+      "days": "Lundi à samedi",
+      "id": "ciwara-matin",
+      "description": "Matinale, échanges et actualités."
+    },
+    {
+      "time": "09h00–09h05",
+      "title": "Flash Infos",
+      "days": "En semaine",
+      "id": "flash-infos",
+      "description": "Le point rapide sur l’actualité."
+    },
+    {
+      "time": "10h00–11h30",
+      "title": "Revue de presse – Gaffé",
+      "days": "En semaine",
+      "id": "gaffe",
+      "description": "Lecture et commentaire des articles de presse."
+    },
+    {
+      "time": "11h30–13h00",
+      "title": "Baroni Sensibilisation",
+      "days": "En semaine",
+      "id": "baroni-sensibilisation",
+      "description": "Échanges et sensibilisation."
+    },
+    {
+      "time": "13h00–14h00",
+      "title": "Maana / Hit du Mali",
+      "days": "Selon le jour",
+      "id": "hit-du-mali",
+      "description": "Rendez-vous musical selon la grille quotidienne."
+    },
+    {
+      "time": "14h05–15h00",
+      "title": "Émissions thématiques",
+      "days": "Selon le jour",
+      "id": "emissions-thematiques",
+      "description": "Mouna Pourquoi, Femmes et Société, J’aime ma commune et autres rendez-vous."
+    },
+    {
+      "time": "15h00–16h00",
+      "title": "Mon Environnement / émissions du jour",
+      "days": "Samedi : Mon Environnement",
+      "id": "mon-environnement",
+      "description": "Émissions thématiques et de société."
+    },
+    {
+      "time": "16h00–17h00",
+      "title": "Soumou / rendez-vous culturels",
+      "days": "Selon le jour",
+      "id": "soumo",
+      "description": "Musique et programmes culturels."
+    },
+    {
+      "time": "17h00–18h00",
+      "title": "Ciwara Love",
+      "days": "Selon la grille",
+      "id": "ciwara-love",
+      "description": "Un rendez-vous musical en fin de journée."
+    },
+    {
+      "time": "18h00–18h15",
+      "title": "Grand Journal",
+      "days": "En semaine",
+      "id": "grand-journal",
+      "description": "Le grand rendez-vous d’information."
+    },
+    {
+      "time": "18h15–19h00",
+      "title": "Baroni Sensibilisation",
+      "days": "En semaine",
+      "id": "baroni-sensibilisation",
+      "description": "Prolongement des échanges et de la sensibilisation."
+    },
+    {
+      "time": "19h00–20h00",
+      "title": "Rediffusion Gaffé",
+      "days": "En semaine",
+      "id": "gaffe",
+      "description": "Rediffusion de la revue de presse."
+    },
+    {
+      "time": "20h00–21h00",
+      "title": "Émissions thématiques / Ciwara Sports",
+      "days": "Selon le jour",
+      "id": "ciwara-sports",
+      "description": "Sport, sécurité routière et rendez-vous de société."
+    },
+    {
+      "time": "21h00–22h00",
+      "title": "Tièben Kènè / Hit du Mali",
+      "days": "Selon le jour",
+      "id": "tieben-kene",
+      "description": "Culture et musique selon la grille."
+    },
+    {
+      "time": "22h00–23h00",
+      "title": "Rétro Mali / Salsa / Yéelen",
+      "days": "Selon le jour",
+      "id": "retro-mali",
+      "description": "Rendez-vous musicaux et culturels."
+    },
+    {
+      "time": "23h00–00h00",
+      "title": "Top Mandingue / Diaspora",
+      "days": "Selon le jour",
+      "id": "top-mandingue",
+      "description": "Musique et découvertes."
+    },
+    {
+      "time": "00h00–01h00",
+      "title": "Ciwara Mix",
+      "days": "Selon la grille",
+      "id": "ciwara-mix",
+      "description": "Sélection musicale nocturne."
+    }
+  ]
+}
